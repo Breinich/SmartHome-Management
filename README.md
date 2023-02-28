@@ -4,8 +4,8 @@ Csapatnév: ITcAtcEtc
 
 Csapattagok Neptun kóddal:
 - Bajnok Vencel (X748Q2)
-- Minta Mókus (ABC123)
-- Minta Mókus (ABC123)
+- Do Hoang Anh ()
+- MArton Judit ()
 
 Bemutató videó URL: 
 (Ugye minden olyan dolog szerepel benne a kiírásnak megfelelően, amire pontot szeretnétek kapni?)

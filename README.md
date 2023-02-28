@@ -1,9 +1,9 @@
 **Házi feladat**
 
-Csapatnév:
+Csapatnév: ITcAtcEtc
 
 Csapattagok Neptun kóddal:
-- Minta Mókus (ABC123)
+- Bajnok Vencel (X748Q2)
 - Minta Mókus (ABC123)
 - Minta Mókus (ABC123)
 

@@ -5,7 +5,7 @@ Csapatnév: ITcAtcEtc
 Csapattagok Neptun kóddal:
 - Bajnok Vencel (X748Q2)
 - Do Hoang Anh ()
-- MArton Judit ()
+- MArton Judit (M0MYIM)
 
 Bemutató videó URL: 
 (Ugye minden olyan dolog szerepel benne a kiírásnak megfelelően, amire pontot szeretnétek kapni?)

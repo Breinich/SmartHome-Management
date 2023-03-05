@@ -4,7 +4,7 @@ Csapatnév: ITcAtcEtc
 
 Csapattagok Neptun kóddal:
 - Bajnok Vencel (X748Q2)
-- Do Hoang Anh ()
+- Do Hoang Anh (M1QRYX)
 - Marton Judit (M0MYIM)
 
 Bemutató videó URL: 

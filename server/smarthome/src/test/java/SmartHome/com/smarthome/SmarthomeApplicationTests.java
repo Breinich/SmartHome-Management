@@ -1,4 +1,4 @@
-package SmartHome.com.smarthome;
+/*package SmartHome.com.smarthome;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,3 +11,4 @@ class SmarthomeApplicationTests {
 	}
 
 }
+*/

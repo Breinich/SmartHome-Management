@@ -53,8 +53,8 @@ public class SensorService {
             sensor.setName(name);
         }
 
-        if(room!= null && room.length() > 0 && !Objects.equals(sensor.getRoom(), room)){
-            sensor.setRoom(room);
+        if(room!= null && room.length() > 0 && !Objects.equals(sensor.getType(), room)){
+            sensor.setType(room);
         }
 
 

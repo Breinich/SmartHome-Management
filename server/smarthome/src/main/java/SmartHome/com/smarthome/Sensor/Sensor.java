@@ -14,54 +14,54 @@ public class Sensor {
             strategy = GenerationType.SEQUENCE,
             generator = "sensor_sequence"
     )
-    private Integer id;
+    private Integer sensorId;
     private String name;
-    private String room;
+    private String type;
 
     public Sensor() {
 
     }
 
-    public Sensor(Integer id, String name, String room) {
-        this.id = id;
+    public Sensor(Integer sensorId, String name, String type) {
+        this.sensorId = sensorId;
         this.name = name;
-        this.room = room;
+        this.type = type;
     }
 
-    public Sensor(String name, String room) {
+    public Sensor(String name, String type) {
         this.name = name;
-        this.room = room;
+        this.type = type;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getSensorId() {
+        return sensorId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setSensorId(Integer id) {
+        this.sensorId = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getRoom() {
-        return room;
+    public String getType() {
+        return type;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setRoom(String room) {
-        this.room = room;
+    public void setType(String room) {
+        this.type = room;
     }
 
     public String toString() {
         return "Sensor{" +
-                "id=" + id +
+                "id=" + sensorId +
                 ", name='" + name + '\'' +
-                ", room='" + room + '\'' +
+                ", room='" + type + '\'' +
                 '}';
     }
 

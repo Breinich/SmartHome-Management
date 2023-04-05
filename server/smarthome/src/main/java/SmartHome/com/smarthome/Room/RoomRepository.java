@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer> {
 
-    @Query("SELECT s FROM Sensor s WHERE s.name = ?1")
+    @Query("SELECT s FROM Room s WHERE s.name = ?1")
     Optional<Room> findRoomByName(String name);
 }

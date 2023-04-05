@@ -1,5 +1,7 @@
 package SmartHome.com.smarthome;
 
+import SmartHome.com.smarthome.Data.Data;
+import SmartHome.com.smarthome.Data.DataRepository;
 import SmartHome.com.smarthome.Room.Room;
 import SmartHome.com.smarthome.Room.RoomRepository;
 import SmartHome.com.smarthome.Sensor.Sensor;
@@ -13,7 +15,7 @@ import java.util.List;
 @Configuration
 public class Config {
     @Bean
-    CommandLineRunner commandLineRunner(SensorRepository repository, RoomRepository roomRepository) {
+    CommandLineRunner commandLineRunner(SensorRepository repository, RoomRepository roomRepository, DataRepository dataRepository) {
         return args -> {
             Sensor sensor1 = new Sensor(
                     "Lamp",
@@ -36,6 +38,18 @@ public class Config {
             roomRepository.saveAll(
                     List.of(room1, room2)
             );
+
+
+            Data data1 = new Data(3 );
+
+            Data data2 = new Data(
+                    4
+            );
+
+            dataRepository.saveAll(
+                    List.of(data1, data2)
+            );
+
         };
     }
 }

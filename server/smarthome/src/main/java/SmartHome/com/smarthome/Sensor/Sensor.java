@@ -1,4 +1,5 @@
 package SmartHome.com.smarthome.Sensor;
+import SmartHome.com.smarthome.Room.Room;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,6 +18,10 @@ public class Sensor {
     private Integer sensorId;
     private String name;
     private String type;
+
+    @ManyToOne(cascade= CascadeType.ALL)
+    @JoinColumn(name = "roomId", referencedColumnName = "roomId")
+    private Room room;
 
     public Sensor() {
 

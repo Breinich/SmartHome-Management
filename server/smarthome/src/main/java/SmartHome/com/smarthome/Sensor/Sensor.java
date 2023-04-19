@@ -19,9 +19,9 @@ public class Sensor {
     private String name;
     private String type;
 
-    @ManyToOne(cascade= CascadeType.ALL)
+   /* @ManyToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "roomId", referencedColumnName = "roomId")
-    private Room room;
+    private Room room;*/
 
     public Sensor() {
 

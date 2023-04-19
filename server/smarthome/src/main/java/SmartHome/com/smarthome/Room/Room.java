@@ -20,8 +20,10 @@ public class Room {
     private Integer roomId;
     private String name;
 
+    /*
     @OneToMany(fetch = FetchType.EAGER,mappedBy="Sensor",cascade = CascadeType.ALL)
     private Set<Sensor> sensorSet;
+     */
 
     public Room() {
 

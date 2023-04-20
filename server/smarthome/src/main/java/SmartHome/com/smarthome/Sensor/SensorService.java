@@ -51,12 +51,18 @@ public class SensorService {
                 throw new IllegalStateException("name taken");
             }
             sensor.setName(name);
+
+            // here we could update the sensor in the database
         }
 
         if(room!= null && room.length() > 0 && !Objects.equals(sensor.getType(), room)){
             sensor.setType(room);
+
+            // here we could update the sensor in the database
         }
 
-
+        // TODO: somewhere the sensor needs to be updated in the database
+        // or if we use a changed flag, we could update the sensor in the database here
+        // this would be more efficient, because we would not update the sensor in the database twice
     }
 }

@@ -1,17 +1,17 @@
 package SmartHome.com.smarthome.Sensor;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -63,7 +63,7 @@ public class SensorServiceTest {
     }
 
     /**
-     * Test adding a new sensor by havinng already one sensor in the database with the same name
+     * Test adding a new sensor by having already one sensor in the database with the same name
      */
     @Test(expected = IllegalStateException.class)
     public void testAddNewSensorWithExistingName() {
@@ -82,7 +82,7 @@ public class SensorServiceTest {
                 "Living Room"
         );
 
-        Mockito.when(repository.findAll()).thenReturn(new ArrayList<Sensor>());
+        Mockito.when(repository.findAll()).thenReturn(new ArrayList<>());
 
         List<Sensor> ret = controller.getSmartHomeDevices();
         Assert.assertEquals(0, ret.size());
@@ -102,7 +102,7 @@ public class SensorServiceTest {
      * Test deleting a sensor
      */
     @Test
-    public void testDeleteSensor() throws InstantiationException, IllegalAccessException, NoSuchFieldException {
+    public void testDeleteSensor() {
         Mockito.when(repository.existsById(sensor.getSensorId())).thenReturn(true);
 
         controller.deleteSensor(sensor.getSensorId());
@@ -132,9 +132,7 @@ public class SensorServiceTest {
         int expected = 2;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
-        name = null;
-
-        controller.updateSensor(id, name, type);
+        controller.updateSensor(id, null, type);
         expected += 2;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
@@ -144,9 +142,8 @@ public class SensorServiceTest {
         expected += 2;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
-        type = null;
 
-        controller.updateSensor(id, name, type);
+        controller.updateSensor(id, name, null);
         expected += 1;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 

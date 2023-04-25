@@ -1,5 +1,6 @@
 package SmartHome.com.smarthome.Sensor;
 
+import SmartHome.com.smarthome.Type.Type;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class SensorService {
         this.sensorRepository = sensorRepository;
     }
 
-    public List<Sensor> getSmartHomeDevices(){
+    public List<Sensor> getSensors(){
         return sensorRepository.findAll();
     }
 
@@ -42,7 +43,7 @@ public class SensorService {
 
 
     @Transactional
-    public void updateSensor(Integer sensorId, String name, String room) {
+    public void updateSensor(Integer sensorId, String name, Type type) {
         Sensor sensor = sensorRepository.findById(sensorId).orElseThrow(() -> new IllegalStateException("sensor with id " + sensorId + " does not exists"));
 
         if(name!= null && name.length() > 0 && !Objects.equals(sensor.getName(), name)){
@@ -51,18 +52,12 @@ public class SensorService {
                 throw new IllegalStateException("name taken");
             }
             sensor.setName(name);
-
-            // here we could update the sensor in the database
         }
 
-        if(room!= null && room.length() > 0 && !Objects.equals(sensor.getType(), room)){
-            sensor.setType(room);
+        if(type!= null && !Objects.equals(sensor.getType(), type)){
+            sensor.setType(type);
 
-            // here we could update the sensor in the database
         }
 
-        // TODO: somewhere the sensor needs to be updated in the database
-        // or if we use a changed flag, we could update the sensor in the database here
-        // this would be more efficient, because we would not update the sensor in the database twice
     }
 }

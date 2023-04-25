@@ -16,8 +16,8 @@ public class SensorController {
     }
 
     @GetMapping
-    public List<Sensor> getSmartHomeDevices(){
-        return sensorService.getSmartHomeDevices();
+    public List<Sensor> getSensors(){
+        return sensorService.getSensors();
     }
 
     @PostMapping

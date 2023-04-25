@@ -11,6 +11,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -18,27 +19,33 @@ public class Config {
     @Bean
     CommandLineRunner commandLineRunner(SensorRepository repository, RoomRepository roomRepository, DataRepository dataRepository) {
         return args -> {
+            List <Sensor> sensors1 = new ArrayList<>();
+            List <Sensor> sensors2 = new ArrayList<>();
+            Room room1 = new Room(
+                    "Living Room",
+                    sensors1);
+            Room room2 = new Room(
+                    "Bedroom",
+                    sensors2);
+            roomRepository.saveAll(
+                    List.of(room1, room2)
+            );
+
             Sensor sensor1 = new Sensor(
                     "Temperature sensor",
-                    Type.TEMPERATURE
-            );
+                    Type.TEMPERATURE,
+                    room1);
             Sensor sensor2 = new Sensor(
                     "Light sensor",
-                    Type.LIGHT
-            );
+                    Type.LIGHT,
+                    room2);
             repository.saveAll(
                     List.of(sensor1, sensor2)
             );
 
-            Room room1 = new Room(
-                    "Living Room"
-            );
-            Room room2 = new Room(
-                    "Bedroom"
-            );
-            roomRepository.saveAll(
-                    List.of(room1, room2)
-            );
+            room1.addSensor(sensor1);
+            room2.addSensor(sensor2);
+
 
 
             Data data1 = new Data(3 );

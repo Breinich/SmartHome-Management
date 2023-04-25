@@ -33,8 +33,8 @@ public class SensorServiceTest {
 
         sensor = new Sensor(
                 "Lamp",
-                "Living Room"
-        );
+                "Living Room",
+                room);
 
         Field f1 = sensor.getClass().getDeclaredField("sensorId");
         f1.setAccessible(true);
@@ -79,8 +79,8 @@ public class SensorServiceTest {
     public void testGetAllSensors() {
         Sensor sensor2 = new Sensor(
                 "Lamp2",
-                "Living Room"
-        );
+                "Living Room",
+                room);
 
         Mockito.when(repository.findAll()).thenReturn(new ArrayList<>());
 

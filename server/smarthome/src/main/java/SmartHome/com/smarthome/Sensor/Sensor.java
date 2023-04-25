@@ -21,17 +21,20 @@ public class Sensor {
     private Type type;
 
     //Amíg a room nem működik, addig kikommentezve
-   /* @ManyToOne(cascade= CascadeType.ALL)
+   ///*
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId", referencedColumnName = "roomId")
-    private Room room;*/
+    private Room room;
+    //*/
 
     public Sensor() {
 
     }
 
-    public Sensor(String name, Type type) {
+    public Sensor(String name, Type type, Room room) {
         this.name = name;
         this.type = type;
+        this.room = room;
     }
 
     public Integer getSensorId() {

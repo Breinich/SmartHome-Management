@@ -1,5 +1,7 @@
 package SmartHome.com.smarthome.Sensor;
 
+import SmartHome.com.smarthome.Room.Room;
+import SmartHome.com.smarthome.Type.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +33,8 @@ public class SensorController {
     }
 
     @PutMapping(path = "{sensorId}")
-    public void updateSensor(@PathVariable("sensorId") Integer sensorId, @RequestParam(required = false) String name, @RequestParam(required = false) String room){
-        sensorService.updateSensor(sensorId, name, room);
+    public void updateSensor(@PathVariable("sensorId") Integer sensorId, @RequestParam(required = false) String name,
+                             @RequestParam(required = false) Type type, @RequestParam(required = false) Room room){
+        sensorService.updateSensor(sensorId, name, type, room);
     }
 }

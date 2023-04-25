@@ -1,5 +1,6 @@
 package SmartHome.com.smarthome.Sensor;
 
+import SmartHome.com.smarthome.Room.Room;
 import SmartHome.com.smarthome.Type.Type;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class SensorService {
 
 
     @Transactional
-    public void updateSensor(Integer sensorId, String name, Type type) {
+    public void updateSensor(Integer sensorId, String name, Type type, Room room) {
         Sensor sensor = sensorRepository.findById(sensorId).orElseThrow(() -> new IllegalStateException("sensor with id " + sensorId + " does not exists"));
 
         if(name!= null && name.length() > 0 && !Objects.equals(sensor.getName(), name)){

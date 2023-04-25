@@ -2,7 +2,7 @@ package SmartHome.com.smarthome.Room;
 import SmartHome.com.smarthome.Sensor.Sensor;
 import jakarta.persistence.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table
@@ -20,39 +20,33 @@ public class Room {
     private Integer roomId;
     private String name;
 
-    /*
-    @OneToMany(fetch = FetchType.EAGER,mappedBy="Sensor",cascade = CascadeType.ALL)
-    private Set<Sensor> sensorSet;
-     */
+    ///*
+        @OneToMany(mappedBy="room", cascade = CascadeType.ALL) //,fetch = FetchType.EAGER,mappedBy="sensorId"
+    private List<Sensor> sensors;
+     //*/
 
     public Room() {
 
     }
 
-    public Room(Integer roomId, String name) {
-        this.roomId = roomId;
+    public Room(String name, List<Sensor> sensors) {
         this.name = name;
-    }
-
-    public Room(String name) {
-        this.name = name;
+        this.sensors = sensors;
     }
 
     public Integer getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(Integer id) {
-        this.roomId = id;
-    }
-
     public String getName() {
         return name;
     }
-
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void addSensor(Sensor sensor){
+        sensors.add(sensor);
     }
 
     public String toString() {

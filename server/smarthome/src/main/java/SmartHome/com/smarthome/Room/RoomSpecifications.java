@@ -10,10 +10,10 @@ public class RoomSpecifications {
                 criteriaBuilder.like(root.<String>get("name"), "%" + name + "%");
     }
 
-    public static Specification<Room> hasSensorWithId(String sensorId) {
+    public static Specification<Room> hasSensorWithId(Integer sensorId) {
         return (root, query, criteriaBuilder) -> {
-            Join<Sensor, Room> roomSensor = root.join("sensorSet");
-            return criteriaBuilder.equal(roomSensor.get("id"), sensorId);
+            Join<Sensor, Room> roomsSensor = root.join("sensorSet");
+            return criteriaBuilder.equal(roomsSensor.get("id"), sensorId);
         };
     }
 }

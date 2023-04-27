@@ -1,5 +1,7 @@
 package SmartHome.com.smarthome.Sensor;
 
+import SmartHome.com.smarthome.Room.Room;
+import SmartHome.com.smarthome.Type.Type;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +21,8 @@ public class SensorServiceTest {
 
     private SensorRepository repository;
     private SensorController controller;
-    Sensor sensor;
+    private Sensor sensor;
+    private Room room;
 
     /**
      * Set up the test by mocking the repository and creating a controller and  a sensor
@@ -31,10 +34,12 @@ public class SensorServiceTest {
         SensorService service = new SensorService(repository);
         controller = new SensorController(service);
 
+        room = new Room("Living Room", new ArrayList<>());
         sensor = new Sensor(
                 "Lamp",
-                "Living Room",
+                Type.TEMPERATURE,
                 room);
+        room.addSensor(sensor);
 
         Field f1 = sensor.getClass().getDeclaredField("sensorId");
         f1.setAccessible(true);
@@ -57,7 +62,7 @@ public class SensorServiceTest {
 
         Assert.assertEquals(2, Mockito.mockingDetails(repository).getInvocations().size());
 
-        List<Sensor> ret = controller.getSmartHomeDevices();
+        List<Sensor> ret = controller.getSensors();
 
         Assert.assertEquals(1, ret.size());
     }
@@ -79,12 +84,12 @@ public class SensorServiceTest {
     public void testGetAllSensors() {
         Sensor sensor2 = new Sensor(
                 "Lamp2",
-                "Living Room",
+                Type.HUMIDITY,
                 room);
 
         Mockito.when(repository.findAll()).thenReturn(new ArrayList<>());
 
-        List<Sensor> ret = controller.getSmartHomeDevices();
+        List<Sensor> ret = controller.getSensors();
         Assert.assertEquals(0, ret.size());
 
         List<Sensor> list = new ArrayList<>();
@@ -93,7 +98,7 @@ public class SensorServiceTest {
 
         Mockito.when(repository.findAll()).thenReturn(list);
 
-        List<Sensor> list2 = controller.getSmartHomeDevices();
+        List<Sensor> list2 = controller.getSensors();
 
         Assert.assertEquals(2, list2.size());
     }
@@ -122,34 +127,34 @@ public class SensorServiceTest {
     public void testUpdateSensor() {
         Integer id = sensor.getSensorId();
         String name = "uj";
-        String type = "uj tipus";
+        Type type = Type.HUMIDITY;
         Mockito.when(repository.findById(id)).thenReturn(Optional.of(sensor));
         Mockito.when(repository.findSensorByName(name)).thenReturn(Optional.empty());
 
-        controller.updateSensor(id, name, type);
+        controller.updateSensor(id, name, type, room);
 
         // TODO: expected is based on implementation, it should be updated if the implementation changes
         int expected = 2;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
-        controller.updateSensor(id, null, type);
-        expected += 2;
-        Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
-
-        name = "Lamp";
-
-        controller.updateSensor(id, name, type);
-        expected += 2;
-        Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
-
-
-        controller.updateSensor(id, name, null);
+        controller.updateSensor(id, null, type, room);
         expected += 1;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
-        type = "Living Room";
+        name = "uj";
 
-        controller.updateSensor(id, name, type);
+        controller.updateSensor(id, name, type, room);
+        expected += 1;
+        Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
+
+
+        controller.updateSensor(id, name, null, room);
+        expected += 1;
+        Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
+
+        type = Type.TEMPERATURE;
+
+        controller.updateSensor(id, name, type, room);
         expected += 1;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
     }

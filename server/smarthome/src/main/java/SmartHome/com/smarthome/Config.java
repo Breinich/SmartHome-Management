@@ -1,11 +1,11 @@
 package SmartHome.com.smarthome;
 
-import SmartHome.com.smarthome.Data.Data;
-import SmartHome.com.smarthome.Data.DataRepository;
 import SmartHome.com.smarthome.Room.Room;
 import SmartHome.com.smarthome.Room.RoomRepository;
 import SmartHome.com.smarthome.Sensor.Sensor;
 import SmartHome.com.smarthome.Sensor.SensorRepository;
+import SmartHome.com.smarthome.SensorData.SensorData;
+import SmartHome.com.smarthome.SensorData.SensorDataRepository;
 import SmartHome.com.smarthome.Type.Type;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -16,10 +16,12 @@ import java.util.List;
 
 @Configuration
 public class Config {
-    @Bean
-    CommandLineRunner commandLineRunner(SensorRepository repository, RoomRepository roomRepository, DataRepository dataRepository) {
+    //Azer commentelem ki, hogy ne keruljenek uj adatok a tablakba
+    //Ha valamiert ki kell torolni a tablat, akkor celszeru ujra lefuttatni, hogy legyenek benne ujra adatok
+   @Bean
+   CommandLineRunner commandLineRunner(SensorRepository repository, RoomRepository roomRepository, SensorDataRepository dataRepository) {
         return args -> {
-            List <Sensor> sensors1 = new ArrayList<>();
+           List<Sensor> sensors1 = new ArrayList<>();
             List <Sensor> sensors2 = new ArrayList<>();
             Room room1 = new Room(
                     "Living Room",
@@ -31,14 +33,18 @@ public class Config {
                     List.of(room1, room2)
             );
 
+            List<SensorData> ures = new ArrayList<>();
+
+
+
             Sensor sensor1 = new Sensor(
                     "Temperature sensor",
                     Type.TEMPERATURE,
-                    room1);
+                    room1, ures );
             Sensor sensor2 = new Sensor(
                     "Light sensor",
                     Type.LIGHT,
-                    room2);
+                    room2, ures);
             repository.saveAll(
                     List.of(sensor1, sensor2)
             );
@@ -48,11 +54,8 @@ public class Config {
 
 
 
-            Data data1 = new Data(3 );
-
-            Data data2 = new Data(
-                    4
-            );
+            SensorData data1 = new SensorData(Type.TEMPERATURE,sensor1,  23);
+            SensorData data2 = new SensorData(Type.LIGHT, sensor1, 40);
 
             dataRepository.saveAll(
                     List.of(data1, data2)

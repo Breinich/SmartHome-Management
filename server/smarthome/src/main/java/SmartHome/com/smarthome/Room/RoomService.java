@@ -1,5 +1,6 @@
 package SmartHome.com.smarthome.Room;
 
+import SmartHome.com.smarthome.Sensor.Sensor;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,9 @@ public class RoomService {
             room.setName(name);
         }
 
+    }
+
+    public List<Sensor> getSensorsByRoomId(Integer roomId) {
+        return roomRepository.findSensorsByRoomId(roomId);
     }
 }

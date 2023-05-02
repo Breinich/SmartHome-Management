@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="api/v1/smarthome/devices")
+@RequestMapping(path="api/v1/smarthome/sensors")
 public class SensorController {
     private final SensorService sensorService;
 

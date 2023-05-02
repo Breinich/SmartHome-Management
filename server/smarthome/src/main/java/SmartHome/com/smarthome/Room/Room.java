@@ -20,10 +20,8 @@ public class Room {
     private Integer roomId;
     private String name;
 
-    ///*
-        @OneToMany(mappedBy="room", cascade = CascadeType.ALL) //,fetch = FetchType.EAGER,mappedBy="sensorId"
+    @OneToMany(mappedBy="room", cascade = CascadeType.ALL)
     private List<Sensor> sensors;
-     //*/
 
     public Room() {
 
@@ -50,12 +48,14 @@ public class Room {
     }
 
     public String toString() {
-        return "Room{" +
+     return "Room{" +
                 "id=" + roomId +
                 ", name='" + name + '\'' +
                 '}';
     }
 
 
-
+    public List<Sensor> getSensors() {
+        return sensors;
+    }
 }

@@ -1,7 +1,10 @@
 package SmartHome.com.smarthome.Sensor;
+import SmartHome.com.smarthome.SensorData.SensorData;
 import SmartHome.com.smarthome.Room.Room;
 import SmartHome.com.smarthome.Type.Type;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table
@@ -20,21 +23,22 @@ public class Sensor {
     private String name;
     private Type type;
 
-    //Amíg a room nem működik, addig kikommentezve
-   ///*
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId", referencedColumnName = "roomId")
     private Room room;
-    //*/
+
+    @OneToMany(mappedBy="sensor", cascade = CascadeType.ALL)
+    private List<SensorData> sensorDatas;
 
     public Sensor() {
 
     }
 
-    public Sensor(String name, Type type, Room room) {
+    public Sensor(String name, Type type, Room room, List<SensorData> sensorDatas) {
         this.name = name;
         this.type = type;
         this.room = room;
+        this.sensorDatas = sensorDatas;
     }
 
     public Integer getSensorId() {
@@ -57,12 +61,20 @@ public class Sensor {
         this.type = type;
     }
 
+    public void addSensorData(SensorData sensorData){
+        sensorDatas.add(sensorData);
+    }
+
     public String toString() {
         return "Sensor{" +
                 "id=" + sensorId +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 '}';
+    }
+
+    public List<SensorData> getSensorDatas() {
+        return sensorDatas;
     }
 
 

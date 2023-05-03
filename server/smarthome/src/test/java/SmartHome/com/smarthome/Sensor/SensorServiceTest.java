@@ -60,7 +60,7 @@ public class SensorServiceTest {
 
         controller.registerNewSensor(sensor);
 
-        Assert.assertEquals(2, Mockito.mockingDetails(repository).getInvocations().size());
+        Mockito.verify(repository, Mockito.times(1)).save(sensor);
 
         List<Sensor> ret = controller.getSensors();
 
@@ -112,7 +112,7 @@ public class SensorServiceTest {
 
         controller.deleteSensor(sensor.getSensorId());
 
-        Assert.assertEquals(2, Mockito.mockingDetails(repository).getInvocations().size());
+        Mockito.verify(repository, Mockito.times(1)).deleteById(sensor.getSensorId());
     }
 
     /**

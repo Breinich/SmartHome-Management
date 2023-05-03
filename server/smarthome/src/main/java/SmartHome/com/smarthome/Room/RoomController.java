@@ -1,5 +1,6 @@
 package SmartHome.com.smarthome.Room;
 
+import SmartHome.com.smarthome.Actuator.Actuator;
 import SmartHome.com.smarthome.Sensor.Sensor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +22,14 @@ public class RoomController {
         return roomService.getRooms();
     }
 
-    @GetMapping(path = "{roomId}")
+    @GetMapping(path = "/sensors/{roomId}")
     public List<Sensor> getSensorsByRoomId(@PathVariable("roomId") Integer roomId){
         return roomService.getSensorsByRoomId(roomId);
+    }
+
+    @GetMapping(path = "/actuators/{roomId}")
+    public List<Actuator> getActuatorsByRoomId(@PathVariable("roomId") Integer roomId){
+        return roomService.getActuatorsByRoomId(roomId);
     }
 
     @PostMapping

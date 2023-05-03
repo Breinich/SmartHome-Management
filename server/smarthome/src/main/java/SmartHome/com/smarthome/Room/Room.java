@@ -1,7 +1,9 @@
 package SmartHome.com.smarthome.Room;
+import SmartHome.com.smarthome.Actuator.Actuator;
 import SmartHome.com.smarthome.Sensor.Sensor;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,13 +25,17 @@ public class Room {
     @OneToMany(mappedBy="room", cascade = CascadeType.ALL)
     private List<Sensor> sensors;
 
+    @OneToMany(mappedBy="room", cascade = CascadeType.ALL)
+    private List<Actuator> actuators;
+
     public Room() {
 
     }
 
-    public Room(String name, List<Sensor> sensors) {
+    public Room(String name) {
         this.name = name;
-        this.sensors = sensors;
+        this.sensors = new ArrayList<>();
+        this.actuators = new ArrayList<>();
     }
 
     public Integer getRoomId() {
@@ -46,6 +52,9 @@ public class Room {
     public void addSensor(Sensor sensor){
         sensors.add(sensor);
     }
+    public void addActuator(Actuator actuator){
+        actuators.add(actuator);
+    }
 
     public String toString() {
      return "Room{" +
@@ -57,5 +66,8 @@ public class Room {
 
     public List<Sensor> getSensors() {
         return sensors;
+    }
+    public List<Actuator> getActuators() {
+        return actuators;
     }
 }

@@ -1,5 +1,6 @@
 package SmartHome.com.smarthome.Room;
 
+import SmartHome.com.smarthome.Actuator.Actuator;
 import SmartHome.com.smarthome.Sensor.Sensor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -21,5 +22,8 @@ public interface RoomRepository extends JpaRepository<Room, Integer>, JpaSpecifi
     //WHY?
     @Query("SELECT s FROM Sensor s WHERE s.room = ?1")
     List<Sensor> findSensorsByRoomId(Integer roomId);
+
+    @Query("SELECT a FROM Actuator a WHERE a.room = ?1")
+    List<Actuator> findActuatorsByRoomId(Integer roomId);
 
 }

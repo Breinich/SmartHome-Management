@@ -31,7 +31,7 @@ public class RoomController {
     }
 
     @DeleteMapping(path = "{roomId}")
-    public void deleteSensor(@PathVariable("roomId") Integer roomId){
+    public void deleteRoom(@PathVariable("roomId") Integer roomId){
         roomService.deleteRoom(roomId);
     }
 

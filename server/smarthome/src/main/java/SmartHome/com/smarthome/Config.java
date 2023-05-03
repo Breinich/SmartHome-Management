@@ -1,3 +1,4 @@
+/*
 package SmartHome.com.smarthome;
 
 import SmartHome.com.smarthome.Room.Room;
@@ -33,18 +34,17 @@ public class Config {
                     List.of(room1, room2)
             );
 
-            List<SensorData> ures = new ArrayList<>();
 
 
 
             Sensor sensor1 = new Sensor(
                     "Temperature sensor",
                     Type.TEMPERATURE,
-                    room1, ures );
+                    room1 );
             Sensor sensor2 = new Sensor(
                     "Light sensor",
                     Type.LIGHT,
-                    room2, ures);
+                    room2);
             repository.saveAll(
                     List.of(sensor1, sensor2)
             );
@@ -64,3 +64,5 @@ public class Config {
         };
     }
 }
+
+ */

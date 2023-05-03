@@ -4,6 +4,7 @@ import SmartHome.com.smarthome.Room.Room;
 import SmartHome.com.smarthome.Type.Type;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,11 +35,11 @@ public class Sensor {
 
     }
 
-    public Sensor(String name, Type type, Room room, List<SensorData> sensorDatas) {
+    public Sensor(String name, Type type, Room room) {
         this.name = name;
         this.type = type;
         this.room = room;
-        this.sensorDatas = sensorDatas;
+        this.sensorDatas = new ArrayList<>();
     }
 
     public Integer getSensorId() {

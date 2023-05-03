@@ -1,7 +1,5 @@
 package SmartHome.com.smarthome.Room;
 
-import SmartHome.com.smarthome.Sensor.Sensor;
-import SmartHome.com.smarthome.Type.Type;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

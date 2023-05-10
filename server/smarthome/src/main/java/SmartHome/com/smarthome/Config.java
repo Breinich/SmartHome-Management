@@ -1,8 +1,10 @@
-/*
+
 package SmartHome.com.smarthome;
 
 import SmartHome.com.smarthome.Actuator.Actuator;
 import SmartHome.com.smarthome.Actuator.ActuatorRepository;
+import SmartHome.com.smarthome.Login.User.User;
+import SmartHome.com.smarthome.Login.User.UserRepository;
 import SmartHome.com.smarthome.Room.Room;
 import SmartHome.com.smarthome.Room.RoomRepository;
 import SmartHome.com.smarthome.Sensor.Sensor;
@@ -23,7 +25,7 @@ public class Config {
     //Ha valamiert ki kell torolni a tablat, akkor celszeru ujra lefuttatni, hogy legyenek benne ujra adatok
    @Bean
    CommandLineRunner commandLineRunner(SensorRepository repository, RoomRepository roomRepository, SensorDataRepository dataRepository,
-                                       ActuatorRepository actuatorRepository) {
+                                       ActuatorRepository actuatorRepository, UserRepository userRepository) {
         return args -> {
             Room room1 = new Room(
                     "Living Room");
@@ -72,7 +74,21 @@ public class Config {
                     List.of(actuator1, actuator2)
             );
 
+            User user1 = new User(
+                    "user1",
+                    "user1",
+                    "user1@gmail.com",
+                    "user1");
+            User user2 = new User(
+                    "user2",
+                    "user2",
+                    "user2@gmail.com",
+                    "user2");
+            userRepository.saveAll(
+                    List.of(user1, user2)
+            );
+
         };
     }
 }
-*/
+

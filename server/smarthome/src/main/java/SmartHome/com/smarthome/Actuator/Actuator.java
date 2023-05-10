@@ -1,9 +1,8 @@
 package SmartHome.com.smarthome.Actuator;
+
 import SmartHome.com.smarthome.Room.Room;
 import SmartHome.com.smarthome.Type.Type;
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
 
 @Entity
 @Table

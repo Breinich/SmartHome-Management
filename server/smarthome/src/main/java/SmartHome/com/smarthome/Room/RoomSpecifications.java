@@ -16,4 +16,11 @@ public class RoomSpecifications {
             return criteriaBuilder.equal(roomsSensor.get("id"), sensorId);
         };
     }
+
+    public static Specification<Room> hasActuatorWithId(Integer actuatorId) {
+        return (root, query, criteriaBuilder) -> {
+            Join<Sensor, Room> roomsActuator = root.join("actuatorSet");
+            return criteriaBuilder.equal(roomsActuator.get("id"), actuatorId);
+        };
+    }
 }

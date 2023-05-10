@@ -1,6 +1,10 @@
-/*
+
 package SmartHome.com.smarthome;
 
+import SmartHome.com.smarthome.Actuator.Actuator;
+import SmartHome.com.smarthome.Actuator.ActuatorRepository;
+import SmartHome.com.smarthome.Login.User.User;
+import SmartHome.com.smarthome.Login.User.UserRepository;
 import SmartHome.com.smarthome.Room.Room;
 import SmartHome.com.smarthome.Room.RoomRepository;
 import SmartHome.com.smarthome.Sensor.Sensor;
@@ -20,16 +24,13 @@ public class Config {
     //Azer commentelem ki, hogy ne keruljenek uj adatok a tablakba
     //Ha valamiert ki kell torolni a tablat, akkor celszeru ujra lefuttatni, hogy legyenek benne ujra adatok
    @Bean
-   CommandLineRunner commandLineRunner(SensorRepository repository, RoomRepository roomRepository, SensorDataRepository dataRepository) {
+   CommandLineRunner commandLineRunner(SensorRepository repository, RoomRepository roomRepository, SensorDataRepository dataRepository,
+                                       ActuatorRepository actuatorRepository, UserRepository userRepository) {
         return args -> {
-           List<Sensor> sensors1 = new ArrayList<>();
-            List <Sensor> sensors2 = new ArrayList<>();
             Room room1 = new Room(
-                    "Living Room",
-                    sensors1);
+                    "Living Room");
             Room room2 = new Room(
-                    "Bedroom",
-                    sensors2);
+                    "Bedroom");
             roomRepository.saveAll(
                     List.of(room1, room2)
             );
@@ -61,8 +62,33 @@ public class Config {
                     List.of(data1, data2)
             );
 
+            Actuator actuator1 = new Actuator(
+                    "Light",
+                    Type.LIGHT,
+                    room1);
+            Actuator actuator2 = new Actuator(  "Heater",
+                    Type.TEMPERATURE,
+                    room2);
+
+            actuatorRepository.saveAll(
+                    List.of(actuator1, actuator2)
+            );
+
+            User user1 = new User(
+                    "user1",
+                    "user1",
+                    "user1@gmail.com",
+                    "user1");
+            User user2 = new User(
+                    "user2",
+                    "user2",
+                    "user2@gmail.com",
+                    "user2");
+            userRepository.saveAll(
+                    List.of(user1, user2)
+            );
+
         };
     }
 }
 
- */

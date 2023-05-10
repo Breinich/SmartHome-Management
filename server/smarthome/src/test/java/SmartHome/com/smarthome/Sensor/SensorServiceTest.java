@@ -2,9 +2,12 @@ package SmartHome.com.smarthome.Sensor;
 
 import SmartHome.com.smarthome.Room.Room;
 import SmartHome.com.smarthome.Type.Type;
+import org.aspectj.lang.annotation.Before;
+import org.assertj.core.api.Assert;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;

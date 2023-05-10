@@ -2,12 +2,9 @@ package SmartHome.com.smarthome.Sensor;
 
 import SmartHome.com.smarthome.Room.Room;
 import SmartHome.com.smarthome.Type.Type;
-import org.aspectj.lang.annotation.Before;
-import org.assertj.core.api.Assert;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,7 +34,7 @@ public class SensorServiceTest {
         SensorService service = new SensorService(repository);
         controller = new SensorController(service);
 
-        room = new Room("Living Room", new ArrayList<>());
+        room = new Room("Living Room");
         sensor = new Sensor(
                 "Lamp",
                 Type.TEMPERATURE,

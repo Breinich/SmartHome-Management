@@ -1,7 +1,5 @@
 package SmartHome.com.smarthome.Room;
 
-import SmartHome.com.smarthome.Sensor.Sensor;
-import SmartHome.com.smarthome.Type.Type;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -27,7 +24,7 @@ public class RoomServiceTest {
         RoomService service = new RoomService(repository);
         controller = new RoomController(service);
 
-        room = new Room("Living Room", new ArrayList<>());
+        room = new Room("Living Room");
 
         Field f1 = room.getClass().getDeclaredField("roomId");
         f1.setAccessible(true);
@@ -97,7 +94,7 @@ public class RoomServiceTest {
      */
     @Test(expected = IllegalStateException.class)
     public void testUpdateRoomWithSameName() {
-        Room room2 = new Room("Bedroom", new ArrayList<>());
+        Room room2 = new Room("Bedroom");
         Mockito.when(repository.findById(room.getRoomId())).thenReturn(Optional.of(room));
         Mockito.when(repository.findRoomByName("Bedroom")).thenReturn(Optional.of(room2));
         controller.updateRoom(room.getRoomId(), "Bedroom");

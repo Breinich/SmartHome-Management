@@ -25,7 +25,7 @@ public class ActuatorService {
     }
 
     public void addNewActuator(Actuator actuator) {
-        Optional<Actuator> actuatorOptional= actuatorRepository.findActuatorByName(actuator.getName());
+        Optional<Actuator> actuatorOptional= actuatorRepository.findByName(actuator.getName());
         if(actuatorOptional.isPresent()) {
             throw new IllegalStateException("name taken");
         }
@@ -48,7 +48,7 @@ public class ActuatorService {
         Actuator actuator = actuatorRepository.findById(actuatorId).orElseThrow(() -> new IllegalStateException("actuator with id " + actuatorId + " does not exists"));
 
         if(name!= null && name.length() > 0 && !Objects.equals(actuator.getName(), name)){
-            Optional<Actuator> actuatorOptional= actuatorRepository.findActuatorByName(name);
+            Optional<Actuator> actuatorOptional= actuatorRepository.findByName(name);
             if(actuatorOptional.isPresent()) {
                 throw new IllegalStateException("name taken");
             }

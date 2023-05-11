@@ -27,6 +27,8 @@ public class ActuatorCommand {
     private Room room;
     @Enumerated(EnumType.STRING)
     private Type premiseType;
+    // true: premise is true, if the average value of the sensor data is greater than the premiseValue
+    // false: premise is true, if the average value of the sensor data is less than the premiseValue
     private boolean greaterThan;
     private Integer premiseValue;
     @Enumerated(EnumType.STRING)

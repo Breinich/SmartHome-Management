@@ -1,6 +1,7 @@
 package com.itcatcetc.smarthome.room;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.actuator.Actuator;
 import com.itcatcetc.smarthome.sensor.Sensor;
 import jakarta.persistence.*;
@@ -59,10 +60,15 @@ public class Room {
     }
 
     public String toString() {
-     return "Room{" +
-                "id=" + roomId +
-                ", name='" + name + '\'' +
-                '}';
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (Exception e) {
+            return "Room{" +
+                    "id=" + roomId +
+                    ", name='" + name + '\'' +
+                    '}';
+        }
     }
 
 

@@ -1,6 +1,8 @@
 package com.itcatcetc.smarthome.actuator;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.type.Type;
 import jakarta.persistence.*;
@@ -65,11 +67,16 @@ public class Actuator {
     }*/
 
     public String toString() {
-        return "Sensor{" +
-                "id=" + actuatorId +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                '}';
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            return "Sensor{" +
+                    "id=" + actuatorId +
+                    ", name='" + name + '\'' +
+                    ", type='" + type + '\'' +
+                    '}';
+        }
     }
 
    /* public List<SensorData> getSensorDatas() {

@@ -1,7 +1,8 @@
 package com.itcatcetc.smarthome.sensor;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.room.Room;
-import com.itcatcetc.smarthome.sensorData.SensorData;
+import com.itcatcetc.smarthome.sensor.data.SensorData;
 import com.itcatcetc.smarthome.type.Type;
 
 import jakarta.persistence.*;
@@ -68,11 +69,16 @@ public class Sensor {
     }
 
     public String toString() {
-        return "Sensor{" +
-                "id=" + sensorId +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                '}';
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (Exception e) {
+            return "Sensor{" +
+                    "id=" + sensorId +
+                    ", name='" + name + '\'' +
+                    ", type='" + type + '\'' +
+                    '}';
+        }
     }
 
     public List<SensorData> getSensorDatas() {

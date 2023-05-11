@@ -1,5 +1,6 @@
 package com.itcatcetc.smarthome.sensor.data;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.sensor.Sensor;
 import com.itcatcetc.smarthome.type.Type;
 
@@ -60,12 +61,17 @@ public class SensorData {
     }
 
     public String toString() {
-        return "SensorData{" +
-                "id=" + dataId +
-                ", name='" + value +
-                ", timestamp='" + timestamp.toString() +
-                '\'' +
-                '}';
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (Exception e) {
+            return "SensorData{" +
+                    "id=" + dataId +
+                    ", name='" + value +
+                    ", timestamp='" + timestamp.toString() +
+                    '\'' +
+                    '}';
+        }
     }
 
 

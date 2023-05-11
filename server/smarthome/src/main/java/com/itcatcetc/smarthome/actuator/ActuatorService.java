@@ -44,7 +44,7 @@ public class ActuatorService {
 
 
     @Transactional
-    public void updateActuator(Integer actuatorId, String name, Type type, Room room) {
+    public void updateActuator(Integer actuatorId, String name, Type type, Room room, String apiUrl) {
         Actuator actuator = actuatorRepository.findById(actuatorId).orElseThrow(() -> new IllegalStateException("actuator with id " + actuatorId + " does not exists"));
 
         if(name!= null && name.length() > 0 && !Objects.equals(actuator.getName(), name)){
@@ -57,7 +57,14 @@ public class ActuatorService {
 
         if(type!= null && !Objects.equals(actuator.getType(), type)){
             actuator.setType(type);
+        }
 
+        if(room!= null && !Objects.equals(actuator.getRoom(), room)){
+            actuator.setRoom(room);
+        }
+
+        if(apiUrl!= null && apiUrl.length() > 0 && !Objects.equals(actuator.getApiEndpoint(), apiUrl)){
+            actuator.setApiEndpoint(apiUrl);
         }
 
     }

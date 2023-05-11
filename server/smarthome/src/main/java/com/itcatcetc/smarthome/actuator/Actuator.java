@@ -24,6 +24,16 @@ public class Actuator {
     private String name;
     private Type type;
 
+    private String apiEndpoint;
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId", referencedColumnName = "roomId")
     private Room room;
@@ -39,7 +49,6 @@ public class Actuator {
         this.name = name;
         this.type = type;
         this.room = room;
-        //this.sensorDatas = new ArrayList<>();
     }
 
     public Integer getActuatorId() {
@@ -62,9 +71,13 @@ public class Actuator {
         this.type = type;
     }
 
-   /* public void addSensorData(SensorData sensorData){
-        sensorDatas.add(sensorData);
-    }*/
+    public String getApiEndpoint() {
+        return apiEndpoint;
+    }
+
+    public void setApiEndpoint(String apiEndpoint) {
+        this.apiEndpoint = apiEndpoint;
+    }
 
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
@@ -78,11 +91,4 @@ public class Actuator {
                     '}';
         }
     }
-
-   /* public List<SensorData> getSensorDatas() {
-        return sensorDatas;
-    }*/
-
-
-
 }

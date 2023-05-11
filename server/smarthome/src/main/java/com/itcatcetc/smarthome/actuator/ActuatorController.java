@@ -42,7 +42,8 @@ public class ActuatorController {
     @PutMapping(path = "{actuatorId}")
     @Secured(Role.HOMIE)
     public void updateActuator(@PathVariable("actuatorId") Integer actuatorId, @RequestParam(required = false) String name,
-                               @RequestParam(required = false) Type type, @RequestParam(required = false) Room room){
-        actuatorService.updateActuator(actuatorId, name, type, room);
+                               @RequestParam(required = false) Type type, @RequestParam(required = false) Room room,
+                               @RequestParam(required = false) String apiUrl){
+        actuatorService.updateActuator(actuatorId, name, type, room, apiUrl);
     }
 }

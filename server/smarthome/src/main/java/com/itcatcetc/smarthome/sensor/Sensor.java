@@ -29,7 +29,8 @@ public class Sensor {
     private String name;
     @Enumerated(EnumType.STRING)
     private Type type;
-
+    @Pattern(regexp = "^(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\." +
+            "(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))/[a-z0-9/]*$")
     private String apiEndpoint;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.type.Type;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table
@@ -21,10 +22,12 @@ public class Actuator {
             generator = "actuator_sequence"
     )
     private Integer actuatorId;
+    @Pattern(regexp = "^[a-zA-Z0-9]+$")
     private String name;
     @Enumerated(EnumType.STRING)
     private Type type;
-
+    @Pattern(regexp = "^(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\." +
+            "(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))/[a-z0-9/]*$")
     private String apiEndpoint;
 
     public Room getRoom() {
@@ -38,9 +41,6 @@ public class Actuator {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId", referencedColumnName = "roomId")
     private Room room;
-
-    /*@OneToMany(mappedBy="sensor", cascade = CascadeType.ALL)
-    private List<SensorData> sensorDatas; //majd actuatorcommand lesz*/
 
     public Actuator() {
 

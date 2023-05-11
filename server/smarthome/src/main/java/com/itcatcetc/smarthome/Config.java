@@ -44,7 +44,7 @@ public class Config {
 
     private void populateRooms(RoomRepository roomRepository) {
         Room room1 = new Room(
-                "Living Room");
+                "LivingRoom");
         Room room2 = new Room(
                 "Bedroom");
         roomRepository.saveAll(
@@ -56,12 +56,12 @@ public class Config {
         Room room1 = roomRepository.findAll().get(0);
 
         Sensor sensor1 = new Sensor(
-                "Temperature sensor",
+                "TemperatureSensor",
                 Type.TEMPERATURE,
                 room1,
                 "192.168.0.3");
         Sensor sensor2 = new Sensor(
-                "Light sensor",
+                "LightSensor",
                 Type.LIGHT,
                 room1,
                 "192.168.0.4");
@@ -89,15 +89,15 @@ public class Config {
 
     private void populateUsers(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         User user1 = new User();
-        user1.setFirstName("user1");
-        user1.setLastName("user1");
+        user1.setFirstName("Adam");
+        user1.setLastName("Nagy");
         user1.setEmail("user1@gmail.com");
         user1.setPassword(passwordEncoder.encode("user1"));
         user1.setRoles(List.of(Role.HOMIE));
 
         User user2 = new User();
-        user2.setFirstName("user2");
-        user2.setLastName("user2");
+        user2.setFirstName("Eva");
+        user2.setLastName("Kiss");
         user2.setEmail("user2@gmail.com");
         user2.setPassword(passwordEncoder.encode("user2"));
         user2.setRoles(List.of(Role.GUEST));

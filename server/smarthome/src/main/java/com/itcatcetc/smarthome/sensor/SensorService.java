@@ -27,7 +27,7 @@ public class SensorService {
     }
 
     public void addNewSensor(Sensor sensor) {
-       Optional<Sensor> sensorOptional= sensorRepository.findSensorByName(sensor.getName());
+       Optional<Sensor> sensorOptional= sensorRepository.findByName(sensor.getName());
        if(sensorOptional.isPresent()) {
                     throw new IllegalStateException("name taken");
        }
@@ -50,7 +50,7 @@ public class SensorService {
         Sensor sensor = sensorRepository.findById(sensorId).orElseThrow(() -> new IllegalStateException("sensor with id " + sensorId + " does not exists"));
 
         if(name!= null && name.length() > 0 && !Objects.equals(sensor.getName(), name)){
-            Optional<Sensor> sensorOptional= sensorRepository.findSensorByName(name);
+            Optional<Sensor> sensorOptional= sensorRepository.findByName(name);
             if(sensorOptional.isPresent()) {
                 throw new IllegalStateException("name taken");
             }

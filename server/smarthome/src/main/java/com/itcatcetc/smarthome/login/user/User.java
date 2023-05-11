@@ -117,11 +117,8 @@ public class User {
             return false;
         User other = (User) obj;
         if (email == null) {
-            if (other.email != null)
-                return false;
-        } else if (!email.equals(other.email))
-            return false;
-        return true;
+            return other.email == null;
+        } else return email.equals(other.email);
     }
 
     public void addRole(String role) {

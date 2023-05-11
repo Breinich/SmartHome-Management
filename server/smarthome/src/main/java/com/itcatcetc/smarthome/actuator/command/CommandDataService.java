@@ -25,7 +25,7 @@ public class CommandDataService {
     }
 
     public void addNewCommand(ActuatorCommand command) {
-       Optional<ActuatorCommand> dataOptional= commandDataRepository.findDataById(command.getCommandId());
+       Optional<ActuatorCommand> dataOptional= commandDataRepository.findByDataid(command.getCommandId());
         if(dataOptional.isPresent()) {
             throw new IllegalStateException("id taken");
         }

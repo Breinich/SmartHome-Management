@@ -65,7 +65,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody User user){
+    public ResponseEntity<String> registerUser(@Valid @RequestBody User user){
 
         // add check for email exists in DB
         if(userRepository.existsByEmail(user.getEmail())){

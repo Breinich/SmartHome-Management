@@ -52,7 +52,7 @@ public class SensorServiceTest {
      */
     @Test
     public void testAddNewSensor() {
-        Mockito.when(repository.findSensorByName(sensor.getName())).thenReturn(Optional.empty());
+        Mockito.when(repository.findByName(sensor.getName())).thenReturn(Optional.empty());
 
         List<Sensor> list = new ArrayList<>();
         list.add(sensor);
@@ -73,7 +73,7 @@ public class SensorServiceTest {
      */
     @Test(expected = IllegalStateException.class)
     public void testAddNewSensorWithExistingName() {
-        Mockito.when(repository.findSensorByName(sensor.getName())).thenReturn(Optional.of(sensor));
+        Mockito.when(repository.findByName(sensor.getName())).thenReturn(Optional.of(sensor));
 
         controller.registerNewSensor(sensor);
     }
@@ -130,7 +130,7 @@ public class SensorServiceTest {
         String name = "uj";
         Type type = Type.HUMIDITY;
         Mockito.when(repository.findById(id)).thenReturn(Optional.of(sensor));
-        Mockito.when(repository.findSensorByName(name)).thenReturn(Optional.empty());
+        Mockito.when(repository.findByName(name)).thenReturn(Optional.empty());
 
         controller.updateSensor(id, name, type, room, "");
 

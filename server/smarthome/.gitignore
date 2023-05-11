@@ -36,4 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 
-/target/classes/application.properties
+/target/

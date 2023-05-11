@@ -6,6 +6,8 @@ import com.itcatcetc.smarthome.sensor.data.SensorData;
 import com.itcatcetc.smarthome.type.Type;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +25,12 @@ public class Sensor {
             generator = "sensor_sequence"
     )
     private Integer sensorId;
+    @Pattern(regexp = "^[a-zA-Z0-9]+$")
     private String name;
+    @Enumerated(EnumType.STRING)
     private Type type;
+
+    private String apiEndpoint;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId", referencedColumnName = "roomId")
@@ -37,10 +43,11 @@ public class Sensor {
 
     }
 
-    public Sensor(String name, Type type, Room room) {
+    public Sensor(String name, Type type, Room room, String apiEndpoint) {
         this.name = name;
         this.type = type;
         this.room = room;
+        this.apiEndpoint = apiEndpoint;
         this.sensorDatas = new ArrayList<>();
     }
 
@@ -64,8 +71,30 @@ public class Sensor {
         this.type = type;
     }
 
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    public String getApiEndpoint() {
+        return apiEndpoint;
+    }
+
+    public void setApiEndpoint(String apiEndpoint) {
+        this.apiEndpoint = apiEndpoint;
+    }
+
+
     public void addSensorData(SensorData sensorData){
         sensorDatas.add(sensorData);
+    }
+
+
+    public List<SensorData> getSensorDatas() {
+        return sensorDatas;
     }
 
     public String toString() {
@@ -80,11 +109,4 @@ public class Sensor {
                     '}';
         }
     }
-
-    public List<SensorData> getSensorDatas() {
-        return sensorDatas;
-    }
-
-
-
 }

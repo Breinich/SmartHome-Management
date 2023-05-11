@@ -46,7 +46,7 @@ public class SensorService {
 
 
     @Transactional
-    public void updateSensor(Integer sensorId, String name, Type type, Room room) {
+    public void updateSensor(Integer sensorId, String name, Type type, Room room, String apiUrl) {
         Sensor sensor = sensorRepository.findById(sensorId).orElseThrow(() -> new IllegalStateException("sensor with id " + sensorId + " does not exists"));
 
         if(name!= null && name.length() > 0 && !Objects.equals(sensor.getName(), name)){
@@ -59,8 +59,14 @@ public class SensorService {
 
         if(type!= null && !Objects.equals(sensor.getType(), type)){
             sensor.setType(type);
-
         }
 
+        if(room!= null && !Objects.equals(sensor.getRoom(), room)){
+            sensor.setRoom(room);
+        }
+
+        if(apiUrl!= null && apiUrl.length() > 0 && !Objects.equals(sensor.getApiEndpoint(), apiUrl)){
+            sensor.setApiEndpoint(apiUrl);
+        }
     }
 }

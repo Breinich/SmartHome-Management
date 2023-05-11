@@ -2,6 +2,7 @@ package com.itcatcetc.smarthome.actuator.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.login.user.User;
+import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.type.Type;
 import jakarta.persistence.*;
 
@@ -20,11 +21,15 @@ public class ActuatorCommand {
             strategy = GenerationType.SEQUENCE,
             generator = "data_sequence"
     )
-    private Integer dataId;
+    private Integer commandId;
 
+    @ManyToOne
+    private Room room;
+    @Enumerated(EnumType.STRING)
     private Type premiseType;
+    private boolean greaterThan;
     private Integer premiseValue;
-
+    @Enumerated(EnumType.STRING)
     private Type consequenceType;
     private Integer consequenceValue;
 
@@ -37,20 +42,28 @@ public class ActuatorCommand {
 
     private Date expirationDate;
 
+
+
+    private Date startDate;
+
     public ActuatorCommand() {
     }
 
-    public ActuatorCommand(Type premiseType, Integer premiseValue, Type consequenceType, Integer consequenceValue, User user, Date expirationDate) {
+    public ActuatorCommand(Room room, Type premiseType, boolean greaterThan, Integer premiseValue, Type consequenceType,
+                           Integer consequenceValue, User user, Date expirationDate, Date startDate) {
+        this.room = room;
         this.premiseType = premiseType;
+        this.greaterThan = greaterThan;
         this.premiseValue = premiseValue;
         this.consequenceType = consequenceType;
         this.consequenceValue = consequenceValue;
         this.user = user;
         this.expirationDate = expirationDate;
+        this.startDate = startDate;
     }
 
-    public Integer getDataId() {
-        return dataId;
+    public Integer getCommandId() {
+        return commandId;
     }
 
     public Type getPremiseType() {
@@ -101,7 +114,28 @@ public class ActuatorCommand {
         return expirationDate;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
 
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public boolean isGreaterThan() {
+        return greaterThan;
+    }
+
+    public void setGreaterThan(boolean greaterThan) {
+        this.greaterThan = greaterThan;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+    public void setRoom(Room room) {
+        this.room = room;
+    }
 
     @Override
     public String toString() {
@@ -110,7 +144,7 @@ public class ActuatorCommand {
             return mapper.writeValueAsString(this);
         } catch (Exception e) {
             return "ActuatorCommand{" +
-                    "dataId=" + dataId +
+                    "dataId=" + commandId +
                     ", premiseType=" + premiseType +
                     ", premiseValue=" + premiseValue +
                     ", consequenceType=" + consequenceType +

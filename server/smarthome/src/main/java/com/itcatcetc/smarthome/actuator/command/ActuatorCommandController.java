@@ -1,8 +1,9 @@
 package com.itcatcetc.smarthome.actuator.command;
 
 import com.itcatcetc.smarthome.login.Role;
-import com.itcatcetc.smarthome.sensor.data.SensorData;
+import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.type.Type;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -28,21 +29,24 @@ public class ActuatorCommandController {
 
     @PostMapping
     @Secured(Role.HOMIE)
-    public void registerNewData(@RequestBody ActuatorCommand command){
-        commandDataService.addNewData(command);
+    public void registerNewData(@Valid @RequestBody ActuatorCommand command){
+        commandDataService.addNewCommand(command);
     }
 
     @DeleteMapping(path = "{dataId}")
     @Secured(Role.HOMIE)
-    public void deleteData(@PathVariable("dataId") Integer dataId){
-        commandDataService.deleteData(dataId);
+    public void deleteData(@Valid @PathVariable("dataId") Integer dataId){
+        commandDataService.deleteCommand(dataId);
     }
 
     @PutMapping(path = "{dataId}")
     @Secured(Role.HOMIE)
-    public void updateData(@PathVariable("dataId") Integer dataId, @RequestParam(required = false) Type premiseType,
+    public void updateData(@Valid @PathVariable("dataId") Integer dataId, @RequestParam(required = false) Room room,
+                           @RequestParam(required = false) Type premiseType, @RequestParam(required = false) boolean greaterThan,
                            @RequestParam(required = false) Integer premiseValue, @RequestParam(required = false) Type consequenceType,
-                           @RequestParam(required = false) Integer consequenceValue, @RequestParam(required = false) Date expiryDate){
-        commandDataService.updateData(dataId, premiseType, premiseValue, consequenceType, consequenceValue, expiryDate);
+                           @RequestParam(required = false) Integer consequenceValue, @RequestParam(required = false) Date startDate,
+                           @RequestParam(required = false) Date expiryDate){
+        commandDataService.updateCommand(room, dataId, premiseType, greaterThan, premiseValue, consequenceType,
+                consequenceValue,startDate, expiryDate);
     }
 }

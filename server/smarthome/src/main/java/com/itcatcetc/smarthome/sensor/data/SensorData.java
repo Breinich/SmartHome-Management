@@ -22,6 +22,7 @@ public class SensorData {
             generator = "data_sequence"
     )
     private Integer dataId;
+    @Enumerated(EnumType.STRING)
     private Type type;
 
     @ManyToOne(fetch = FetchType.LAZY)

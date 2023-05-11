@@ -2,6 +2,7 @@ package com.itcatcetc.smarthome.login;
 
 import com.itcatcetc.smarthome.login.user.User;
 import com.itcatcetc.smarthome.login.user.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping(path="api/v1/smarthome/auth")
@@ -57,7 +56,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody User user){
+    public ResponseEntity<String> authenticateUser(@Valid @RequestBody User user){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getEmail(), user.getPassword()));
 
@@ -66,7 +65,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody User user){
+    public ResponseEntity<?> registerUser(@Valid @RequestBody User user){
 
         // add check for email exists in DB
         if(userRepository.existsByEmail(user.getEmail())){

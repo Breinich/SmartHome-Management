@@ -38,8 +38,9 @@ public class SensorServiceTest {
         sensor = new Sensor(
                 "Lamp",
                 Type.TEMPERATURE,
-                room);
-        room.addSensor(sensor);
+                room,
+                "");
+        //room.addSensor(sensor);
 
         Field f1 = sensor.getClass().getDeclaredField("sensorId");
         f1.setAccessible(true);
@@ -85,7 +86,7 @@ public class SensorServiceTest {
         Sensor sensor2 = new Sensor(
                 "Lamp2",
                 Type.HUMIDITY,
-                room);
+                room, "");
 
         Mockito.when(repository.findAll()).thenReturn(new ArrayList<>());
 
@@ -131,30 +132,30 @@ public class SensorServiceTest {
         Mockito.when(repository.findById(id)).thenReturn(Optional.of(sensor));
         Mockito.when(repository.findSensorByName(name)).thenReturn(Optional.empty());
 
-        controller.updateSensor(id, name, type, room);
+        controller.updateSensor(id, name, type, room, "");
 
         // TODO: expected is based on implementation, it should be updated if the implementation changes
         int expected = 2;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
-        controller.updateSensor(id, null, type, room);
+        controller.updateSensor(id, null, type, room, "");
         expected += 1;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
         name = "uj";
 
-        controller.updateSensor(id, name, type, room);
+        controller.updateSensor(id, name, type, room, "");
         expected += 1;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
 
-        controller.updateSensor(id, name, null, room);
+        controller.updateSensor(id, name, null, room, "");
         expected += 1;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
         type = Type.TEMPERATURE;
 
-        controller.updateSensor(id, name, type, room);
+        controller.updateSensor(id, name, type, room, "");
         expected += 1;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
     }

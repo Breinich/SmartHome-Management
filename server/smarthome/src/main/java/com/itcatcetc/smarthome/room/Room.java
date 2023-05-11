@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.actuator.Actuator;
 import com.itcatcetc.smarthome.sensor.Sensor;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class Room {
             generator = "room_sequence"
     )
     private Integer roomId;
+    @Pattern(regexp = "^[a-zA-Z0-9]+$")
     private String name;
 
     @OneToMany(mappedBy="room", cascade = CascadeType.ALL)

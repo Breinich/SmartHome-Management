@@ -3,6 +3,7 @@ package com.itcatcetc.smarthome.room;
 import com.itcatcetc.smarthome.actuator.Actuator;
 import com.itcatcetc.smarthome.login.Role;
 import com.itcatcetc.smarthome.sensor.Sensor;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -27,30 +28,30 @@ public class RoomController {
 
     @GetMapping(path = "/sensors/{roomId}")
     @Secured({Role.GUEST, Role.HOMIE})
-    public List<Sensor> getSensorsByRoomId(@PathVariable("roomId") Integer roomId){
+    public List<Sensor> getSensorsByRoomId(@Valid @PathVariable("roomId") Integer roomId){
         return roomService.getSensorsByRoomId(roomId);
     }
 
     @GetMapping(path = "/actuators/{roomId}")
     @Secured({Role.GUEST, Role.HOMIE})
-    public List<Actuator> getActuatorsByRoomId(@PathVariable("roomId") Integer roomId){
+    public List<Actuator> getActuatorsByRoomId(@Valid @PathVariable("roomId") Integer roomId){
         return roomService.getActuatorsByRoomId(roomId);
     }
 
     @PostMapping
     @Secured(Role.HOMIE)
-    public void registerNewRoom(@RequestBody  Room room){roomService.addNewRoom(room);
+    public void registerNewRoom(@Valid @RequestBody  Room room){roomService.addNewRoom(room);
     }
 
     @DeleteMapping(path = "{roomId}")
     @Secured(Role.HOMIE)
-    public void deleteRoom(@PathVariable("roomId") Integer roomId){
+    public void deleteRoom(@Valid @PathVariable("roomId") Integer roomId){
         roomService.deleteRoom(roomId);
     }
 
     @PutMapping(path = "{roomId}")
     @Secured(Role.HOMIE)
-    public void updateRoom(@PathVariable("roomId") Integer roomId, @RequestParam(required = false) String name){
+    public void updateRoom(@Valid @PathVariable("roomId") Integer roomId, @RequestParam(required = false) String name){
         roomService.updateRoom(roomId, name);
     }
 }

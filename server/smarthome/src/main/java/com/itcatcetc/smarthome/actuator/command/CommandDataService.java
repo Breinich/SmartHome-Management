@@ -1,5 +1,6 @@
 package com.itcatcetc.smarthome.actuator.command;
 
+import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.type.Type;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ public class CommandDataService {
         return commandDataRepository.findAll();
     }
 
-    public void addNewData(ActuatorCommand command) {
-       Optional<ActuatorCommand> dataOptional= commandDataRepository.findDataById(command.getDataId());
+    public void addNewCommand(ActuatorCommand command) {
+       Optional<ActuatorCommand> dataOptional= commandDataRepository.findDataById(command.getCommandId());
         if(dataOptional.isPresent()) {
             throw new IllegalStateException("id taken");
         }
@@ -32,7 +33,7 @@ public class CommandDataService {
         commandDataRepository.save(command);
     }
 
-    public void deleteData(Integer dataId) {
+    public void deleteCommand(Integer dataId) {
         boolean exists = commandDataRepository.existsById(dataId);
         if(!exists){
             throw new IllegalStateException("Data with id " + dataId + " does not exists");
@@ -42,8 +43,8 @@ public class CommandDataService {
 
 
     @Transactional
-    public void updateData(Integer dataId,Type premiseType, Integer premiseValue, Type consequenceType,
-                           Integer consequenceValue, Date expiryDate) {
+    public void updateCommand(Room room, Integer dataId, Type premiseType, boolean greaterThan, Integer premiseValue, Type consequenceType,
+                              Integer consequenceValue, Date startDate, Date expiryDate) {
         ActuatorCommand command = commandDataRepository
                 .findById(dataId).orElseThrow(() -> new IllegalStateException("data with id " + dataId + " does not exists"));
 
@@ -57,11 +58,18 @@ public class CommandDataService {
             consequenceValue = command.getConsequenceValue();
         if (expiryDate == null)
             expiryDate = command.getExpirationDate();
+        if (startDate == null)
+            startDate = command.getStartDate();
+        if (room == null)
+            room = command.getRoom();
 
         command.setPremiseType(premiseType);
         command.setPremiseValue(premiseValue);
         command.setConsequenceType(consequenceType);
         command.setConsequenceValue(consequenceValue);
         command.setExpirationDate(expiryDate);
+        command.setStartDate(startDate);
+        command.setGreaterThan(greaterThan);
+        command.setRoom(room);
     }
 }

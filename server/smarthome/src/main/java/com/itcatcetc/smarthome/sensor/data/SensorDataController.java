@@ -1,6 +1,7 @@
 package com.itcatcetc.smarthome.sensor.data;
 
 import com.itcatcetc.smarthome.login.Role;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -25,19 +26,19 @@ public class SensorDataController {
 
     @PostMapping
     @Secured(Role.HOMIE)
-    public void registerNewData(@RequestBody SensorData sensorData){
+    public void registerNewData(@Valid @RequestBody SensorData sensorData){
         sensorDataService.addNewData(sensorData);
     }
 
     @DeleteMapping(path = "{dataId}")
     @Secured(Role.HOMIE)
-    public void deleteData(@PathVariable("dataId") Integer dataId){
+    public void deleteData(@Valid @PathVariable("dataId") Integer dataId){
         sensorDataService.deleteData(dataId);
     }
 
     @PutMapping(path = "{dataId}")
     @Secured(Role.HOMIE)
-    public void updateData(@PathVariable("dataId") Integer dataId, @RequestParam(required = false) Integer value){
+    public void updateData(@Valid @PathVariable("dataId") Integer dataId, @RequestParam(required = false) Integer value){
         sensorDataService.updateData(dataId);
     }
 }

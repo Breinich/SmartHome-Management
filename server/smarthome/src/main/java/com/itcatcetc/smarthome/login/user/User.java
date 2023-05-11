@@ -1,6 +1,10 @@
 package com.itcatcetc.smarthome.login.user;
 
+import com.itcatcetc.smarthome.actuator.command.ActuatorCommand;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,31 +19,28 @@ public class User {
     private Long userId;
 
     @Column(name="first_name")
+    @Pattern(regexp = "^[a-zA-Z]+$")
     private String firstName;
     @Column(name="last_name")
+    @Pattern(regexp = "^[a-zA-Z]+$")
     private String lastName;
     @Column(unique = true, nullable = false, length = 45)
+    @Email
     private String email;
     @Column(nullable = false)
+    @NotBlank
     private String password;
-   /* @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name="users_roles",
-            joinColumns = @JoinColumn(name="user_id", referencedColumnName = "userId"),
-            inverseJoinColumns = @JoinColumn(name="role_id", referencedColumnName = "roleId")
-    )*/
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
 
-    /*public User(String firstName, String lastName, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-    }*/
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ActuatorCommand> commands;
+
 
     public User() {
     	roles = new ArrayList<>();
+        commands = new ArrayList<>();
     }
 
     public Long getUserId() {
@@ -84,6 +85,18 @@ public class User {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public void addCommand(ActuatorCommand command) {
+    	commands.add(command);
+    }
+
+    public void removeCommand(ActuatorCommand command) {
+    	commands.remove(command);
+    }
+
+    public List<ActuatorCommand> getCommands() {
+    	return commands;
     }
 
     @Override

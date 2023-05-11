@@ -22,6 +22,7 @@ public class Actuator {
     )
     private Integer actuatorId;
     private String name;
+    @Enumerated(EnumType.STRING)
     private Type type;
 
     private String apiEndpoint;
@@ -45,10 +46,11 @@ public class Actuator {
 
     }
 
-    public Actuator(String name, Type type, Room room) {
+    public Actuator(String name, Type type, Room room, String apiEndpoint) {
         this.name = name;
         this.type = type;
         this.room = room;
+        this.apiEndpoint = apiEndpoint;
     }
 
     public Integer getActuatorId() {

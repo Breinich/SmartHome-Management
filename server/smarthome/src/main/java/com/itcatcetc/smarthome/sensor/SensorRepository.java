@@ -16,5 +16,4 @@ public interface SensorRepository extends JpaRepository<Sensor, Integer> {
     @Query("SELECT s FROM SensorData s WHERE s.sensor = ?1")
     List<Sensor> findSensorDatasBySensorId(Integer sensorId);
 
-
 }

@@ -1,6 +1,7 @@
 package com.itcatcetc.smarthome.sensor;
 
 
+
 import com.itcatcetc.smarthome.sensor.data.SensorData;
 import org.springframework.data.jpa.domain.Specification;
 

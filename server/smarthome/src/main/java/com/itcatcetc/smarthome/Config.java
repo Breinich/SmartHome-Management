@@ -2,6 +2,8 @@
 package com.itcatcetc.smarthome;
 
 import com.itcatcetc.smarthome.actuator.ActuatorRepository;
+import com.itcatcetc.smarthome.login.Role;
+import com.itcatcetc.smarthome.login.user.User;
 import com.itcatcetc.smarthome.login.user.UserRepository;
 import com.itcatcetc.smarthome.room.RoomRepository;
 import com.itcatcetc.smarthome.sensor.SensorRepository;
@@ -10,6 +12,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
 
 @Configuration
 public class Config {

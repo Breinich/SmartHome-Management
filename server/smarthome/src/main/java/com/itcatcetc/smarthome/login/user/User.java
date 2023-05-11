@@ -1,7 +1,10 @@
 package com.itcatcetc.smarthome.login.user;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name="user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
@@ -26,7 +29,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name="role_id", referencedColumnName = "roleId")
     )*/
     @ElementCollection(fetch = FetchType.EAGER)
-    private Collection<String> roles;
+    private List<String> roles;
 
     /*public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -34,6 +37,10 @@ public class User {
         this.email = email;
         this.password = password;
     }*/
+
+    public User() {
+    	roles = new ArrayList<>();
+    }
 
     public Long getUserId() {
         return userId;
@@ -75,7 +82,7 @@ public class User {
         return roles;
     }
 
-    public void setRoles(Collection<String> roles) {
+    public void setRoles(List<String> roles) {
         this.roles = roles;
     }
 

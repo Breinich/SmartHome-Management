@@ -1,7 +1,7 @@
 package com.itcatcetc.smarthome.sensor;
 
 import com.itcatcetc.smarthome.room.Room;
-import com.itcatcetc.smarthome.sensor.data.SensorData;
+import com.itcatcetc.smarthome.sensorData.SensorData;
 import com.itcatcetc.smarthome.type.Type;
 
 import jakarta.persistence.*;

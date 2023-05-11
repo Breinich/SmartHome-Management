@@ -10,19 +10,27 @@ import com.itcatcetc.smarthome.room.RoomRepository;
 import com.itcatcetc.smarthome.sensor.Sensor;
 import com.itcatcetc.smarthome.sensor.SensorRepository;
 import com.itcatcetc.smarthome.type.Type;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 @Configuration
 public class Config {
 
+    private RestTemplate restTemplate;
+
     @Bean
     CommandLineRunner commandLineRunner(SensorRepository sensorRepository, RoomRepository roomRepository,
-                                        ActuatorRepository actuatorRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+                                        ActuatorRepository actuatorRepository, UserRepository userRepository,
+                                        PasswordEncoder passwordEncoder, RestTemplateBuilder restTemplateBuilder) {
 
         return args -> {
             if (userRepository.count() == 0)
@@ -36,6 +44,41 @@ public class Config {
 
             if (sensorRepository.count() == 0)
                 populateSensors(sensorRepository, roomRepository);
+
+            restTemplate = restTemplateBuilder.build();
+
+            //ping all sensors and actuators
+            for(Sensor sensor : sensorRepository.findAll()){
+                Long sent = System.currentTimeMillis();
+                Long back = restTemplate.getForObject(sensor.getApiEndpoint() + "ping/{time}", Long.class, sent);
+                if(back != null)
+                    System.out.println(sensor.getName() + " - Ping: " + (back - sent) + "ms");
+
+                else
+                    System.out.println(sensor.getName() + " - Ping: null");
+            }
+            for (Actuator actuator : actuatorRepository.findAll()) {
+                Long sent = System.currentTimeMillis();
+                Long back = restTemplate.getForObject(actuator.getApiEndpoint() + "ping/{time}", Long.class, sent);
+                if(back != null)
+                    System.out.println(actuator.getName() + " - Ping: " + (back - sent) + "ms");
+
+                else
+                    System.out.println(actuator.getName() + " - Ping: null");
+            }
+
+            //read and write to DB
+            Room testRoom = new Room("TestRoom");
+            roomRepository.save(testRoom);
+            System.out.println("Saved room: " + testRoom);
+            Optional<Room> res = roomRepository.findRoomByName("TestRoom");
+            if(res.isPresent()) {
+                System.out.println("Found room: " + res.get());
+                roomRepository.delete(res.get());
+                System.out.println("Deleted room: " + res.get());
+            }
+            else
+                System.out.println("Room not found, SOMEWHERE SOMETHING WENT WRONG");
 
 
 

@@ -50,21 +50,25 @@ public class Config {
             //ping all sensors and actuators
             for(Sensor sensor : sensorRepository.findAll()){
                 Long sent = System.currentTimeMillis();
-                Long back = restTemplate.getForObject(sensor.getApiEndpoint() + "ping/{time}", Long.class, sent);
-                if(back != null)
-                    System.out.println(sensor.getName() + " - Ping: " + (back - sent) + "ms");
-
-                else
-                    System.out.println(sensor.getName() + " - Ping: null");
+                try {
+                    Long back = restTemplate.getForObject(sensor.getApiEndpoint() + "ping/{time}", Long.class, sent);
+                    if(back != null)
+                        System.out.println(sensor.getName() + " - Ping: " + (back - sent) + "ms");
+                }
+                catch (Exception e){
+                    System.out.println("Sensor " + sensor.getName() + " is not reachable");
+                }
             }
             for (Actuator actuator : actuatorRepository.findAll()) {
                 Long sent = System.currentTimeMillis();
-                Long back = restTemplate.getForObject(actuator.getApiEndpoint() + "ping/{time}", Long.class, sent);
-                if(back != null)
-                    System.out.println(actuator.getName() + " - Ping: " + (back - sent) + "ms");
-
-                else
-                    System.out.println(actuator.getName() + " - Ping: null");
+                try {
+                    Long back = restTemplate.getForObject(actuator.getApiEndpoint() + "ping/{time}", Long.class, sent);
+                    if (back != null)
+                        System.out.println(actuator.getName() + " - Ping: " + (back - sent) + "ms");
+                }
+                catch (Exception e){
+                    System.out.println("Actuator " + actuator.getName() + " is not reachable");
+                }
             }
 
             //read and write to DB

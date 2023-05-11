@@ -129,8 +129,12 @@ public class ManagementService {
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
         HttpEntity<Integer> entity = new HttpEntity<>(param, headers);
-
-        return restTemplate.postForObject(actuator.getApiEndpoint(),entity, String.class);
+        try {
+            return restTemplate.postForObject(actuator.getApiEndpoint(), entity, String.class);
+        }
+        catch (Exception e){
+            return "Actuator is not reachable!";
+        }
     }
 
     @Scheduled(fixedRate = 2000)

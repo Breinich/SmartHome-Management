@@ -26,6 +26,8 @@ import java.util.Random;
 @Component
 public class ManagementService {
 
+    private static final boolean SENSOR_SIMULATION = false;
+
     @Autowired
     private CommandDataRepository commandDataRepository;
 
@@ -133,6 +135,9 @@ public class ManagementService {
 
     @Scheduled(fixedRate = 2000)
     public void simulateSensors(){
+        if(!SENSOR_SIMULATION)
+            return;
+
         List<Sensor> sensors = sensorRepository.findAll();
 
         for (Sensor sensor : sensors) {

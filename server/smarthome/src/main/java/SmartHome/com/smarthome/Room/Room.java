@@ -1,4 +1,5 @@
 package SmartHome.com.smarthome.Room;
+
 import SmartHome.com.smarthome.Actuator.Actuator;
 import SmartHome.com.smarthome.Sensor.Sensor;
 import jakarta.persistence.*;

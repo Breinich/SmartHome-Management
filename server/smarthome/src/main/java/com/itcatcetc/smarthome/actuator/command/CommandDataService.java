@@ -20,7 +20,7 @@ public class CommandDataService {
         this.commandDataRepository = commandDataRepository;
     }
 
-    public List<ActuatorCommand> getDatas(){
+    public List<ActuatorCommand> getData(){
         return commandDataRepository.findAll();
     }
 

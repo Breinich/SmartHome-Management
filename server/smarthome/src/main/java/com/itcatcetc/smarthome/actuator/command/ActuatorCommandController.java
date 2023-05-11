@@ -24,7 +24,7 @@ public class ActuatorCommandController {
     @GetMapping
     @Secured({Role.GUEST, Role.HOMIE})
     public List<ActuatorCommand> getDatas(){
-        return commandDataService.getDatas();
+        return commandDataService.getData();
     }
 
     @PostMapping

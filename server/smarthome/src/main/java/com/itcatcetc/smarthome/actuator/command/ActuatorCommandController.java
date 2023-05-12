@@ -6,6 +6,7 @@ import com.itcatcetc.smarthome.type.Type;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -22,25 +23,25 @@ public class ActuatorCommandController {
     }
 
     @GetMapping
-    @Secured({Role.GUEST, Role.HOMIE})
+    @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public List<ActuatorCommand> getDatas(){
         return commandDataService.getData();
     }
 
     @PostMapping
-    @Secured(Role.HOMIE)
+    @PreAuthorize("hasRole('HOMIE')")
     public void registerNewData(@Valid @RequestBody ActuatorCommand command){
         commandDataService.addNewCommand(command);
     }
 
     @DeleteMapping(path = "{dataId}")
-    @Secured(Role.HOMIE)
+    @PreAuthorize("hasRole('HOMIE')")
     public void deleteData(@Valid @PathVariable("dataId") Integer dataId){
         commandDataService.deleteCommand(dataId);
     }
 
     @PutMapping(path = "{dataId}")
-    @Secured(Role.HOMIE)
+    @PreAuthorize("hasRole('HOMIE')")
     public void updateData(@Valid @PathVariable("dataId") Integer dataId, @RequestParam(required = false) Room room,
                            @RequestParam(required = false) Type premiseType, @RequestParam(required = false) boolean greaterThan,
                            @RequestParam(required = false) Integer premiseValue, @RequestParam(required = false) Type consequenceType,

@@ -4,6 +4,7 @@ import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.type.Type;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
 public class CommandDataService {
 
     private final CommandDataRepository commandDataRepository;

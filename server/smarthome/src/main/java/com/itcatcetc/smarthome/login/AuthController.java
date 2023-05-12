@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,8 +32,9 @@ public class AuthController {
 
     // User data
     @GetMapping("/me")
-    public ResponseEntity<Principal> userData(Principal principal) {
-        return new ResponseEntity<>(principal, HttpStatus.OK);
+    @PreAuthorize("(hasRole('GUEST') or hasRole('HOMIE')) and #email == authentication.principal.email")
+    public ResponseEntity<User> userData(String email) {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // Can be called by anyone
@@ -50,9 +51,21 @@ public class AuthController {
 
     // Can be called by admins only
     @GetMapping("/homie")
-    @Secured(Role.HOMIE)
-    public String adminHello() {
+    @PreAuthorize("hasRole('ROLE_HOMIE')")
+    public String homieHello() {
         return "Wow, you are a homie";
+    }
+
+    @GetMapping("/guest1")
+    @PreAuthorize("hasRole('ROLE_GUEST')")
+    public String guestHello1() {
+        return "Wow, you are a guest";
+    }
+
+    @GetMapping("/guest2")
+    @PreAuthorize("hasRole('GUEST')")
+    public String guestHello2() {
+        return "Wow, you are a guest";
     }
 
     @PostMapping("/login")

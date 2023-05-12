@@ -49,7 +49,7 @@ public class ManagementService {
     }
 
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 50000000)
     public void checkCommands(){
         List<ActuatorCommand> commands = commandDataRepository.findAll();
         for (ActuatorCommand command : commands) {

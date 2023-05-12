@@ -2,11 +2,13 @@ package com.itcatcetc.smarthome.sensor.data;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
 public class SensorDataService {
 
     private final SensorDataRepository sensorDataRepository;

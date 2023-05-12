@@ -17,10 +17,14 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.ErrorResponseException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+
+import static java.lang.String.format;
 
 @Configuration
 public class Config {
@@ -46,17 +50,21 @@ public class Config {
                 populateSensors(sensorRepository, roomRepository);
 
             restTemplate = restTemplateBuilder.build();
+            Logger logger = LoggerFactory.getLogger(Config.class);
 
             //ping all sensors and actuators
             for(Sensor sensor : sensorRepository.findAll()){
                 Long sent = System.currentTimeMillis();
                 try {
                     Long back = restTemplate.getForObject(sensor.getApiEndpoint() + "ping/{time}", Long.class, sent);
-                    if(back != null)
-                        System.out.println(sensor.getName() + " - Ping: " + (back - sent) + "ms");
+                    if(back == null)
+                        throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Sensor not found");
+
+                    logger.info(format("Sensor %s\t\t- Ping: %d ms",sensor.getName(), back - sent));
+
                 }
                 catch (Exception e){
-                    System.out.println("Sensor " + sensor.getName() + " is not reachable");
+                    logger.error(format("Sensor %s is not reachable", sensor.getName()));
                 }
             }
             for (Actuator actuator : actuatorRepository.findAll()) {
@@ -64,25 +72,25 @@ public class Config {
                 try {
                     Long back = restTemplate.getForObject(actuator.getApiEndpoint() + "ping/{time}", Long.class, sent);
                     if (back != null)
-                        System.out.println(actuator.getName() + " - Ping: " + (back - sent) + "ms");
+                        logger.info(format("Actuator %s\t\t- Ping: %d ms",actuator.getName(), back - sent));
                 }
                 catch (Exception e){
-                    System.out.println("Actuator " + actuator.getName() + " is not reachable");
+                    logger.error(format("Actuator %s is not reachable", actuator.getName()));
                 }
             }
 
             //read and write to DB
             Room testRoom = new Room("TestRoom");
             roomRepository.save(testRoom);
-            System.out.println("Saved room: " + testRoom);
+            logger.info(format("Saved room: " + testRoom));
             Optional<Room> res = roomRepository.findRoomByName("TestRoom");
             if(res.isPresent()) {
-                System.out.println("Found room: " + res.get());
+                logger.info(format("Found room: " + res.get()));
                 roomRepository.delete(res.get());
-                System.out.println("Deleted room: " + res.get());
+                logger.info(format("Deleted room: " + res.get()));
             }
             else
-                System.out.println("Room not found, SOMEWHERE SOMETHING WENT WRONG");
+                logger.error(format("Room not found, SOMEWHERE SOMETHING WENT WRONG"));
 
 
 

@@ -6,6 +6,7 @@ import com.itcatcetc.smarthome.actuator.Actuator;
 import com.itcatcetc.smarthome.sensor.Sensor;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
 public class RoomService {
 
     private final RoomRepository roomRepository;

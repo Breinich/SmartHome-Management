@@ -8,6 +8,7 @@ import com.itcatcetc.smarthome.type.Type;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,25 +24,25 @@ public class ActuatorController {
     }
 
     @GetMapping
-    @Secured({Role.GUEST, Role.HOMIE})
+    @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public List<Actuator> getActuators(){
         return actuatorService.getActuators();
     }
 
     @PostMapping
-    @Secured(Role.HOMIE)
+    @PreAuthorize("hasRole('HOMIE')")
     public void registerNewActuator(@Valid @RequestBody  Actuator actuator){
         actuatorService.addNewActuator(actuator);
     }
 
     @DeleteMapping(path = "{actuatorId}")
-    @Secured(Role.HOMIE)
+    @PreAuthorize("hasRole('HOMIE')")
     public void deleteActuator(@Valid @PathVariable("actuatorId") Integer actuatorId){
         actuatorService.deleteActuator(actuatorId);
     }
 
     @PutMapping(path = "{actuatorId}")
-    @Secured(Role.HOMIE)
+    @PreAuthorize("hasRole('HOMIE')")
     public void updateActuator(@Valid @PathVariable("actuatorId") Integer actuatorId, @RequestParam(required = false) String name,
                                @RequestParam(required = false) Type type, @RequestParam(required = false) Room room,
                                @RequestParam(required = false) String apiUrl){

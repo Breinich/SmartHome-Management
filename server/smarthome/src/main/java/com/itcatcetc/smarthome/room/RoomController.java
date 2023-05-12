@@ -6,6 +6,7 @@ import com.itcatcetc.smarthome.sensor.Sensor;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,36 +22,36 @@ public class RoomController {
     }
 
     @GetMapping
-    @Secured({Role.GUEST, Role.HOMIE})
+    @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public List<Room> getRooms(){
         return roomService.getRooms();
     }
 
     @GetMapping(path = "/sensors/{roomId}")
-    @Secured({Role.GUEST, Role.HOMIE})
+    @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public List<Sensor> getSensorsByRoomId(@Valid @PathVariable("roomId") Integer roomId){
         return roomService.getSensorsByRoomId(roomId);
     }
 
     @GetMapping(path = "/actuators/{roomId}")
-    @Secured({Role.GUEST, Role.HOMIE})
+    @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public List<Actuator> getActuatorsByRoomId(@Valid @PathVariable("roomId") Integer roomId){
         return roomService.getActuatorsByRoomId(roomId);
     }
 
     @PostMapping
-    @Secured(Role.HOMIE)
+    @PreAuthorize("hasRole('HOMIE')")
     public void registerNewRoom(@Valid @RequestBody  Room room){roomService.addNewRoom(room);
     }
 
     @DeleteMapping(path = "{roomId}")
-    @Secured(Role.HOMIE)
+    @PreAuthorize("hasRole('HOMIE')")
     public void deleteRoom(@Valid @PathVariable("roomId") Integer roomId){
         roomService.deleteRoom(roomId);
     }
 
     @PutMapping(path = "{roomId}")
-    @Secured(Role.HOMIE)
+    @PreAuthorize("hasRole('HOMIE')")
     public void updateRoom(@Valid @PathVariable("roomId") Integer roomId, @RequestParam(required = false) String name){
         roomService.updateRoom(roomId, name);
     }

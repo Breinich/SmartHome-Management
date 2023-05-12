@@ -4,6 +4,7 @@ import com.itcatcetc.smarthome.login.Role;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,25 +20,25 @@ public class SensorDataController {
     }
 
     @GetMapping
-    @Secured({Role.GUEST, Role.HOMIE})
+    @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public List<SensorData> getDatas(){
         return sensorDataService.getDatas();
     }
 
     @PostMapping
-    @Secured(Role.HOMIE)
+    @PreAuthorize("hasRole('HOMIE')")
     public void registerNewData(@Valid @RequestBody SensorData sensorData){
         sensorDataService.addNewData(sensorData);
     }
 
     @DeleteMapping(path = "{dataId}")
-    @Secured(Role.HOMIE)
+    @PreAuthorize("hasRole('HOMIE')")
     public void deleteData(@Valid @PathVariable("dataId") Integer dataId){
         sensorDataService.deleteData(dataId);
     }
 
     @PutMapping(path = "{dataId}")
-    @Secured(Role.HOMIE)
+    @PreAuthorize("hasRole('HOMIE')")
     public void updateData(@Valid @PathVariable("dataId") Integer dataId, @RequestParam(required = false) Integer value){
         sensorDataService.updateData(dataId);
     }

@@ -1,6 +1,7 @@
 package com.itcatcetc.smarthome.room;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.actuator.Actuator;
 import com.itcatcetc.smarthome.sensor.Sensor;
@@ -28,9 +29,11 @@ public class Room {
     private String name;
 
     @OneToMany(mappedBy="room", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Sensor> sensors;
 
     @OneToMany(mappedBy="room", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Actuator> actuators;
 
     public Room() {

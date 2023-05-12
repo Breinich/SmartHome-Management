@@ -127,6 +127,4 @@ public class RoomServiceTest {
         controller.getSensorsByRoomId(room.getRoomId());
         Mockito.verify(repository, Mockito.times(1)).findSensorsByRoomId(room.getRoomId());
     }
-
-
 }

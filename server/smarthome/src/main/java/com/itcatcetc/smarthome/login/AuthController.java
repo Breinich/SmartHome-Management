@@ -1,5 +1,6 @@
 package com.itcatcetc.smarthome.login;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.login.user.User;
 import com.itcatcetc.smarthome.login.user.UserRepository;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path="api/v1/smarthome/auth")
@@ -33,8 +35,19 @@ public class AuthController {
     // User data
     @GetMapping("/me")
     @PreAuthorize("(hasRole('GUEST') or hasRole('HOMIE')) and #email == authentication.principal.email")
-    public ResponseEntity<User> userData(String email) {
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<String> userData(@RequestParam String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        String res;
+        try {
+            res = objectMapper.writeValueAsString(user.get());
+        } catch (Exception e) {
+            res = user.get().toString();
+        }
+        return ResponseEntity.ok(res);
     }
 
     // Can be called by anyone
@@ -51,18 +64,12 @@ public class AuthController {
 
     // Can be called by admins only
     @GetMapping("/homie")
-    @PreAuthorize("hasRole('ROLE_HOMIE')")
+    @PreAuthorize("hasRole('HOMIE')")
     public String homieHello() {
         return "Wow, you are a homie";
     }
 
-    @GetMapping("/guest1")
-    @PreAuthorize("hasRole('ROLE_GUEST')")
-    public String guestHello1() {
-        return "Wow, you are a guest";
-    }
-
-    @GetMapping("/guest2")
+    @GetMapping("/guest")
     @PreAuthorize("hasRole('GUEST')")
     public String guestHello2() {
         return "Wow, you are a guest";

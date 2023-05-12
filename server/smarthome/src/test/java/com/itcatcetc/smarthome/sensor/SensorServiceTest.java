@@ -1,5 +1,7 @@
 package com.itcatcetc.smarthome.sensor;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.type.Type;
 import org.junit.Assert;
@@ -24,6 +26,8 @@ public class SensorServiceTest {
     private Sensor sensor;
     private Room room;
 
+    private ObjectMapper mapper;
+
     /**
      * Set up the test by mocking the repository and creating a controller and  a sensor
      * The sensor's id is set to 1 with reflection, because it is not set by the database
@@ -45,6 +49,8 @@ public class SensorServiceTest {
         Field f1 = sensor.getClass().getDeclaredField("sensorId");
         f1.setAccessible(true);
         f1.set(sensor, 1);
+
+        mapper = new ObjectMapper();
     }
 
     /**
@@ -63,9 +69,15 @@ public class SensorServiceTest {
 
         Mockito.verify(repository, Mockito.times(1)).save(sensor);
 
-        List<Sensor> ret = controller.getSensors();
+        String ret = controller.getSensors().getBody();
+        List<Sensor> retList;
+        try {
+            retList = mapper.readValue(ret, mapper.getTypeFactory().constructCollectionType(List.class, Sensor.class));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
-        Assert.assertEquals(1, ret.size());
+        Assert.assertEquals(1, retList.size());
     }
 
     /**
@@ -90,8 +102,15 @@ public class SensorServiceTest {
 
         Mockito.when(repository.findAll()).thenReturn(new ArrayList<>());
 
-        List<Sensor> ret = controller.getSensors();
-        Assert.assertEquals(0, ret.size());
+        String ret = controller.getSensors().getBody();
+        List<Sensor> retList;
+        try {
+            retList = mapper.readValue(ret, mapper.getTypeFactory().constructCollectionType(List.class, Sensor.class));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        Assert.assertEquals(0, retList.size());
 
         List<Sensor> list = new ArrayList<>();
         list.add(sensor);
@@ -99,9 +118,15 @@ public class SensorServiceTest {
 
         Mockito.when(repository.findAll()).thenReturn(list);
 
-        List<Sensor> list2 = controller.getSensors();
+        String ret2 = controller.getSensors().getBody();
+        List<Sensor> retList2;
+        try {
+            retList2 = mapper.readValue(ret2, mapper.getTypeFactory().constructCollectionType(List.class, Sensor.class));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
-        Assert.assertEquals(2, list2.size());
+        Assert.assertEquals(2, retList2.size());
     }
 
     /**

@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class SmarthomeApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(SmarthomeApplication.class, args);
 	}
 }

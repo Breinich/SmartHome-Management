@@ -18,15 +18,15 @@ public class SensorDataService {
         this.sensorDataRepository = sensorDataRepository;
     }
 
-    public List<SensorData> getDatas(){
+    public List<SensorData> getData(){
         return sensorDataRepository.findAll();
     }
 
     public void addNewData(SensorData sensorData) {
-       /* Optional<Data> dataOptional= dataRepository.findDataById(data.getDataId());
+       Optional<SensorData> dataOptional= sensorDataRepository.findBy(data.getDataId());
         if(dataOptional.isPresent()) {
             throw new IllegalStateException("id taken");
-        }*/
+        }
 
         sensorDataRepository.save(sensorData);
 

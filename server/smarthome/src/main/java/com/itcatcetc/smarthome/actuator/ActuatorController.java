@@ -1,13 +1,12 @@
 package com.itcatcetc.smarthome.actuator;
 
 
-
-import com.itcatcetc.smarthome.login.Role;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.type.Type;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +24,16 @@ public class ActuatorController {
 
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public List<Actuator> getActuators(){
-        return actuatorService.getActuators();
+    public ResponseEntity<String> getActuators(){
+        List<Actuator> list =  actuatorService.getActuators();
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+        try {
+            json = mapper.writeValueAsString(list);
+        } catch (Exception e) {
+            json = list.toString();
+        }
+        return ResponseEntity.ok(json);
     }
 
     @PostMapping

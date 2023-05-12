@@ -1,5 +1,6 @@
 package com.itcatcetc.smarthome.login.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.itcatcetc.smarthome.actuator.command.ActuatorCommand;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -29,12 +30,14 @@ public class User {
     private String email;
     @Column(nullable = false)
     @NotBlank
+    @JsonIgnore
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ActuatorCommand> commands;
 
 

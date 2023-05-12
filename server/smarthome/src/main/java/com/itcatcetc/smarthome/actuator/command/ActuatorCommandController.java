@@ -1,11 +1,11 @@
 package com.itcatcetc.smarthome.actuator.command;
 
-import com.itcatcetc.smarthome.login.Role;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.type.Type;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +24,16 @@ public class ActuatorCommandController {
 
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public List<ActuatorCommand> getDatas(){
-        return commandDataService.getData();
+    public ResponseEntity<String> getDatas(){
+        List<ActuatorCommand> list =  commandDataService.getData();
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+        try {
+            json = mapper.writeValueAsString(list);
+        } catch (Exception e) {
+            json = list.toString();
+        }
+        return ResponseEntity.ok(json);
     }
 
     @PostMapping

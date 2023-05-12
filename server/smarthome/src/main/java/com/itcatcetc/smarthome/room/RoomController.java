@@ -1,11 +1,11 @@
 package com.itcatcetc.smarthome.room;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.actuator.Actuator;
-import com.itcatcetc.smarthome.login.Role;
 import com.itcatcetc.smarthome.sensor.Sensor;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,20 +23,44 @@ public class RoomController {
 
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public List<Room> getRooms(){
-        return roomService.getRooms();
+    public ResponseEntity<String> getRooms(){
+        List<Room> list =  roomService.getRooms();
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+        try {
+            json = mapper.writeValueAsString(list);
+        } catch (Exception e) {
+            json = list.toString();
+        }
+        return ResponseEntity.ok(json);
     }
 
     @GetMapping(path = "/sensors/{roomId}")
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public List<Sensor> getSensorsByRoomId(@Valid @PathVariable("roomId") Integer roomId){
-        return roomService.getSensorsByRoomId(roomId);
+    public ResponseEntity<String> getSensorsByRoomId(@Valid @PathVariable("roomId") Integer roomId){
+        List<Sensor> list = roomService.getSensorsByRoomId(roomId);
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+        try {
+            json = mapper.writeValueAsString(list);
+        } catch (Exception e) {
+            json = list.toString();
+        }
+        return ResponseEntity.ok(json);
     }
 
     @GetMapping(path = "/actuators/{roomId}")
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public List<Actuator> getActuatorsByRoomId(@Valid @PathVariable("roomId") Integer roomId){
-        return roomService.getActuatorsByRoomId(roomId);
+    public ResponseEntity<String> getActuatorsByRoomId(@Valid @PathVariable("roomId") Integer roomId){
+        List<Actuator> list = roomService.getActuatorsByRoomId(roomId);
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+        try {
+            json = mapper.writeValueAsString(list);
+        } catch (Exception e) {
+            json = list.toString();
+        }
+        return ResponseEntity.ok(json);
     }
 
     @PostMapping

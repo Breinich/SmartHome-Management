@@ -1,9 +1,9 @@
 package com.itcatcetc.smarthome.sensor.data;
 
-import com.itcatcetc.smarthome.login.Role;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +21,16 @@ public class SensorDataController {
 
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public List<SensorData> getDatas(){
-        return sensorDataService.getDatas();
+    public ResponseEntity<String> getDatas(){
+        List<SensorData> data =  sensorDataService.getData();
+        String res;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try{
+            res = objectMapper.writeValueAsString(data);
+        } catch (Exception e) {
+            res = data.toString();
+        }
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping

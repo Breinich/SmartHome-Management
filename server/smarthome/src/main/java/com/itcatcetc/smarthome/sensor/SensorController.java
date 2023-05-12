@@ -1,11 +1,12 @@
 package com.itcatcetc.smarthome.sensor;
 
-import com.itcatcetc.smarthome.login.Role;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.type.Type;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +24,16 @@ public class SensorController {
 
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public List<Sensor> getSensors(){
-        return sensorService.getSensors();
+    public ResponseEntity<String> getSensors(){
+        List<Sensor> sensors = sensorService.getSensors();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String res;
+        try {
+            res = objectMapper.writeValueAsString(sensors);
+        } catch (JsonProcessingException e) {
+            res =  sensors.toString();
+        }
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping

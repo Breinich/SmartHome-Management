@@ -1,11 +1,11 @@
 package com.itcatcetc.smarthome.sensor.data;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
@@ -23,13 +23,12 @@ public class SensorDataService {
     }
 
     public void addNewData(SensorData sensorData) {
-       Optional<SensorData> dataOptional= sensorDataRepository.findBy(data.getDataId());
+        Optional<SensorData> dataOptional= sensorDataRepository.findById(sensorData.getDataId());
         if(dataOptional.isPresent()) {
             throw new IllegalStateException("id taken");
         }
 
         sensorDataRepository.save(sensorData);
-
     }
 
     public void deleteData(Integer dataId) {
@@ -38,12 +37,5 @@ public class SensorDataService {
             throw new IllegalStateException("Data with id " + dataId + " does not exists");
         }
         sensorDataRepository.deleteById(dataId);
-    }
-
-
-    @Transactional
-    public void updateData(Integer dataId) {
-        SensorData sensorData = sensorDataRepository.findById(dataId).orElseThrow(() -> new IllegalStateException("data with id " + dataId + " does not exists"));
-
     }
 }

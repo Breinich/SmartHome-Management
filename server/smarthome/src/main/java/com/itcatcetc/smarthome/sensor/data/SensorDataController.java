@@ -44,10 +44,4 @@ public class SensorDataController {
     public void deleteData(@Valid @PathVariable("dataId") Integer dataId){
         sensorDataService.deleteData(dataId);
     }
-
-    @PutMapping(path = "{dataId}")
-    @PreAuthorize("hasRole('HOMIE')")
-    public void updateData(@Valid @PathVariable("dataId") Integer dataId, @RequestParam(required = false) Integer value){
-        sensorDataService.updateData(dataId);
-    }
 }

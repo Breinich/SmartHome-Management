@@ -2,8 +2,6 @@ package com.itcatcetc.smarthome.sensor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itcatcetc.smarthome.room.Room;
-import com.itcatcetc.smarthome.type.Type;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,11 +46,9 @@ public class SensorController {
         sensorService.deleteSensor(sensorId);
     }
 
-    @PutMapping(path = "{sensorId}")
+    @PutMapping
     @PreAuthorize("hasRole('HOMIE')")
-    public void updateSensor(@Valid @PathVariable("sensorId") Integer sensorId, @RequestParam(required = false) String name,
-                             @RequestParam(required = false) Type type, @RequestParam(required = false) Room room,
-                             @RequestParam(required = false) String apiUrl){
-        sensorService.updateSensor(sensorId, name, type, room, apiUrl);
+    public void updateSensor(@Valid @RequestBody Sensor sensor){
+        sensorService.updateSensor(sensor);
     }
 }

@@ -3,6 +3,7 @@ package com.itcatcetc.smarthome.room;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
 import com.itcatcetc.smarthome.actuator.Actuator;
 import com.itcatcetc.smarthome.sensor.Sensor;
 import jakarta.persistence.*;
@@ -66,6 +67,9 @@ public class Room {
 
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new Hibernate6Module()
+                .enable(Hibernate6Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS)
+                .enable(Hibernate6Module.Feature.WRITE_MISSING_ENTITIES_AS_NULL));
         try {
             return mapper.writeValueAsString(this);
         } catch (Exception e) {

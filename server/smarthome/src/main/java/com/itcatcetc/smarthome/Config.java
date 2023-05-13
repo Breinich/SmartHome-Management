@@ -17,7 +17,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.ErrorResponseException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -82,15 +81,15 @@ public class Config {
             //read and write to DB
             Room testRoom = new Room("TestRoom");
             roomRepository.save(testRoom);
-            logger.info(format("Saved room: " + testRoom));
+            logger.info(format("Saved room: %s", testRoom));
             Optional<Room> res = roomRepository.findRoomByName("TestRoom");
             if(res.isPresent()) {
-                logger.info(format("Found room: " + res.get()));
+                logger.info(format("Found room: %s", res.get()));
                 roomRepository.delete(res.get());
-                logger.info(format("Deleted room: " + res.get()));
+                logger.info(format("Deleted room: %s", res.get()));
             }
             else
-                logger.error(format("Room not found, SOMEWHERE SOMETHING WENT WRONG"));
+                logger.error("Room not found, SOMEWHERE SOMETHING WENT WRONG");
 
 
 
@@ -147,14 +146,14 @@ public class Config {
         user1.setFirstName("Adam");
         user1.setLastName("Nagy");
         user1.setEmail("user1@gmail.com");
-        user1.setPassword(passwordEncoder.encode("user1"));
+        user1.setPassword(passwordEncoder.encode("User1.User1"));
         user1.setRoles(List.of(Role.HOMIE));
 
         User user2 = new User();
         user2.setFirstName("Eva");
         user2.setLastName("Kiss");
         user2.setEmail("user2@gmail.com");
-        user2.setPassword(passwordEncoder.encode("user2"));
+        user2.setPassword(passwordEncoder.encode("User2.User2"));
         user2.setRoles(List.of(Role.GUEST));
         userRepository.saveAll(
                 List.of(user1, user2)

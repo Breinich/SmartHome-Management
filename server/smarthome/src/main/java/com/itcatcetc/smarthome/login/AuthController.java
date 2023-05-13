@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.login.user.User;
 import com.itcatcetc.smarthome.login.user.UserRepository;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +35,8 @@ public class AuthController {
 
     // User data
     @GetMapping("/me")
-    @PreAuthorize("(hasRole('GUEST') or hasRole('HOMIE')) and #email == authentication.principal.email")
-    public ResponseEntity<String> userData(@RequestParam String email) {
+    @PreAuthorize("(hasRole('GUEST') or hasRole('HOMIE')) and #email == authentication.principal.username")
+    public ResponseEntity<String> userData(@Valid @Email @RequestParam String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -58,6 +59,7 @@ public class AuthController {
 
     // Can be called by authenticated user
     @GetMapping
+    @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public String authHello(Principal principal) {
         return "You are authenticated as " + principal.getName();
     }
@@ -76,16 +78,22 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@Valid @RequestBody User user){
+    public ResponseEntity<String> authenticateUser(@Valid @RequestBody UserHeader user){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getEmail(), user.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User signed-in successfully!.", HttpStatus.OK);
+        return new ResponseEntity<>("User signed-in successfully!", HttpStatus.OK);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody User user){
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserHeader userH){
+
+        User user = new User();
+        user.setEmail(userH.getEmail());
+        user.setPassword(userH.getPassword());
+        user.setFirstName(userH.getFirstName());
+        user.setLastName(userH.getLastName());
 
         // add check for email exists in DB
         if(userRepository.existsByEmail(user.getEmail())){

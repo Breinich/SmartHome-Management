@@ -2,6 +2,7 @@ package com.itcatcetc.smarthome.sensor;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
 import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.sensor.data.SensorData;
 import com.itcatcetc.smarthome.type.Type;
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity
 @Table
 public class Sensor {
+
     @Id
     @SequenceGenerator(
             name = "sensor_sequence",
@@ -56,6 +58,10 @@ public class Sensor {
 
     public Integer getSensorId() {
         return sensorId;
+    }
+
+    public void setSensorId(Integer sensorId) {
+        this.sensorId = sensorId;
     }
 
     public String getName() {
@@ -102,6 +108,9 @@ public class Sensor {
 
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new Hibernate6Module()
+                .enable(Hibernate6Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS)
+                .enable(Hibernate6Module.Feature.WRITE_MISSING_ENTITIES_AS_NULL));
         try {
             return mapper.writeValueAsString(this);
         } catch (Exception e) {

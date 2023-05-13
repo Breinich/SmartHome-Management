@@ -1,8 +1,6 @@
 package com.itcatcetc.smarthome.sensor;
 
 
-import com.itcatcetc.smarthome.room.Room;
-import com.itcatcetc.smarthome.type.Type;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,27 +45,27 @@ public class SensorService {
 
 
     @Transactional
-    public void updateSensor(Integer sensorId, String name, Type type, Room room, String apiUrl) {
-        Sensor sensor = sensorRepository.findById(sensorId).orElseThrow(() -> new IllegalStateException("sensor with id " + sensorId + " does not exists"));
+    public void updateSensor(Sensor newSensor) {
+        Sensor sensor = sensorRepository.findById(newSensor.getSensorId()).orElseThrow(() -> new IllegalStateException("sensor with id " + newSensor.getSensorId() + " does not exists"));
 
-        if(name!= null && name.length() > 0 && !Objects.equals(sensor.getName(), name)){
-            Optional<Sensor> sensorOptional= sensorRepository.findByName(name);
+        if(newSensor.getName() != null && newSensor.getName().length() > 0 && !Objects.equals(sensor.getName(), newSensor.getName())){
+            Optional<Sensor> sensorOptional= sensorRepository.findByName(newSensor.getName());
             if(sensorOptional.isPresent()) {
                 throw new IllegalStateException("name taken");
             }
-            sensor.setName(name);
+            sensor.setName(newSensor.getName());
         }
 
-        if(type!= null && !Objects.equals(sensor.getType(), type)){
-            sensor.setType(type);
+        if(newSensor.getType() != null && !Objects.equals(sensor.getType(), newSensor.getType())){
+            sensor.setType(newSensor.getType());
         }
 
-        if(room!= null && !Objects.equals(sensor.getRoom(), room)){
-            sensor.setRoom(room);
+        if(newSensor.getRoom() != null && !Objects.equals(sensor.getRoom(), newSensor.getRoom())){
+            sensor.setRoom(newSensor.getRoom());
         }
 
-        if(apiUrl!= null && apiUrl.length() > 0 && !Objects.equals(sensor.getApiEndpoint(), apiUrl)){
-            sensor.setApiEndpoint(apiUrl);
+        if(newSensor.getApiEndpoint() != null && newSensor.getApiEndpoint().length() > 0 && !Objects.equals(sensor.getApiEndpoint(), newSensor.getApiEndpoint())){
+            sensor.setApiEndpoint(newSensor.getApiEndpoint());
         }
     }
 }

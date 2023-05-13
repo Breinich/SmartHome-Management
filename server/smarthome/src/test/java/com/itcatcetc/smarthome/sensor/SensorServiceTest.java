@@ -157,30 +157,40 @@ public class SensorServiceTest {
         Mockito.when(repository.findById(id)).thenReturn(Optional.of(sensor));
         Mockito.when(repository.findByName(name)).thenReturn(Optional.empty());
 
-        controller.updateSensor(id, name, type, room, "");
+        Sensor testSensor = new Sensor(
+                name,
+                type,
+                room,
+                "");
+        testSensor.setSensorId(id);
+
+        controller.updateSensor(testSensor);
 
         // TODO: expected is based on implementation, it should be updated if the implementation changes
         int expected = 2;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
-        controller.updateSensor(id, null, type, room, "");
+        testSensor.setName(null);
+
+        controller.updateSensor(testSensor);
         expected += 1;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
-        name = "uj";
+        testSensor.setName("uj");
 
-        controller.updateSensor(id, name, type, room, "");
+        controller.updateSensor(testSensor);
         expected += 1;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
+        testSensor.setType(null);
 
-        controller.updateSensor(id, name, null, room, "");
+        controller.updateSensor(testSensor);
         expected += 1;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
 
-        type = Type.TEMPERATURE;
+        testSensor.setType(Type.TEMPERATURE);
 
-        controller.updateSensor(id, name, type, room, "");
+        controller.updateSensor(testSensor);
         expected += 1;
         Assert.assertEquals(expected, Mockito.mockingDetails(repository).getInvocations().size());
     }

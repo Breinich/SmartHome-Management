@@ -1,6 +1,7 @@
 package com.itcatcetc.smarthome.sensor.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
 import com.itcatcetc.smarthome.sensor.Sensor;
 import com.itcatcetc.smarthome.type.Type;
 
@@ -63,6 +64,9 @@ public class SensorData {
 
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new Hibernate6Module()
+                .enable(Hibernate6Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS)
+                .enable(Hibernate6Module.Feature.WRITE_MISSING_ENTITIES_AS_NULL));
         try {
             return mapper.writeValueAsString(this);
         } catch (Exception e) {

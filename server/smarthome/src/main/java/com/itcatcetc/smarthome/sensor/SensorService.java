@@ -28,7 +28,7 @@ public class SensorService {
     public void addNewSensor(Sensor sensor) {
        Optional<Sensor> sensorOptional= sensorRepository.findByName(sensor.getName());
        if(sensorOptional.isPresent()) {
-                    throw new IllegalStateException("name taken");
+                    throw new IllegalArgumentException("name taken");
        }
 
        sensorRepository.save(sensor);
@@ -38,7 +38,7 @@ public class SensorService {
     public void deleteSensor(Integer sensorId) {
         boolean exists = sensorRepository.existsById(sensorId);
         if(!exists){
-            throw new IllegalStateException("sensor with id " + sensorId + " does not exists");
+            throw new IllegalArgumentException("sensor with id " + sensorId + " does not exists");
         }
         sensorRepository.deleteById(sensorId);
     }
@@ -46,12 +46,12 @@ public class SensorService {
 
     @Transactional
     public void updateSensor(Sensor newSensor) {
-        Sensor sensor = sensorRepository.findById(newSensor.getSensorId()).orElseThrow(() -> new IllegalStateException("sensor with id " + newSensor.getSensorId() + " does not exists"));
+        Sensor sensor = sensorRepository.findById(newSensor.getSensorId()).orElseThrow(() -> new IllegalArgumentException("sensor with id " + newSensor.getSensorId() + " does not exists"));
 
         if(newSensor.getName() != null && newSensor.getName().length() > 0 && !Objects.equals(sensor.getName(), newSensor.getName())){
             Optional<Sensor> sensorOptional= sensorRepository.findByName(newSensor.getName());
             if(sensorOptional.isPresent()) {
-                throw new IllegalStateException("name taken");
+                throw new IllegalArgumentException("name taken");
             }
             sensor.setName(newSensor.getName());
         }

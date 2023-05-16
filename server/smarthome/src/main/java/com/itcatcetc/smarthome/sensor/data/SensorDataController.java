@@ -21,7 +21,7 @@ public class SensorDataController {
 
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public ResponseEntity<String> getDatas(){
+    public ResponseEntity<String> getData(){
         List<SensorData> data =  sensorDataService.getData();
         String res;
         ObjectMapper objectMapper = new ObjectMapper();

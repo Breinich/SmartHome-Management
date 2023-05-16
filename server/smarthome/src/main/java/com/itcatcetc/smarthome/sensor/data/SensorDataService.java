@@ -23,9 +23,8 @@ public class SensorDataService {
     }
 
     public void addNewData(SensorData sensorData) {
-        Optional<SensorData> dataOptional= sensorDataRepository.findById(sensorData.getDataId());
-        if(dataOptional.isPresent()) {
-            throw new IllegalStateException("id taken");
+        if(sensorData.getDataId() != null){
+            throw new IllegalArgumentException("dataId must be null");
         }
 
         sensorDataRepository.save(sensorData);
@@ -34,7 +33,7 @@ public class SensorDataService {
     public void deleteData(Integer dataId) {
         boolean exists = sensorDataRepository.existsById(dataId);
         if(!exists){
-            throw new IllegalStateException("Data with id " + dataId + " does not exists");
+            throw new IllegalArgumentException("Data with id " + dataId + " does not exists");
         }
         sensorDataRepository.deleteById(dataId);
     }

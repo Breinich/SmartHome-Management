@@ -31,7 +31,7 @@ public class RoomService {
     public void addNewRoom(Room room) {
         Optional<Room> roomOptional= roomRepository.findRoomByName(room.getName());
         if(roomOptional.isPresent()) {
-            throw new IllegalStateException("name taken");
+            throw new IllegalArgumentException("name taken");
         }
 
         roomRepository.save(room);
@@ -40,7 +40,7 @@ public class RoomService {
     public void deleteRoom(Integer roomId) {
         boolean exists = roomRepository.existsById(roomId);
         if(!exists){
-            throw new IllegalStateException("Room with id " + roomId + " does not exists");
+            throw new IllegalArgumentException("Room with id " + roomId + " does not exists");
         }
         roomRepository.deleteById(roomId);
     }
@@ -48,12 +48,12 @@ public class RoomService {
 
     @Transactional
     public void updateRoom(Integer roomId, String name) {
-        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalStateException("room with id " + roomId + " does not exists"));
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("room with id " + roomId + " does not exists"));
 
         if(name != null && name.length() > 0 && !Objects.equals(room.getName(), name)){
             Optional<Room> roomOptional= roomRepository.findRoomByName(name);
             if(roomOptional.isPresent()) {
-                throw new IllegalStateException("name taken");
+                throw new IllegalArgumentException("name taken");
             }
             room.setName(name);
         }

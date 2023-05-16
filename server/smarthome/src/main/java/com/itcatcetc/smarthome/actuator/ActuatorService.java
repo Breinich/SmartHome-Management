@@ -29,7 +29,7 @@ public class ActuatorService {
     public void addNewActuator(Actuator actuator) {
         Optional<Actuator> actuatorOptional= actuatorRepository.findByName(actuator.getName());
         if(actuatorOptional.isPresent()) {
-            throw new IllegalStateException("name taken");
+            throw new IllegalArgumentException("name taken");
         }
 
         actuatorRepository.save(actuator);
@@ -39,7 +39,7 @@ public class ActuatorService {
     public void deleteActuator(Integer actuatorId) {
         boolean exists = actuatorRepository.existsById(actuatorId);
         if(!exists){
-            throw new IllegalStateException("actuator with id " + actuatorId + " does not exists");
+            throw new IllegalArgumentException("actuator with id " + actuatorId + " does not exists");
         }
         actuatorRepository.deleteById(actuatorId);
     }
@@ -47,12 +47,12 @@ public class ActuatorService {
 
     @Transactional
     public void updateActuator(Integer actuatorId, String name, Type type, Room room, String apiUrl) {
-        Actuator actuator = actuatorRepository.findById(actuatorId).orElseThrow(() -> new IllegalStateException("actuator with id " + actuatorId + " does not exists"));
+        Actuator actuator = actuatorRepository.findById(actuatorId).orElseThrow(() -> new IllegalArgumentException("actuator with id " + actuatorId + " does not exists"));
 
         if(name!= null && name.length() > 0 && !Objects.equals(actuator.getName(), name)){
             Optional<Actuator> actuatorOptional= actuatorRepository.findByName(name);
             if(actuatorOptional.isPresent()) {
-                throw new IllegalStateException("name taken");
+                throw new IllegalArgumentException("name taken");
             }
             actuator.setName(name);
         }

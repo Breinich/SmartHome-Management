@@ -29,7 +29,7 @@ public class CommandDataService {
     public void addNewCommand(ActuatorCommand command) {
        Optional<ActuatorCommand> dataOptional= commandDataRepository.findByCommandId(command.getCommandId());
         if(dataOptional.isPresent()) {
-            throw new IllegalStateException("id taken");
+            throw new IllegalArgumentException("id taken");
         }
 
         commandDataRepository.save(command);
@@ -38,7 +38,7 @@ public class CommandDataService {
     public void deleteCommand(Integer dataId) {
         boolean exists = commandDataRepository.existsById(dataId);
         if(!exists){
-            throw new IllegalStateException("Data with id " + dataId + " does not exists");
+            throw new IllegalArgumentException("Data with id " + dataId + " does not exists");
         }
         commandDataRepository.deleteById(dataId);
     }
@@ -48,7 +48,7 @@ public class CommandDataService {
     public void updateCommand(Room room, Integer dataId, Type premiseType, boolean greaterThan, Integer premiseValue, Type consequenceType,
                               Integer consequenceValue, Date startDate, Date expiryDate) {
         ActuatorCommand command = commandDataRepository
-                .findById(dataId).orElseThrow(() -> new IllegalStateException("data with id " + dataId + " does not exists"));
+                .findById(dataId).orElseThrow(() -> new IllegalArgumentException("data with id " + dataId + " does not exists"));
 
         if (premiseType == null)
             premiseType = command.getPremiseType();

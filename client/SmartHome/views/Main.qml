@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls 6.2
 import itcatcetc.networkcommunication 1.0
+import itcatcetc.inputvalidator 1.0
 
 ApplicationWindow {
     minimumWidth: 640
@@ -75,6 +76,12 @@ ApplicationWindow {
         {
             id: httpcommunication
         }
+
+        InputValidator
+        {
+            id: userinputvalidator
+        }
+
 
         function showMenu(){
             menuBar.visible = true;

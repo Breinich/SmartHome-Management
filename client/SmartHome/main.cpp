@@ -3,6 +3,7 @@
 #include <QQmlApplicationEngine>
 #include <QIcon>
 #include "networkcommunication.h"
+#include "inputvalidator.h"
 
 
 int main(int argc, char *argv[])
@@ -12,6 +13,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     qmlRegisterType<NetworkCommunication>("itcatcetc.networkcommunication", 1, 0, "NetworkCommunication");
+    qmlRegisterType<InputValidator>("itcatcetc.inputvalidator", 1, 0, "InputValidator");
 
     const QUrl url(u"qrc:/SmartHome/Main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

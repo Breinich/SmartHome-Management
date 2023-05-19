@@ -6,6 +6,8 @@ CppApplication {
     property pathList qmlImportPaths: []
 
     files: [
+        "inputvalidator.cpp",
+        "inputvalidator.h",
         "main.cpp",
         "networkcommunication.cpp",
         "networkcommunication.h",

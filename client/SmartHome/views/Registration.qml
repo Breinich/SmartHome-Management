@@ -111,9 +111,43 @@ Page {
         height: 25
         text: qsTr("Create account")
         onClicked: {
-            //Todo: validate inputs
+            textFirstNameErrReg.visible = false;
+            textLastNameErrReg.visible = false;
+            textEmailErrReg.visible = false;
+            textPwdErrReg.visible = false;
+            textPwdRepeatErrReg.visible = false;
 
-            httpcommunication.createAccount(inputFirstNameReg.text, inputLastNameReg.text, inputEmailReg.text, inputPwdReg.text);
+            if(!userinputvalidator.validateName(inputFirstNameReg.text))
+            {
+                textFirstNameErrReg.visible = true;
+            }
+
+            if(!userinputvalidator.validateName(inputLastNameReg.text))
+            {
+                textLastNameErrReg.visible = true;
+            }
+
+            if(!userinputvalidator.validateEmail(inputEmailReg.text))
+            {
+                textEmailErrReg.visible = true;
+            }
+
+            if(!userinputvalidator.validatePassword(inputPwdReg.text))
+            {
+                textPwdErrReg.visible = true;
+            }
+            else
+            {
+                if(inputPwdReg.text != inputPwdRepeatReg.text)
+                {
+                    textPwdRepeatErrReg.visible = true;
+                }
+            }
+
+            if(!textFirstNameErrReg.visible && !textLastNameErrReg.visible && !textEmailErrReg.visible && !textPwdErrReg.visible && !textPwdRepeatErrReg.visible)
+            {
+                httpcommunication.createAccount(inputFirstNameReg.text, inputLastNameReg.text, inputEmailReg.text, inputPwdReg.text);
+            }
         }
     }
 
@@ -266,7 +300,8 @@ Page {
     }
 
     Text {
-        id: textUserErrReg
+        id: textEmailErrReg
+        visible: false
         x: 298
         y: 244
         width: 113
@@ -280,6 +315,7 @@ Page {
 
     Text {
         id: textPwdErrReg
+        visible: false
         x: 207
         y: 317
         color: "#ff0000"
@@ -290,10 +326,31 @@ Page {
 
     Text {
         id: textPwdRepeatErrReg
+        visible: false
         x: 268
         y: 377
         color: "#ff0000"
         text: qsTr("The given passwords don't mach")
+        font.pixelSize: 12
+    }
+
+    Text {
+        id: textFirstNameErrReg
+        visible: false
+        x: 44
+        y: 115
+        color: "#ff0000"
+        text: qsTr("First name can contain only uppercase and lowercase alphabetic characters. No whitespaces are allowed.")
+        font.pixelSize: 12
+    }
+
+    Text {
+        id: textLastNameErrReg
+        visible: false
+        x: 45
+        y: 180
+        color: "#ff0000"
+        text: qsTr("Last name can contain only uppercase and lowercase alphabetic characters. No whitespaces are allowed.")
         font.pixelSize: 12
     }
 

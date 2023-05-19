@@ -2,7 +2,7 @@
 #include <QByteArray>
 #include <QNetworkReply>
 
-NetworkCommunication::NetworkCommunication(QObject* pParent)
+NetworkCommunication::NetworkCommunication(QObject* pParent) : QObject(pParent)
 {
     QString host = "localhost";
     m_baseUrl = "http://" + host + ":8081/api/v1/smarthome";

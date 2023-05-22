@@ -48,8 +48,18 @@ public class CommandDataService {
 
 
     @Transactional
-    public void updateCommand(Room room, Integer dataId, Type premiseType, boolean greaterThan, Integer premiseValue, Type consequenceType,
-                              Integer consequenceValue, Date startDate, Date expiryDate) {
+    public void updateCommand(ActuatorCommand newCommand) {
+
+        Integer dataId = newCommand.getCommandId();
+        Type premiseType = newCommand.getPremiseType();
+        Integer premiseValue = newCommand.getPremiseValue();
+        Type consequenceType = newCommand.getConsequenceType();
+        Integer consequenceValue = newCommand.getConsequenceValue();
+        Date expiryDate = newCommand.getExpirationDate();
+        Date startDate = newCommand.getStartDate();
+        boolean greaterThan = newCommand.isGreaterThan();
+        Room room = newCommand.getRoom();
+
         ActuatorCommand command = commandDataRepository
                 .findById(dataId).orElseThrow(() -> new IllegalArgumentException("data with id " + dataId + " does not exists"));
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,5 +68,10 @@ public class SensorService {
         if(newSensor.getApiEndpoint() != null && newSensor.getApiEndpoint().length() > 0 && !Objects.equals(sensor.getApiEndpoint(), newSensor.getApiEndpoint())){
             sensor.setApiEndpoint(newSensor.getApiEndpoint());
         }
+    }
+
+    public void getSensorDatasInTimeRange(Integer sensorId, Timestamp startTime, Timestamp endTime) {
+        Sensor sensor = sensorRepository.findById(sensorId).orElseThrow(() -> new IllegalArgumentException("sensor with id " + sensorId + " does not exists"));
+        sensor.getSensorDatasInTimeRange(startTime, endTime);
     }
 }

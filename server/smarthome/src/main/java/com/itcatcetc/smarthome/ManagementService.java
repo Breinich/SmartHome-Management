@@ -12,6 +12,7 @@ import com.itcatcetc.smarthome.sensor.SensorRepository;
 import com.itcatcetc.smarthome.sensor.data.SensorData;
 import com.itcatcetc.smarthome.sensor.data.SensorDataRepository;
 import com.itcatcetc.smarthome.type.Type;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -55,6 +56,7 @@ public class ManagementService {
 
 
     @Scheduled(fixedRate = 5000)
+    @Transactional
     public void checkCommands(){
         List<ActuatorCommand> commands = commandDataRepository.findAll();
         for (ActuatorCommand command : commands) {
@@ -170,7 +172,7 @@ public class ManagementService {
                 newData = new SensorData(sensor.getType(), sensor, data.get().getValue() + (random.nextInt(10)) - 5);
             }
             else{
-                newData = new SensorData(sensor.getType(), sensor, random.nextInt(100));
+                newData = new SensorData(sensor.getType(), sensor, random.nextInt(101));
             }
             sensorDataRepository.save(newData);
         }

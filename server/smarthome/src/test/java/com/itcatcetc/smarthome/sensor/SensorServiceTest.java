@@ -83,7 +83,7 @@ public class SensorServiceTest {
     /**
      * Test adding a new sensor by having already one sensor in the database with the same name
      */
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAddNewSensorWithExistingName() {
         Mockito.when(repository.findByName(sensor.getName())).thenReturn(Optional.of(sensor));
 

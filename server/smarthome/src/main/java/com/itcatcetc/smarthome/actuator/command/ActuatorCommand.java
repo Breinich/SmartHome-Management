@@ -56,19 +56,6 @@ public class ActuatorCommand {
     public ActuatorCommand() {
     }
 
-    public ActuatorCommand(Room room, Type premiseType, boolean greaterThan, Integer premiseValue, Type consequenceType,
-                           Integer consequenceValue, User user, Date expirationDate, Date startDate) {
-        this.room = room;
-        this.premiseType = premiseType;
-        this.greaterThan = greaterThan;
-        this.premiseValue = premiseValue;
-        this.consequenceType = consequenceType;
-        this.consequenceValue = consequenceValue;
-        this.user = user;
-        this.expirationDate = expirationDate;
-        this.startDate = startDate;
-    }
-
     public Integer getCommandId() {
         return commandId;
     }
@@ -85,11 +72,11 @@ public class ActuatorCommand {
         return consequenceType;
     }
 
-    public Integer getConsequenceValue() {
+    public @NotNull Integer getConsequenceValue() {
         return consequenceValue;
     }
 
-    public User getUser() {
+    public @NotNull User getUser() {
         return user;
     }
 
@@ -109,7 +96,7 @@ public class ActuatorCommand {
         this.consequenceType = consequenceType;
     }
 
-    public void setConsequenceValue(Integer consequenceValue) {
+    public void setConsequenceValue(@NotNull Integer consequenceValue) {
         this.consequenceValue = consequenceValue;
     }
 
@@ -137,10 +124,10 @@ public class ActuatorCommand {
         this.greaterThan = greaterThan;
     }
 
-    public Room getRoom() {
+    public @NotNull Room getRoom() {
         return room;
     }
-    public void setRoom(Room room) {
+    public void setRoom(@NotNull Room room) {
         this.room = room;
     }
 

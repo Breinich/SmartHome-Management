@@ -72,12 +72,4 @@ public class Room {
                     '}';
         }
     }
-
-
-    public List<Sensor> getSensors() {
-        return sensors;
-    }
-    public List<Actuator> getActuators() {
-        return actuators;
-    }
 }

@@ -93,11 +93,6 @@ public class Sensor {
         this.apiEndpoint = apiEndpoint;
     }
 
-
-    public List<SensorData> getSensorDatas() {
-        return sensorDatas;
-    }
-
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new Hibernate6Module()

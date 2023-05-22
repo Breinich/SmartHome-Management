@@ -31,7 +31,7 @@ public class BaseController {
 
     private final ActuatorRepository actuatorRepository;
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     public BaseController(RoomRepository roomRepository, SensorRepository sensorRepository, ActuatorRepository actuatorRepository,
                           RestTemplateBuilder restTemplateBuilder) {

@@ -92,8 +92,6 @@ public class Config {
             else
                 logger.error("Room not found, SOMEWHERE SOMETHING WENT WRONG");
 
-
-
         };
     }
 

@@ -1,6 +1,8 @@
 package com.itcatcetc.smarthome.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itcatcetc.smarthome.login.email.EmailDetails;
+import com.itcatcetc.smarthome.login.email.EmailService;
 import com.itcatcetc.smarthome.login.user.User;
 import com.itcatcetc.smarthome.login.user.UserRepository;
 import jakarta.validation.Valid;
@@ -31,6 +33,9 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
 
     // User data
@@ -107,6 +112,17 @@ public class AuthController {
 
         userRepository.save(user);
 
+        //send email to user
+        sendEmail(user);
+
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+    }
+
+    private void sendEmail(User user) {
+        EmailDetails details = new EmailDetails();
+        details.setRecipient(user.getEmail());
+        details.setSubject("Welcome to SmartHome!");
+        details.setMsgBody("Hello " + user.getFirstName() + ",\n\nWelcome to SmartHome! We are excited to have you on board.\n\nBest,\nSmartHome Team");
+        emailService.sendSimpleMail(details);
     }
 }

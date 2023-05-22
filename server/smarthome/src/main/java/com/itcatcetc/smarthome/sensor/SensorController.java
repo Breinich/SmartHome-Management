@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -50,5 +51,11 @@ public class SensorController {
     @PreAuthorize("hasRole('HOMIE')")
     public void updateSensor(@Valid @RequestBody Sensor sensor){
         sensorService.updateSensor(sensor);
+    }
+
+    @GetMapping(path = "{sensorId}/data/{startTime}/{endTime}")
+    @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
+    public void getSensorDatasInTimeRange(Integer sensorId, Timestamp startTime, Timestamp endTime){
+        sensorService.getSensorDatasInTimeRange(sensorId, startTime, endTime);
     }
 }

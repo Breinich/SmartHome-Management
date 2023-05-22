@@ -10,6 +10,7 @@ import com.itcatcetc.smarthome.type.Type;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,6 +120,14 @@ public class Sensor {
                     ", name='" + name + '\'' +
                     ", type='" + type + '\'' +
                     '}';
+        }
+    }
+
+    public void getSensorDatasInTimeRange(Timestamp startTime, Timestamp endTime) {
+        for (SensorData sensorData : sensorDatas) {
+            if (sensorData.getTimestamp().after(startTime) && sensorData.getTimestamp().before(endTime)) {
+                System.out.println(sensorData);
+            }
         }
     }
 }

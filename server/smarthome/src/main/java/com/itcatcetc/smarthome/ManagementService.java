@@ -4,6 +4,8 @@ import com.itcatcetc.smarthome.actuator.Actuator;
 import com.itcatcetc.smarthome.actuator.ActuatorRepository;
 import com.itcatcetc.smarthome.actuator.command.ActuatorCommand;
 import com.itcatcetc.smarthome.actuator.command.CommandDataRepository;
+import com.itcatcetc.smarthome.login.email.EmailDetails;
+import com.itcatcetc.smarthome.login.email.EmailService;
 import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.sensor.Sensor;
 import com.itcatcetc.smarthome.sensor.SensorRepository;
@@ -26,7 +28,7 @@ import java.util.Random;
 @Component
 public class ManagementService {
 
-    private static final boolean SENSOR_SIMULATION = false;
+    private static final boolean SENSOR_SIMULATION = true;
 
     @Autowired
     private CommandDataRepository commandDataRepository;
@@ -40,6 +42,9 @@ public class ManagementService {
     @Autowired
     private ActuatorRepository actuatorRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     private final RestTemplate restTemplate;
 
     private final Random random = new Random();
@@ -49,7 +54,7 @@ public class ManagementService {
     }
 
 
-    @Scheduled(fixedRate = 50000000)
+    @Scheduled(fixedRate = 5000)
     public void checkCommands(){
         List<ActuatorCommand> commands = commandDataRepository.findAll();
         for (ActuatorCommand command : commands) {
@@ -57,6 +62,13 @@ public class ManagementService {
 
                 //if command expired
                 if(command.getExpirationDate().getTime() < System.currentTimeMillis()){
+
+                    EmailDetails details = new EmailDetails();
+                    details.setRecipient(command.getUser().getEmail());
+                    details.setSubject(command.getCommandId() + " command expired for " + command.getRoom().getName());
+                    details.setMsgBody("Your command with these details has expired:\n"+command+"\n\nBest,\nSmartHome Team");
+                    emailService.sendSimpleMail(details);
+
                     commandDataRepository.delete(command);
                     continue;
                 }
@@ -137,7 +149,7 @@ public class ManagementService {
         }
     }
 
-    @Scheduled(fixedRate = 2000)
+    @Scheduled(fixedRate = 4000)
     public void simulateSensors(){
         if(!SENSOR_SIMULATION)
             return;

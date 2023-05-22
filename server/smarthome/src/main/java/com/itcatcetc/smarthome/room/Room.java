@@ -29,11 +29,11 @@ public class Room {
     @Pattern(regexp = "^[a-zA-Z0-9]+$")
     private String name;
 
-    @OneToMany(mappedBy="room", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Sensor> sensors;
 
-    @OneToMany(mappedBy="room", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Actuator> actuators;
 
@@ -54,6 +54,7 @@ public class Room {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }

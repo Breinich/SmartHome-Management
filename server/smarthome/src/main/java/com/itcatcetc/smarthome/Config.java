@@ -17,7 +17,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -53,17 +52,16 @@ public class Config {
             Logger logger = LoggerFactory.getLogger(Config.class);
 
             //ping all sensors and actuators
-            for(Sensor sensor : sensorRepository.findAll()){
+            for (Sensor sensor : sensorRepository.findAll()) {
                 Long sent = System.currentTimeMillis();
                 try {
                     Long back = restTemplate.getForObject(sensor.getApiEndpoint() + "ping/{time}", Long.class, sent);
-                    if(back == null)
+                    if (back == null)
                         throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Sensor not found");
 
-                    logger.info(format("Sensor %s\t\t- Ping: %d ms",sensor.getName(), back - sent));
+                    logger.info(format("Sensor %s\t\t- Ping: %d ms", sensor.getName(), back - sent));
 
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     logger.error(format("Sensor %s is not reachable", sensor.getName()));
                 }
             }
@@ -72,9 +70,8 @@ public class Config {
                 try {
                     Long back = restTemplate.getForObject(actuator.getApiEndpoint() + "ping/{time}", Long.class, sent);
                     if (back != null)
-                        logger.info(format("Actuator %s\t\t- Ping: %d ms",actuator.getName(), back - sent));
-                }
-                catch (Exception e){
+                        logger.info(format("Actuator %s\t\t- Ping: %d ms", actuator.getName(), back - sent));
+                } catch (Exception e) {
                     logger.error(format("Actuator %s is not reachable", actuator.getName()));
                 }
             }
@@ -84,12 +81,11 @@ public class Config {
             roomRepository.save(testRoom);
             logger.info(format("Saved room: %s", testRoom));
             Optional<Room> res = roomRepository.findRoomByName("TestRoomhfiufehiusdfhsdhfihweufhweufhweu");
-            if(res.isPresent()) {
+            if (res.isPresent()) {
                 logger.info(format("Found room: %s", res.get()));
                 roomRepository.delete(res.get());
                 logger.info(format("Deleted room: %s", res.get()));
-            }
-            else
+            } else
                 logger.error("Room not found, SOMEWHERE SOMETHING WENT WRONG");
 
             logger.info(format("Application finished checks at %d", System.currentTimeMillis()));

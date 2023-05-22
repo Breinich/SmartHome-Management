@@ -1,7 +1,6 @@
 package com.itcatcetc.smarthome.room;
 
 
-
 import com.itcatcetc.smarthome.actuator.Actuator;
 import com.itcatcetc.smarthome.sensor.Sensor;
 import jakarta.transaction.Transactional;
@@ -24,13 +23,13 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public List<Room> getRooms(){
+    public List<Room> getRooms() {
         return roomRepository.findAll();
     }
 
     public void addNewRoom(Room room) {
-        Optional<Room> roomOptional= roomRepository.findRoomByName(room.getName());
-        if(roomOptional.isPresent()) {
+        Optional<Room> roomOptional = roomRepository.findRoomByName(room.getName());
+        if (roomOptional.isPresent()) {
             throw new IllegalArgumentException("name taken");
         }
 
@@ -39,7 +38,7 @@ public class RoomService {
 
     public void deleteRoom(Integer roomId) {
         boolean exists = roomRepository.existsById(roomId);
-        if(!exists){
+        if (!exists) {
             throw new IllegalArgumentException("Room with id " + roomId + " does not exists");
         }
         roomRepository.deleteById(roomId);
@@ -50,9 +49,9 @@ public class RoomService {
     public void updateRoom(Room room) {
         Room oldRoom = roomRepository.findById(room.getRoomId()).orElseThrow(() -> new IllegalArgumentException("room with id " + room.getRoomId() + " does not exists"));
 
-        if(room.getName() != null && room.getName().length() > 0 && !Objects.equals(room.getName(), oldRoom.getName())){
-            Optional<Room> roomOptional= roomRepository.findRoomByName(room.getName());
-            if(roomOptional.isPresent()) {
+        if (room.getName() != null && room.getName().length() > 0 && !Objects.equals(room.getName(), oldRoom.getName())) {
+            Optional<Room> roomOptional = roomRepository.findRoomByName(room.getName());
+            if (roomOptional.isPresent()) {
                 throw new IllegalArgumentException("name taken");
             }
             oldRoom.setName(room.getName());
@@ -62,6 +61,7 @@ public class RoomService {
     public List<Sensor> getSensorsByRoomId(Integer roomId) {
         return roomRepository.findSensorsByRoomId(roomId);
     }
+
     public List<Actuator> getActuatorsByRoomId(Integer roomId) {
         return roomRepository.findActuatorsByRoomId(roomId);
     }

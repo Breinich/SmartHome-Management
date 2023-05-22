@@ -16,10 +16,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -30,25 +30,18 @@ import java.util.Random;
 public class ManagementService {
 
     private static final boolean SENSOR_SIMULATION = false;
-
+    private final RestTemplate restTemplate;
+    private final Random random = new Random();
     @Autowired
     private CommandDataRepository commandDataRepository;
-
     @Autowired
     private SensorDataRepository sensorDataRepository;
-
     @Autowired
     private SensorRepository sensorRepository;
-
     @Autowired
     private ActuatorRepository actuatorRepository;
-
     @Autowired
     private EmailService emailService;
-
-    private final RestTemplate restTemplate;
-
-    private final Random random = new Random();
 
     public ManagementService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
@@ -57,30 +50,30 @@ public class ManagementService {
 
     @Scheduled(fixedRate = 5000)
     @Transactional
-    public void checkCommands(){
+    public void checkCommands() {
         List<ActuatorCommand> commands = commandDataRepository.findAll();
         for (ActuatorCommand command : commands) {
-            if(command.getStartDate().getTime() < System.currentTimeMillis()){
+            if (command.getStartDate().getTime() < System.currentTimeMillis()) {
                 //if command has no expiration date
-                if(command.getExpirationDate() == null)
+                if (command.getExpirationDate() == null)
                     checkConstraint(command);
 
-                //if command expired
-                else if(command.getExpirationDate().getTime() < System.currentTimeMillis()){
+                    //if command expired
+                else if (command.getExpirationDate().getTime() < System.currentTimeMillis()) {
 
                     EmailDetails details = new EmailDetails();
                     details.setRecipient(command.getUser().getEmail());
                     details.setSubject(command.getCommandId() + " command expired for " + command.getRoom().getName());
-                    details.setMsgBody("Your command with these details has expired:\n"+command+"\n\nBest,\nSmartHome Team");
+                    details.setMsgBody("Your command with these details has expired:\n" + command + "\n\nBest,\nSmartHome Team");
                     emailService.sendSimpleMail(details);
 
                     commandDataRepository.delete(command);
                 }
 
                 //if command will expire in 5 seconds
-                else if(command.getExpirationDate().getTime() + 5000 >= System.currentTimeMillis()){
+                else if (command.getExpirationDate().getTime() + 5000 >= System.currentTimeMillis()) {
 
-                    for(Actuator actuator : actuatorRepository.findAllByRoomAndType(command.getRoom(), command.getConsequenceType())) {
+                    for (Actuator actuator : actuatorRepository.findAllByRoomAndType(command.getRoom(), command.getConsequenceType())) {
                         sendPost(0, actuator);
                     }
                 }
@@ -91,7 +84,7 @@ public class ManagementService {
         }
     }
 
-    private void checkConstraint(ActuatorCommand command){
+    private void checkConstraint(ActuatorCommand command) {
         if (command.getPremiseType() == Type.NONE) {
             doCommand(command);
         } else {
@@ -104,7 +97,7 @@ public class ManagementService {
         }
     }
 
-    private int getAvgValue(Room room, Type type){
+    private int getAvgValue(Room room, Type type) {
         List<Sensor> sensors = sensorRepository.findAllByRoomAndType(room, type);
 
         int ct = 0;
@@ -113,36 +106,35 @@ public class ManagementService {
         for (Sensor sensor : sensors) {
             Optional<SensorData> data = sensorDataRepository.findTopBySensorOrderByTimestampDesc(sensor);
 
-            if(data.isPresent()){
+            if (data.isPresent()) {
                 ct++;
                 avg += data.get().getValue();
             }
         }
 
-        if(ct != 0)
+        if (ct != 0)
             avg /= ct;
 
         return avg;
     }
 
-    private void doCommand(ActuatorCommand command){
+    private void doCommand(ActuatorCommand command) {
         int avg = getAvgValue(command.getRoom(), command.getPremiseType());
 
         Integer param = 0;
 
         if (avg < command.getConsequenceValue()) {
             param = 1;
-        }
-        else if (avg > command.getConsequenceValue()) {
+        } else if (avg > command.getConsequenceValue()) {
             param = -1;
         }
 
-        for(Actuator actuator : actuatorRepository.findAllByRoomAndType(command.getRoom(), command.getConsequenceType())) {
+        for (Actuator actuator : actuatorRepository.findAllByRoomAndType(command.getRoom(), command.getConsequenceType())) {
             sendPost(param, actuator);
         }
     }
 
-    private String sendPost(Integer param, Actuator actuator){
+    private String sendPost(Integer param, Actuator actuator) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
@@ -150,15 +142,14 @@ public class ManagementService {
         HttpEntity<Integer> entity = new HttpEntity<>(param, headers);
         try {
             return restTemplate.postForObject(actuator.getApiEndpoint(), entity, String.class);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return "Actuator is not reachable!";
         }
     }
 
     @Scheduled(fixedRate = 4000)
-    public void simulateSensors(){
-        if(!SENSOR_SIMULATION)
+    public void simulateSensors() {
+        if (!SENSOR_SIMULATION)
             return;
 
         List<Sensor> sensors = sensorRepository.findAll();
@@ -168,10 +159,9 @@ public class ManagementService {
 
             SensorData newData;
 
-            if(data.isPresent()){
+            if (data.isPresent()) {
                 newData = new SensorData(sensor.getType(), sensor, data.get().getValue() + (random.nextInt(10)) - 5);
-            }
-            else{
+            } else {
                 newData = new SensorData(sensor.getType(), sensor, random.nextInt(101));
             }
             sensorDataRepository.save(newData);

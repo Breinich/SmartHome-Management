@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface SensorRepository extends JpaRepository<Sensor, Integer> {
 
     Optional<Sensor> findByName(String name);
+
     List<Sensor> findAllByRoomAndType(Room room, Type type);
 
 }

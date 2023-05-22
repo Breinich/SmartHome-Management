@@ -21,10 +21,9 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final UserDetailsServiceImpl userDetailsService;
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
-
-    private final UserDetailsServiceImpl userDetailsService;
 
     public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;

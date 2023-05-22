@@ -22,7 +22,7 @@ import java.util.Optional;
 import static java.lang.String.format;
 
 @RestController
-@RequestMapping(path="")
+@RequestMapping(path = "")
 public class BaseController {
 
     private final RoomRepository roomRepository;
@@ -43,27 +43,26 @@ public class BaseController {
     }
 
     @GetMapping
-    public ResponseEntity<String> getBase(){
+    public ResponseEntity<String> getBase() {
         return ResponseEntity.ok("Welcome to SmartHome API");
     }
 
-    @GetMapping(path="api/v1/smarthome/status")
+    @GetMapping(path = "api/v1/smarthome/status")
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public ResponseEntity<String> getStatus(){
+    public ResponseEntity<String> getStatus() {
 
-        HashMap<String,String> status = new HashMap<>();
+        HashMap<String, String> status = new HashMap<>();
 
         //ping all sensors and actuators
-        for(Sensor sensor : sensorRepository.findAll()){
+        for (Sensor sensor : sensorRepository.findAll()) {
             Long sent = System.currentTimeMillis();
             try {
                 Long back = restTemplate.getForObject(sensor.getApiEndpoint() + "ping/{time}", Long.class, sent);
-                if(back == null)
+                if (back == null)
                     throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Sensor not found");
 
                 status.put("Sensor " + sensor.getName(), format("Ping: %d ms", back - sent));
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 status.put("Sensor " + sensor.getName(), "Not reachable");
             }
         }
@@ -73,8 +72,7 @@ public class BaseController {
                 Long back = restTemplate.getForObject(actuator.getApiEndpoint() + "ping/{time}", Long.class, sent);
                 if (back != null)
                     status.put("Actuator " + actuator.getName(), format("Ping: %d ms", back - sent));
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 status.put("Actuator " + actuator.getName(), "Not reachable");
             }
         }
@@ -84,12 +82,11 @@ public class BaseController {
         roomRepository.save(testRoom);
         status.put("DB - save", "OK");
         Optional<Room> res = roomRepository.findRoomByName("TestRoomgvjhdsfhgwefgsdljhfbsdljahfgsdl");
-        if(res.isPresent()) {
+        if (res.isPresent()) {
             status.put("DB - read", "OK");
             roomRepository.delete(res.get());
             status.put("DB - delete", "OK");
-        }
-        else
+        } else
             status.put("DB - read", "FAILED");
 
         status.put("API", "OK");

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="api/v1/smarthome/command")
+@RequestMapping(path = "api/v1/smarthome/command")
 public class ActuatorCommandController {
     private final CommandDataService commandDataService;
 
@@ -21,8 +21,8 @@ public class ActuatorCommandController {
 
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public ResponseEntity<String> getData(){
-        List<ActuatorCommand> list =  commandDataService.getData();
+    public ResponseEntity<String> getData() {
+        List<ActuatorCommand> list = commandDataService.getData();
         ObjectMapper mapper = new ObjectMapper();
         String json;
         try {
@@ -35,19 +35,19 @@ public class ActuatorCommandController {
 
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
-    public void registerNewData(@Valid @RequestBody ActuatorCommand command){
+    public void registerNewData(@Valid @RequestBody ActuatorCommand command) {
         commandDataService.addNewCommand(command);
     }
 
     @DeleteMapping(path = "{dataId}")
     @PreAuthorize("hasRole('HOMIE')")
-    public void deleteData(@Valid @PathVariable("dataId") Integer dataId){
+    public void deleteData(@Valid @PathVariable("dataId") Integer dataId) {
         commandDataService.deleteCommand(dataId);
     }
 
     @PutMapping
     @PreAuthorize("hasRole('HOMIE')")
-    public void updateData(@RequestBody ActuatorCommand command){
+    public void updateData(@RequestBody ActuatorCommand command) {
         commandDataService.updateCommand(command);
     }
 }

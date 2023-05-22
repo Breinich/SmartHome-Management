@@ -13,6 +13,8 @@ import java.util.Date;
 @Entity
 @Table
 public class ActuatorCommand {
+    @Temporal(TemporalType.TIMESTAMP)
+    private final Date timestamp = new Date(System.currentTimeMillis());
     @Id
     @SequenceGenerator(
             name = "data_sequence",
@@ -24,7 +26,6 @@ public class ActuatorCommand {
             generator = "data_sequence"
     )
     private Integer commandId;
-
     @ManyToOne
     @NotNull
     private Room room;
@@ -38,17 +39,11 @@ public class ActuatorCommand {
     private Type consequenceType;
     @NotNull
     private Integer consequenceValue;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     @NotNull
-    private User user ;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private final Date timestamp = new Date(System.currentTimeMillis());
-
+    private User user;
     private Date expirationDate;
-
 
 
     private Date startDate;
@@ -64,16 +59,32 @@ public class ActuatorCommand {
         return premiseType;
     }
 
+    public void setPremiseType(Type premiseType) {
+        this.premiseType = premiseType;
+    }
+
     public Integer getPremiseValue() {
         return premiseValue;
+    }
+
+    public void setPremiseValue(Integer premiseValue) {
+        this.premiseValue = premiseValue;
     }
 
     public Type getConsequenceType() {
         return consequenceType;
     }
 
+    public void setConsequenceType(Type consequenceType) {
+        this.consequenceType = consequenceType;
+    }
+
     public @NotNull Integer getConsequenceValue() {
         return consequenceValue;
+    }
+
+    public void setConsequenceValue(@NotNull Integer consequenceValue) {
+        this.consequenceValue = consequenceValue;
     }
 
     public @NotNull User getUser() {
@@ -84,28 +95,12 @@ public class ActuatorCommand {
         return timestamp;
     }
 
-    public void setPremiseType(Type premiseType) {
-        this.premiseType = premiseType;
-    }
-
-    public void setPremiseValue(Integer premiseValue) {
-        this.premiseValue = premiseValue;
-    }
-
-    public void setConsequenceType(Type consequenceType) {
-        this.consequenceType = consequenceType;
-    }
-
-    public void setConsequenceValue(@NotNull Integer consequenceValue) {
-        this.consequenceValue = consequenceValue;
+    public Date getExpirationDate() {
+        return expirationDate;
     }
 
     public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
-    }
-
-    public Date getExpirationDate() {
-        return expirationDate;
     }
 
     public Date getStartDate() {
@@ -127,6 +122,7 @@ public class ActuatorCommand {
     public @NotNull Room getRoom() {
         return room;
     }
+
     public void setRoom(@NotNull Room room) {
         this.room = room;
     }

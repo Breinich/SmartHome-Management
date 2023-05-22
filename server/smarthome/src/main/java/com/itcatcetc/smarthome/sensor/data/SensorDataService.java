@@ -5,7 +5,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
@@ -18,12 +17,12 @@ public class SensorDataService {
         this.sensorDataRepository = sensorDataRepository;
     }
 
-    public List<SensorData> getData(){
+    public List<SensorData> getData() {
         return sensorDataRepository.findAll();
     }
 
     public void addNewData(SensorData sensorData) {
-        if(sensorData.getDataId() != null){
+        if (sensorData.getDataId() != null) {
             throw new IllegalArgumentException("dataId must be null");
         }
 
@@ -32,7 +31,7 @@ public class SensorDataService {
 
     public void deleteData(Integer dataId) {
         boolean exists = sensorDataRepository.existsById(dataId);
-        if(!exists){
+        if (!exists) {
             throw new IllegalArgumentException("Data with id " + dataId + " does not exists");
         }
         sensorDataRepository.deleteById(dataId);

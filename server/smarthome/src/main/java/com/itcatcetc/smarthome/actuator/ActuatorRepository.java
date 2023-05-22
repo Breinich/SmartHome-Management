@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface ActuatorRepository extends JpaRepository<Actuator, Integer> {
 
     Optional<Actuator> findByName(String name);
+
     List<Actuator> findAllByRoomAndType(Room room, Type type);
 
 }

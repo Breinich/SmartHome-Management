@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="api/v1/smarthome/sensordata")
+@RequestMapping(path = "api/v1/smarthome/sensordata")
 public class SensorDataController {
     private final SensorDataService sensorDataService;
 
@@ -21,11 +21,11 @@ public class SensorDataController {
 
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public ResponseEntity<String> getData(){
-        List<SensorData> data =  sensorDataService.getData();
+    public ResponseEntity<String> getData() {
+        List<SensorData> data = sensorDataService.getData();
         String res;
         ObjectMapper objectMapper = new ObjectMapper();
-        try{
+        try {
             res = objectMapper.writeValueAsString(data);
         } catch (Exception e) {
             res = data.toString();
@@ -35,13 +35,13 @@ public class SensorDataController {
 
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
-    public void registerNewData(@Valid @RequestBody SensorData sensorData){
+    public void registerNewData(@Valid @RequestBody SensorData sensorData) {
         sensorDataService.addNewData(sensorData);
     }
 
     @DeleteMapping(path = "{dataId}")
     @PreAuthorize("hasRole('HOMIE')")
-    public void deleteData(@Valid @PathVariable("dataId") Integer dataId){
+    public void deleteData(@Valid @PathVariable("dataId") Integer dataId) {
         sensorDataService.deleteData(dataId);
     }
 }

@@ -77,7 +77,7 @@ public class RoomServiceTest {
         Mockito.when(repository.findById(room.getRoomId())).thenReturn(Optional.of(room));
         Mockito.when(repository.findRoomByName("Bedroom")).thenReturn(Optional.empty());
 
-        Room room1= new Room();
+        Room room1 = new Room();
         room1.setName("Bedroom");
 
         Field f1 = room1.getClass().getDeclaredField("roomId");
@@ -95,7 +95,7 @@ public class RoomServiceTest {
     public void testUpdateRoomThatDoesntExist() throws NoSuchFieldException, IllegalAccessException {
         Mockito.when(repository.findById(room.getRoomId())).thenReturn(Optional.empty());
 
-        Room room1= new Room();
+        Room room1 = new Room();
         room1.setName("Bedroom");
 
         Field f1 = room1.getClass().getDeclaredField("roomId");
@@ -114,7 +114,7 @@ public class RoomServiceTest {
         Mockito.when(repository.findById(room.getRoomId())).thenReturn(Optional.of(room));
         Mockito.when(repository.findRoomByName("Bedroom")).thenReturn(Optional.of(room2));
 
-        Room room1= new Room();
+        Room room1 = new Room();
         room1.setName("Bedroom");
 
         Field f1 = room1.getClass().getDeclaredField("roomId");
@@ -131,7 +131,7 @@ public class RoomServiceTest {
     public void testUpdateRoomWithNullName() throws NoSuchFieldException, IllegalAccessException {
         Mockito.when(repository.findById(room.getRoomId())).thenReturn(Optional.of(room));
 
-        Room room1= new Room();
+        Room room1 = new Room();
         room1.setName(null);
 
         Field f1 = room1.getClass().getDeclaredField("roomId");

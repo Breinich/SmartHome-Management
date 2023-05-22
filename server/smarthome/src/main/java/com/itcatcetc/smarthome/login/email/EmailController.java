@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path="api/v1/smarthome/email")
+@RequestMapping(path = "api/v1/smarthome/email")
 public class EmailController {
 
     @Autowired
@@ -18,8 +18,7 @@ public class EmailController {
     // Sending a simple Email
     @PostMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public String sendMail(@Valid @RequestBody EmailDetails details)
-    {
+    public String sendMail(@Valid @RequestBody EmailDetails details) {
         return emailService.sendSimpleMail(details);
     }
 }

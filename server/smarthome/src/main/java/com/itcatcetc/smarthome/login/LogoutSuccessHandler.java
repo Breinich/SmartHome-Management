@@ -7,7 +7,6 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
-
 import java.io.IOException;
 
 public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {

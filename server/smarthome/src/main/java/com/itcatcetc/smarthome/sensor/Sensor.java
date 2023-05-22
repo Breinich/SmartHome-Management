@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
 import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.sensor.data.SensorData;
 import com.itcatcetc.smarthome.type.Type;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
@@ -41,7 +40,7 @@ public class Sensor {
     @JoinColumn(name = "roomId", referencedColumnName = "roomId")
     private Room room;
 
-    @OneToMany(mappedBy="sensor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sensor", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<SensorData> sensorDatas;
 
@@ -65,12 +64,12 @@ public class Sensor {
         return name;
     }
 
-    public Type getType() {
-        return type;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public void setType(Type type) {

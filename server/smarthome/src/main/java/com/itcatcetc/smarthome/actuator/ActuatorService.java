@@ -20,13 +20,13 @@ public class ActuatorService {
         this.actuatorRepository = actuatorRepository;
     }
 
-    public List<Actuator> getActuators(){
+    public List<Actuator> getActuators() {
         return actuatorRepository.findAll();
     }
 
     public void addNewActuator(Actuator actuator) {
-        Optional<Actuator> actuatorOptional= actuatorRepository.findByName(actuator.getName());
-        if(actuatorOptional.isPresent()) {
+        Optional<Actuator> actuatorOptional = actuatorRepository.findByName(actuator.getName());
+        if (actuatorOptional.isPresent()) {
             throw new IllegalArgumentException("name taken");
         }
 
@@ -36,7 +36,7 @@ public class ActuatorService {
 
     public void deleteActuator(Integer actuatorId) {
         boolean exists = actuatorRepository.existsById(actuatorId);
-        if(!exists){
+        if (!exists) {
             throw new IllegalArgumentException("actuator with id " + actuatorId + " does not exists");
         }
         actuatorRepository.deleteById(actuatorId);
@@ -47,23 +47,23 @@ public class ActuatorService {
     public void updateActuator(Actuator newActuator) {
         Actuator actuator = actuatorRepository.findById(newActuator.getActuatorId()).orElseThrow(() -> new IllegalArgumentException("actuator with id " + newActuator.getActuatorId() + " does not exists"));
 
-        if(newActuator.getName() != null && newActuator.getName().length() > 0 && !Objects.equals(actuator.getName(), newActuator.getName())){
-            Optional<Actuator> actuatorOptional= actuatorRepository.findByName(newActuator.getName());
-            if(actuatorOptional.isPresent()) {
+        if (newActuator.getName() != null && newActuator.getName().length() > 0 && !Objects.equals(actuator.getName(), newActuator.getName())) {
+            Optional<Actuator> actuatorOptional = actuatorRepository.findByName(newActuator.getName());
+            if (actuatorOptional.isPresent()) {
                 throw new IllegalArgumentException("name taken");
             }
             actuator.setName(newActuator.getName());
         }
 
-        if(newActuator.getType() != null && !Objects.equals(actuator.getType(), newActuator.getType())){
+        if (newActuator.getType() != null && !Objects.equals(actuator.getType(), newActuator.getType())) {
             actuator.setType(newActuator.getType());
         }
 
-        if(newActuator.getRoom() != null && !Objects.equals(actuator.getRoom(), newActuator.getRoom())){
+        if (newActuator.getRoom() != null && !Objects.equals(actuator.getRoom(), newActuator.getRoom())) {
             actuator.setRoom(newActuator.getRoom());
         }
 
-        if(newActuator.getApiEndpoint() != null && newActuator.getApiEndpoint().length() > 0 && !Objects.equals(actuator.getApiEndpoint(), newActuator.getApiEndpoint())){
+        if (newActuator.getApiEndpoint() != null && newActuator.getApiEndpoint().length() > 0 && !Objects.equals(actuator.getApiEndpoint(), newActuator.getApiEndpoint())) {
             actuator.setApiEndpoint(newActuator.getApiEndpoint());
         }
 

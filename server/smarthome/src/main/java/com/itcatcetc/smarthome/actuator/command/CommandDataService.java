@@ -22,17 +22,17 @@ public class CommandDataService {
         this.commandDataRepository = commandDataRepository;
     }
 
-    public List<ActuatorCommand> getData(){
+    public List<ActuatorCommand> getData() {
         return commandDataRepository.findAll();
     }
 
     public void addNewCommand(ActuatorCommand command) {
-       Optional<ActuatorCommand> dataOptional= commandDataRepository.findByCommandId(command.getCommandId());
-        if(dataOptional.isPresent()) {
+        Optional<ActuatorCommand> dataOptional = commandDataRepository.findByCommandId(command.getCommandId());
+        if (dataOptional.isPresent()) {
             throw new IllegalArgumentException("id taken");
         }
 
-        if(command.getStartDate() == null)
+        if (command.getStartDate() == null)
             command.setStartDate(command.getTimestamp());
 
         commandDataRepository.save(command);
@@ -40,7 +40,7 @@ public class CommandDataService {
 
     public void deleteCommand(Integer dataId) {
         boolean exists = commandDataRepository.existsById(dataId);
-        if(!exists){
+        if (!exists) {
             throw new IllegalArgumentException("Data with id " + dataId + " does not exists");
         }
         commandDataRepository.deleteById(dataId);

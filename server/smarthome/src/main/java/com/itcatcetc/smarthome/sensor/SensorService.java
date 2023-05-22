@@ -23,23 +23,23 @@ public class SensorService {
         this.sensorRepository = sensorRepository;
     }
 
-    public List<Sensor> getSensors(){
+    public List<Sensor> getSensors() {
         return sensorRepository.findAll();
     }
 
     public void addNewSensor(Sensor sensor) {
-       Optional<Sensor> sensorOptional= sensorRepository.findByName(sensor.getName());
-       if(sensorOptional.isPresent()) {
-                    throw new IllegalArgumentException("name taken");
-       }
+        Optional<Sensor> sensorOptional = sensorRepository.findByName(sensor.getName());
+        if (sensorOptional.isPresent()) {
+            throw new IllegalArgumentException("name taken");
+        }
 
-       sensorRepository.save(sensor);
+        sensorRepository.save(sensor);
 
     }
 
     public void deleteSensor(Integer sensorId) {
         boolean exists = sensorRepository.existsById(sensorId);
-        if(!exists){
+        if (!exists) {
             throw new IllegalArgumentException("sensor with id " + sensorId + " does not exists");
         }
         sensorRepository.deleteById(sensorId);
@@ -50,23 +50,23 @@ public class SensorService {
     public void updateSensor(Sensor newSensor) {
         Sensor sensor = sensorRepository.findById(newSensor.getSensorId()).orElseThrow(() -> new IllegalArgumentException("sensor with id " + newSensor.getSensorId() + " does not exists"));
 
-        if(newSensor.getName() != null && newSensor.getName().length() > 0 && !Objects.equals(sensor.getName(), newSensor.getName())){
-            Optional<Sensor> sensorOptional= sensorRepository.findByName(newSensor.getName());
-            if(sensorOptional.isPresent()) {
+        if (newSensor.getName() != null && newSensor.getName().length() > 0 && !Objects.equals(sensor.getName(), newSensor.getName())) {
+            Optional<Sensor> sensorOptional = sensorRepository.findByName(newSensor.getName());
+            if (sensorOptional.isPresent()) {
                 throw new IllegalArgumentException("name taken");
             }
             sensor.setName(newSensor.getName());
         }
 
-        if(newSensor.getType() != null && !Objects.equals(sensor.getType(), newSensor.getType())){
+        if (newSensor.getType() != null && !Objects.equals(sensor.getType(), newSensor.getType())) {
             sensor.setType(newSensor.getType());
         }
 
-        if(newSensor.getRoom() != null && !Objects.equals(sensor.getRoom(), newSensor.getRoom())){
+        if (newSensor.getRoom() != null && !Objects.equals(sensor.getRoom(), newSensor.getRoom())) {
             sensor.setRoom(newSensor.getRoom());
         }
 
-        if(newSensor.getApiEndpoint() != null && newSensor.getApiEndpoint().length() > 0 && !Objects.equals(sensor.getApiEndpoint(), newSensor.getApiEndpoint())){
+        if (newSensor.getApiEndpoint() != null && newSensor.getApiEndpoint().length() > 0 && !Objects.equals(sensor.getApiEndpoint(), newSensor.getApiEndpoint())) {
             sensor.setApiEndpoint(newSensor.getApiEndpoint());
         }
     }

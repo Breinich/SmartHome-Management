@@ -22,7 +22,7 @@ import java.security.Principal;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path="api/v1/smarthome/auth")
+@RequestMapping(path = "api/v1/smarthome/auth")
 public class AuthController {
 
     @Autowired
@@ -83,7 +83,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@Valid @RequestBody UserHeader user){
+    public ResponseEntity<String> authenticateUser(@Valid @RequestBody UserHeader user) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getEmail(), user.getPassword()));
 
@@ -92,7 +92,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody UserHeader userH){
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserHeader userH) {
 
         User user = new User();
         user.setEmail(userH.getEmail());
@@ -101,7 +101,7 @@ public class AuthController {
         user.setLastName(userH.getLastName());
 
         // add check for email exists in DB
-        if(userRepository.existsByEmail(user.getEmail())){
+        if (userRepository.existsByEmail(user.getEmail())) {
             return new ResponseEntity<>("Email is already taken!", HttpStatus.BAD_REQUEST);
         }
 

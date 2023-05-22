@@ -13,17 +13,17 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name="user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name="first_name")
+    @Column(name = "first_name")
     @Pattern(regexp = "^[a-zA-Z]+$")
     private String firstName;
-    @Column(name="last_name")
+    @Column(name = "last_name")
     @Pattern(regexp = "^[a-zA-Z]+$")
     private String lastName;
     @Column(unique = true, nullable = false, length = 45)
@@ -44,7 +44,7 @@ public class User {
 
 
     public User() {
-    	roles = new ArrayList<>();
+        roles = new ArrayList<>();
         commands = new ArrayList<>();
     }
 
@@ -93,15 +93,15 @@ public class User {
     }
 
     public void addCommand(ActuatorCommand command) {
-    	commands.add(command);
+        commands.add(command);
     }
 
     public void removeCommand(ActuatorCommand command) {
-    	commands.remove(command);
+        commands.remove(command);
     }
 
     public List<ActuatorCommand> getCommands() {
-    	return commands;
+        return commands;
     }
 
     @Override

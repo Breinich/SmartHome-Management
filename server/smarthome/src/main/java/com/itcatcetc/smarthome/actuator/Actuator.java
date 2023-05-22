@@ -30,15 +30,6 @@ public class Actuator {
     @Pattern(regexp = "^https://(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\." +
             "(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))/[a-z0-9/]*$")
     private String apiEndpoint;
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId", referencedColumnName = "roomId")
     private Room room;
@@ -54,6 +45,14 @@ public class Actuator {
         this.apiEndpoint = apiEndpoint;
     }
 
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
     public Integer getActuatorId() {
         return actuatorId;
     }
@@ -62,12 +61,12 @@ public class Actuator {
         return name;
     }
 
-    public Type getType() {
-        return type;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public void setType(Type type) {

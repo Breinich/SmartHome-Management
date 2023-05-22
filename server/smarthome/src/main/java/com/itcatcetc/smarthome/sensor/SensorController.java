@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="api/v1/smarthome/sensors")
+@RequestMapping(path = "api/v1/smarthome/sensors")
 public class SensorController {
     private final SensorService sensorService;
 
@@ -24,33 +24,33 @@ public class SensorController {
 
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public ResponseEntity<String> getSensors(){
+    public ResponseEntity<String> getSensors() {
         List<Sensor> sensors = sensorService.getSensors();
         ObjectMapper objectMapper = new ObjectMapper();
         String res;
         try {
             res = objectMapper.writeValueAsString(sensors);
         } catch (JsonProcessingException e) {
-            res =  sensors.toString();
+            res = sensors.toString();
         }
         return ResponseEntity.ok(res);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
-    public void registerNewSensor(@Valid @RequestBody  Sensor sensor){
+    public void registerNewSensor(@Valid @RequestBody Sensor sensor) {
         sensorService.addNewSensor(sensor);
     }
 
     @DeleteMapping(path = "{sensorId}")
     @PreAuthorize("hasRole('HOMIE')")
-    public void deleteSensor(@Valid @PathVariable("sensorId") Integer sensorId){
+    public void deleteSensor(@Valid @PathVariable("sensorId") Integer sensorId) {
         sensorService.deleteSensor(sensorId);
     }
 
     @PutMapping
     @PreAuthorize("hasRole('HOMIE')")
-    public void updateSensor(@Valid @RequestBody Sensor sensor){
+    public void updateSensor(@Valid @RequestBody Sensor sensor) {
         sensorService.updateSensor(sensor);
     }
 
@@ -58,7 +58,7 @@ public class SensorController {
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public ResponseEntity<String> getSensorDatasInTimeRange(@Valid @PathVariable("sensorId") Integer sensorId,
                                                             @PathVariable("startTime") Long start,
-                                                            @PathVariable("endTime") Long end){
+                                                            @PathVariable("endTime") Long end) {
         Date startTime = new Date(start);
         Date endTime = new Date(end);
 
@@ -69,7 +69,7 @@ public class SensorController {
         try {
             res = objectMapper.writeValueAsString(data);
         } catch (JsonProcessingException e) {
-            res =  data.toString();
+            res = data.toString();
         }
         return ResponseEntity.ok(res);
     }

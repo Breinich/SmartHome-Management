@@ -1,11 +1,9 @@
 package com.itcatcetc.smarthome.sensor;
 
 
-
 import com.itcatcetc.smarthome.sensor.data.SensorData;
-import org.springframework.data.jpa.domain.Specification;
-
 import jakarta.persistence.criteria.Join;
+import org.springframework.data.jpa.domain.Specification;
 
 public class SensorSpecifications {
     public static Specification<Sensor> hasName(String name) {

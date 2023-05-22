@@ -4,14 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
 import com.itcatcetc.smarthome.sensor.Sensor;
 import com.itcatcetc.smarthome.type.Type;
-
 import jakarta.persistence.*;
+
 import java.util.Date;
 
 
 @Entity
 @Table
 public class SensorData {
+    @Temporal(TemporalType.TIMESTAMP)
+    private final Date timestamp = new Date(System.currentTimeMillis());
     @Id
     @SequenceGenerator(
             name = "data_sequence",
@@ -25,14 +27,10 @@ public class SensorData {
     private Integer dataId;
     @Enumerated(EnumType.STRING)
     private Type type;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sensorId", referencedColumnName = "sensorId")
     private Sensor sensor;
     private Integer value;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private final Date timestamp = new Date(System.currentTimeMillis());
 
     public SensorData() {
     }
@@ -51,15 +49,16 @@ public class SensorData {
         return value;
     }
 
+    public void setValue(Integer value) {
+        this.value = value;
+    }
+
     public Type getType() {
         return type;
     }
 
     public Date getTimestamp() {
         return timestamp;
-    }
-    public void setValue(Integer value) {
-        this.value = value;
     }
 
     public String toString() {
@@ -78,7 +77,6 @@ public class SensorData {
                     '}';
         }
     }
-
 
 
 }

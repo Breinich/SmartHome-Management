@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="api/v1/smarthome/actuators")
+@RequestMapping(path = "api/v1/smarthome/actuators")
 public class ActuatorController {
     private final ActuatorService actuatorService;
 
@@ -22,8 +22,8 @@ public class ActuatorController {
 
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public ResponseEntity<String> getActuators(){
-        List<Actuator> list =  actuatorService.getActuators();
+    public ResponseEntity<String> getActuators() {
+        List<Actuator> list = actuatorService.getActuators();
         ObjectMapper mapper = new ObjectMapper();
         String json;
         try {
@@ -36,19 +36,19 @@ public class ActuatorController {
 
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
-    public void registerNewActuator(@Valid @RequestBody  Actuator actuator){
+    public void registerNewActuator(@Valid @RequestBody Actuator actuator) {
         actuatorService.addNewActuator(actuator);
     }
 
     @DeleteMapping(path = "{actuatorId}")
     @PreAuthorize("hasRole('HOMIE')")
-    public void deleteActuator(@Valid @PathVariable("actuatorId") Integer actuatorId){
+    public void deleteActuator(@Valid @PathVariable("actuatorId") Integer actuatorId) {
         actuatorService.deleteActuator(actuatorId);
     }
 
     @PutMapping
     @PreAuthorize("hasRole('HOMIE')")
-    public void updateActuator(@Valid @RequestBody Actuator actuator){
+    public void updateActuator(@Valid @RequestBody Actuator actuator) {
         actuatorService.updateActuator(actuator);
     }
 }

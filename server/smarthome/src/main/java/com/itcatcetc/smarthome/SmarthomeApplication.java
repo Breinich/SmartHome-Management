@@ -1,4 +1,5 @@
 package com.itcatcetc.smarthome;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -10,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class SmarthomeApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SmarthomeApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SmarthomeApplication.class, args);
+    }
 }

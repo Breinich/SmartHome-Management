@@ -150,7 +150,7 @@ public class SensorServiceTest {
      * 5. name and type are the same as the existing ones
      */
     @Test
-    public void testUpdateSensor() {
+    public void testUpdateSensor() throws NoSuchFieldException, IllegalAccessException {
         Integer id = sensor.getSensorId();
         String name = "uj";
         Type type = Type.HUMIDITY;
@@ -162,7 +162,10 @@ public class SensorServiceTest {
                 type,
                 room,
                 "");
-        testSensor.setSensorId(id);
+
+        Field f1 = testSensor.getClass().getDeclaredField("sensorId");
+        f1.setAccessible(true);
+        f1.set(testSensor, id);
 
         controller.updateSensor(testSensor);
 

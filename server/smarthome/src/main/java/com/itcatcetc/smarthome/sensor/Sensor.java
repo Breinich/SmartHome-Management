@@ -61,10 +61,6 @@ public class Sensor {
         return sensorId;
     }
 
-    public void setSensorId(Integer sensorId) {
-        this.sensorId = sensorId;
-    }
-
     public String getName() {
         return name;
     }
@@ -95,11 +91,6 @@ public class Sensor {
 
     public void setApiEndpoint(String apiEndpoint) {
         this.apiEndpoint = apiEndpoint;
-    }
-
-
-    public void addSensorData(SensorData sensorData){
-        sensorDatas.add(sensorData);
     }
 
 

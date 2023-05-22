@@ -80,10 +80,10 @@ public class Config {
             }
 
             //read and write to DB
-            Room testRoom = new Room("TestRoom");
+            Room testRoom = new Room("TestRoomhfiufehiusdfhsdhfihweufhweufhweu");
             roomRepository.save(testRoom);
             logger.info(format("Saved room: %s", testRoom));
-            Optional<Room> res = roomRepository.findRoomByName("TestRoom");
+            Optional<Room> res = roomRepository.findRoomByName("TestRoomhfiufehiusdfhsdhfihweufhweufhweu");
             if(res.isPresent()) {
                 logger.info(format("Found room: %s", res.get()));
                 roomRepository.delete(res.get());

@@ -16,14 +16,10 @@ public interface RoomRepository extends JpaRepository<Room, Integer>, JpaSpecifi
     @Query("SELECT s FROM Room s WHERE s.name = ?1")
     Optional<Room> findRoomByName(String name);
 
-    // @Query( "SELECT pg FROM Book bk join bk.pages pg WHERE bk.bookId = :bookId")
-    // List<Page> findPagesByBookId(@Param("bookId") String bookId);
-    //write something similar to this
-    //WHY?
-    @Query("SELECT s FROM Sensor s WHERE s.room = ?1")
+    @Query("SELECT s FROM Sensor s WHERE s.room.roomId = ?1")
     List<Sensor> findSensorsByRoomId(Integer roomId);
 
-    @Query("SELECT a FROM Actuator a WHERE a.room = ?1")
+    @Query("SELECT a FROM Actuator a WHERE a.room.roomId = ?1")
     List<Actuator> findActuatorsByRoomId(Integer roomId);
 
 }

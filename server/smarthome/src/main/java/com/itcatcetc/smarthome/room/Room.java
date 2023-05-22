@@ -58,13 +58,6 @@ public class Room {
         this.name = name;
     }
 
-    public void addSensor(Sensor sensor){
-        sensors.add(sensor);
-    }
-    public void addActuator(Actuator actuator){
-        actuators.add(actuator);
-    }
-
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new Hibernate6Module()

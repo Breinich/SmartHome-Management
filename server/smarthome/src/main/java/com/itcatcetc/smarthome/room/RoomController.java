@@ -74,9 +74,9 @@ public class RoomController {
         roomService.deleteRoom(roomId);
     }
 
-    @PutMapping(path = "{roomId}")
+    @PutMapping
     @PreAuthorize("hasRole('HOMIE')")
-    public void updateRoom(@Valid @PathVariable("roomId") Integer roomId, @RequestParam(required = false) String name){
-        roomService.updateRoom(roomId, name);
+    public void updateRoom(@Valid @RequestBody Room room){
+        roomService.updateRoom(room);
     }
 }

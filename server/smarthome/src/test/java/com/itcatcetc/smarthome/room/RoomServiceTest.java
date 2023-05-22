@@ -24,7 +24,7 @@ public class RoomServiceTest {
         RoomService service = new RoomService(repository);
         controller = new RoomController(service);
 
-        room = new Room("Living Room");
+        room = new Room("LivingRoom");
 
         Field f1 = room.getClass().getDeclaredField("roomId");
         f1.setAccessible(true);
@@ -44,7 +44,7 @@ public class RoomServiceTest {
     /**
      * Test adding same named room
      */
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAddSameRoom() {
         Mockito.when(repository.findRoomByName(room.getName())).thenReturn(Optional.of(room));
         controller.registerNewRoom(room);
@@ -63,7 +63,7 @@ public class RoomServiceTest {
     /**
      * Test deleting a room that doesn't exist
      */
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testDeleteRoomThatDoesntExist() {
         Mockito.when(repository.existsById(room.getRoomId())).thenReturn(false);
         controller.deleteRoom(room.getRoomId());
@@ -73,41 +73,73 @@ public class RoomServiceTest {
      * Test updating a room
      */
     @Test
-    public void testUpdateRoom() {
+    public void testUpdateRoom() throws NoSuchFieldException, IllegalAccessException {
         Mockito.when(repository.findById(room.getRoomId())).thenReturn(Optional.of(room));
         Mockito.when(repository.findRoomByName("Bedroom")).thenReturn(Optional.empty());
-        controller.updateRoom(room.getRoomId(), "Bedroom");
+
+        Room room1= new Room();
+        room1.setName("Bedroom");
+
+        Field f1 = room1.getClass().getDeclaredField("roomId");
+        f1.setAccessible(true);
+        f1.set(room1, room.getRoomId());
+
+        controller.updateRoom(room1);
         Assert.assertEquals("Bedroom", room.getName());
     }
 
     /**
      * Test updating a room that doesn't exist
      */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateRoomThatDoesntExist() {
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateRoomThatDoesntExist() throws NoSuchFieldException, IllegalAccessException {
         Mockito.when(repository.findById(room.getRoomId())).thenReturn(Optional.empty());
-        controller.updateRoom(room.getRoomId(), "Bedroom");
+
+        Room room1= new Room();
+        room1.setName("Bedroom");
+
+        Field f1 = room1.getClass().getDeclaredField("roomId");
+        f1.setAccessible(true);
+        f1.set(room1, room.getRoomId());
+
+        controller.updateRoom(room1);
     }
 
     /**
      * Test updating a room with a name that already exists
      */
-    @Test(expected = IllegalStateException.class)
-    public void testUpdateRoomWithSameName() {
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateRoomWithSameName() throws NoSuchFieldException, IllegalAccessException {
         Room room2 = new Room("Bedroom");
         Mockito.when(repository.findById(room.getRoomId())).thenReturn(Optional.of(room));
         Mockito.when(repository.findRoomByName("Bedroom")).thenReturn(Optional.of(room2));
-        controller.updateRoom(room.getRoomId(), "Bedroom");
+
+        Room room1= new Room();
+        room1.setName("Bedroom");
+
+        Field f1 = room1.getClass().getDeclaredField("roomId");
+        f1.setAccessible(true);
+        f1.set(room1, room.getRoomId());
+
+        controller.updateRoom(room1);
     }
 
     /**
      * Test updating a room with a null name
      */
     @Test
-    public void testUpdateRoomWithNullName() {
+    public void testUpdateRoomWithNullName() throws NoSuchFieldException, IllegalAccessException {
         Mockito.when(repository.findById(room.getRoomId())).thenReturn(Optional.of(room));
-        controller.updateRoom(room.getRoomId(), null);
-        Assert.assertEquals("Living Room", room.getName());
+
+        Room room1= new Room();
+        room1.setName(null);
+
+        Field f1 = room1.getClass().getDeclaredField("roomId");
+        f1.setAccessible(true);
+        f1.set(room1, room.getRoomId());
+
+        controller.updateRoom(room1);
+        Assert.assertEquals("LivingRoom", room.getName());
     }
 
     /**

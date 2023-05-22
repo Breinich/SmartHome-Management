@@ -47,15 +47,15 @@ public class RoomService {
 
 
     @Transactional
-    public void updateRoom(Integer roomId, String name) {
-        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("room with id " + roomId + " does not exists"));
+    public void updateRoom(Room room) {
+        Room oldRoom = roomRepository.findById(room.getRoomId()).orElseThrow(() -> new IllegalArgumentException("room with id " + room.getRoomId() + " does not exists"));
 
-        if(name != null && name.length() > 0 && !Objects.equals(room.getName(), name)){
-            Optional<Room> roomOptional= roomRepository.findRoomByName(name);
+        if(room.getName() != null && room.getName().length() > 0 && !Objects.equals(room.getName(), oldRoom.getName())){
+            Optional<Room> roomOptional= roomRepository.findRoomByName(room.getName());
             if(roomOptional.isPresent()) {
                 throw new IllegalArgumentException("name taken");
             }
-            room.setName(name);
+            oldRoom.setName(room.getName());
         }
     }
 

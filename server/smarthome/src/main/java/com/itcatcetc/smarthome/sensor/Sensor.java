@@ -10,8 +10,8 @@ import com.itcatcetc.smarthome.type.Type;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -34,7 +34,7 @@ public class Sensor {
     @Enumerated(EnumType.STRING)
     private Type type;
     @Pattern(regexp = "^https://(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\." +
-            "(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))[a-z0-9/]*$")
+            "(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))/[a-z0-9/]*$")
     private String apiEndpoint;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -123,11 +123,15 @@ public class Sensor {
         }
     }
 
-    public void getSensorDatasInTimeRange(Timestamp startTime, Timestamp endTime) {
+    public List<SensorData> getSensorDatasInTimeRange(Date startTime, Date endTime) {
+        List<SensorData> sensorDatasInTimeRange = new ArrayList<>();
+
         for (SensorData sensorData : sensorDatas) {
             if (sensorData.getTimestamp().after(startTime) && sensorData.getTimestamp().before(endTime)) {
-                System.out.println(sensorData);
+                sensorDatasInTimeRange.add(sensorData);
             }
         }
+
+        return sensorDatasInTimeRange;
     }
 }

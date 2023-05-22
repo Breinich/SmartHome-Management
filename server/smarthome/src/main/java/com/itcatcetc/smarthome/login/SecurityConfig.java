@@ -59,7 +59,7 @@ public class SecurityConfig {
                 .logoutSuccessHandler(new LogoutSuccessHandler())
                 .and().httpBasic().authenticationEntryPoint(restAuthenticationEntryPoint)
                 //.and().formLogin().failureHandler(authenticationFailureHandler())
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
 
         return http.build();
     }

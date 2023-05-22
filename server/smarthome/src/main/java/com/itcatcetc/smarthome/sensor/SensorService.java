@@ -1,12 +1,13 @@
 package com.itcatcetc.smarthome.sensor;
 
 
+import com.itcatcetc.smarthome.sensor.data.SensorData;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -70,8 +71,8 @@ public class SensorService {
         }
     }
 
-    public void getSensorDatasInTimeRange(Integer sensorId, Timestamp startTime, Timestamp endTime) {
+    public List<SensorData> getSensorDatasInTimeRange(Integer sensorId, Date startTime, Date endTime) {
         Sensor sensor = sensorRepository.findById(sensorId).orElseThrow(() -> new IllegalArgumentException("sensor with id " + sensorId + " does not exists"));
-        sensor.getSensorDatasInTimeRange(startTime, endTime);
+        return sensor.getSensorDatasInTimeRange(startTime, endTime);
     }
 }

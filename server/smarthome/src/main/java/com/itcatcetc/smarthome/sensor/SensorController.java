@@ -2,13 +2,14 @@ package com.itcatcetc.smarthome.sensor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itcatcetc.smarthome.sensor.data.SensorData;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -55,7 +56,21 @@ public class SensorController {
 
     @GetMapping(path = "{sensorId}/data/{startTime}/{endTime}")
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public void getSensorDatasInTimeRange(Integer sensorId, Timestamp startTime, Timestamp endTime){
-        sensorService.getSensorDatasInTimeRange(sensorId, startTime, endTime);
+    public ResponseEntity<String> getSensorDatasInTimeRange(@Valid @PathVariable("sensorId") Integer sensorId,
+                                                            @PathVariable("startTime") Long start,
+                                                            @PathVariable("endTime") Long end){
+        Date startTime = new Date(start);
+        Date endTime = new Date(end);
+
+        List<SensorData> data = sensorService.getSensorDatasInTimeRange(sensorId, startTime, endTime);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String res;
+        try {
+            res = objectMapper.writeValueAsString(data);
+        } catch (JsonProcessingException e) {
+            res =  data.toString();
+        }
+        return ResponseEntity.ok(res);
     }
 }

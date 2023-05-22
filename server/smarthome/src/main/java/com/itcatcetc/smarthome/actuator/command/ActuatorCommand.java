@@ -6,7 +6,6 @@ import com.itcatcetc.smarthome.login.user.User;
 import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.type.Type;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
@@ -36,14 +35,13 @@ public class ActuatorCommand {
     private boolean greaterThan;
     private Integer premiseValue;
     @Enumerated(EnumType.STRING)
-    @NotEmpty
     private Type consequenceType;
     @NotNull
     private Integer consequenceValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
-    @NotEmpty
+    @NotNull
     private User user ;
 
     @Temporal(TemporalType.TIMESTAMP)

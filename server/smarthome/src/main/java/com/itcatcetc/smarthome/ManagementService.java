@@ -28,7 +28,7 @@ import java.util.Random;
 @Component
 public class ManagementService {
 
-    private static final boolean SENSOR_SIMULATION = true;
+    private static final boolean SENSOR_SIMULATION = false;
 
     @Autowired
     private CommandDataRepository commandDataRepository;

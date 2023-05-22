@@ -1,7 +1,5 @@
 package com.itcatcetc.smarthome.actuator;
 
-import com.itcatcetc.smarthome.room.Room;
-import com.itcatcetc.smarthome.type.Type;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,27 +44,27 @@ public class ActuatorService {
 
 
     @Transactional
-    public void updateActuator(Integer actuatorId, String name, Type type, Room room, String apiUrl) {
-        Actuator actuator = actuatorRepository.findById(actuatorId).orElseThrow(() -> new IllegalArgumentException("actuator with id " + actuatorId + " does not exists"));
+    public void updateActuator(Actuator newActuator) {
+        Actuator actuator = actuatorRepository.findById(newActuator.getActuatorId()).orElseThrow(() -> new IllegalArgumentException("actuator with id " + newActuator.getActuatorId() + " does not exists"));
 
-        if(name!= null && name.length() > 0 && !Objects.equals(actuator.getName(), name)){
-            Optional<Actuator> actuatorOptional= actuatorRepository.findByName(name);
+        if(newActuator.getName() != null && newActuator.getName().length() > 0 && !Objects.equals(actuator.getName(), newActuator.getName())){
+            Optional<Actuator> actuatorOptional= actuatorRepository.findByName(newActuator.getName());
             if(actuatorOptional.isPresent()) {
                 throw new IllegalArgumentException("name taken");
             }
-            actuator.setName(name);
+            actuator.setName(newActuator.getName());
         }
 
-        if(type!= null && !Objects.equals(actuator.getType(), type)){
-            actuator.setType(type);
+        if(newActuator.getType() != null && !Objects.equals(actuator.getType(), newActuator.getType())){
+            actuator.setType(newActuator.getType());
         }
 
-        if(room!= null && !Objects.equals(actuator.getRoom(), room)){
-            actuator.setRoom(room);
+        if(newActuator.getRoom() != null && !Objects.equals(actuator.getRoom(), newActuator.getRoom())){
+            actuator.setRoom(newActuator.getRoom());
         }
 
-        if(apiUrl!= null && apiUrl.length() > 0 && !Objects.equals(actuator.getApiEndpoint(), apiUrl)){
-            actuator.setApiEndpoint(apiUrl);
+        if(newActuator.getApiEndpoint() != null && newActuator.getApiEndpoint().length() > 0 && !Objects.equals(actuator.getApiEndpoint(), newActuator.getApiEndpoint())){
+            actuator.setApiEndpoint(newActuator.getApiEndpoint());
         }
 
     }

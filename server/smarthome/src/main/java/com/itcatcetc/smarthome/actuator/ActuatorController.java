@@ -2,8 +2,6 @@ package com.itcatcetc.smarthome.actuator;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itcatcetc.smarthome.room.Room;
-import com.itcatcetc.smarthome.type.Type;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,11 +46,9 @@ public class ActuatorController {
         actuatorService.deleteActuator(actuatorId);
     }
 
-    @PutMapping(path = "{actuatorId}")
+    @PutMapping
     @PreAuthorize("hasRole('HOMIE')")
-    public void updateActuator(@Valid @PathVariable("actuatorId") Integer actuatorId, @RequestParam(required = false) String name,
-                               @RequestParam(required = false) Type type, @RequestParam(required = false) Room room,
-                               @RequestParam(required = false) String apiUrl){
-        actuatorService.updateActuator(actuatorId, name, type, room, apiUrl);
+    public void updateActuator(@Valid @RequestBody Actuator actuator){
+        actuatorService.updateActuator(actuator);
     }
 }

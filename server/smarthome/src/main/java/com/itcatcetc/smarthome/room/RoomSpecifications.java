@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class RoomSpecifications {
     public static Specification<Room> hasName(String name) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.like(root.<String>get("name"), "%" + name + "%");
+                criteriaBuilder.like(root.get("name"), "%" + name + "%");
     }
 
     public static Specification<Room> hasSensorWithId(Integer sensorId) {

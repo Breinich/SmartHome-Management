@@ -10,7 +10,7 @@ import jakarta.persistence.criteria.Join;
 public class SensorSpecifications {
     public static Specification<Sensor> hasName(String name) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.like(root.<String>get("name"), "%" + name + "%");
+                criteriaBuilder.like(root.get("name"), "%" + name + "%");
     }
 
     public static Specification<Sensor> hasSensorWithId(Integer sensorDataId) {

@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import java.io.IOException;
 
 public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
-    private ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
+    private final ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,

@@ -32,7 +32,7 @@ public class SensorData {
     private Integer value;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date timestamp = new Date(System.currentTimeMillis());
+    private final Date timestamp = new Date(System.currentTimeMillis());
 
     public SensorData() {
     }

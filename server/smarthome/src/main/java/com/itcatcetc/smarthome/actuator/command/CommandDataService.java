@@ -32,6 +32,9 @@ public class CommandDataService {
             throw new IllegalArgumentException("id taken");
         }
 
+        if(command.getStartDate() == null)
+            command.setStartDate(command.getTimestamp());
+
         commandDataRepository.save(command);
     }
 

@@ -24,7 +24,7 @@ public class ActuatorCommandController {
 
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-    public ResponseEntity<String> getDatas(){
+    public ResponseEntity<String> getData(){
         List<ActuatorCommand> list =  commandDataService.getData();
         ObjectMapper mapper = new ObjectMapper();
         String json;

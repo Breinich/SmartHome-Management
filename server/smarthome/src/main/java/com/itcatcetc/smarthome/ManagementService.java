@@ -59,9 +59,12 @@ public class ManagementService {
         List<ActuatorCommand> commands = commandDataRepository.findAll();
         for (ActuatorCommand command : commands) {
             if(command.getStartDate().getTime() < System.currentTimeMillis()){
+                //if command has no expiration date
+                if(command.getExpirationDate() == null)
+                    checkConstraint(command);
 
                 //if command expired
-                if(command.getExpirationDate().getTime() < System.currentTimeMillis()){
+                else if(command.getExpirationDate().getTime() < System.currentTimeMillis()){
 
                     EmailDetails details = new EmailDetails();
                     details.setRecipient(command.getUser().getEmail());
@@ -70,29 +73,31 @@ public class ManagementService {
                     emailService.sendSimpleMail(details);
 
                     commandDataRepository.delete(command);
-                    continue;
                 }
 
                 //if command will expire in 5 seconds
-                if(command.getExpirationDate().getTime() + 5000 >= System.currentTimeMillis()){
+                else if(command.getExpirationDate().getTime() + 5000 >= System.currentTimeMillis()){
 
                     for(Actuator actuator : actuatorRepository.findAllByRoomAndType(command.getRoom(), command.getConsequenceType())) {
                         sendPost(0, actuator);
                     }
                 }
-                else {
+                //if command is still valid
+                else
+                    checkConstraint(command);
+            }
+        }
+    }
 
-                    if (command.getPremiseType() == Type.NONE) {
-                        doCommand(command);
-                    } else {
-                        int avg = getAvgValue(command.getRoom(), command.getPremiseType());
+    private void checkConstraint(ActuatorCommand command){
+        if (command.getPremiseType() == Type.NONE) {
+            doCommand(command);
+        } else {
+            int avg = getAvgValue(command.getRoom(), command.getPremiseType());
 
-                        if ((command.isGreaterThan() && avg > command.getConsequenceValue()) ||
-                                (!command.isGreaterThan() && avg < command.getConsequenceValue())) {
-                            doCommand(command);
-                        }
-                    }
-                }
+            if ((command.isGreaterThan() && avg > command.getConsequenceValue()) ||
+                    (!command.isGreaterThan() && avg < command.getConsequenceValue())) {
+                doCommand(command);
             }
         }
     }

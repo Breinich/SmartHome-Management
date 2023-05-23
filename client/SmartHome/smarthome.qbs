@@ -11,6 +11,8 @@ CppApplication {
         "main.cpp",
         "networkcommunication.cpp",
         "networkcommunication.h",
+        "room.cpp",
+        "room.h",
     ]
 
     Group {

@@ -54,6 +54,7 @@ Page {
                 }
 
                 model: ListModel {
+                    id: listModelAddRoom
                     ListElement {
                         imgsource: "bedroom.jpg"
                     }
@@ -166,12 +167,9 @@ Page {
             if(!bErr)
             {
                 //TODO: communicate with server
+                httpcommunication.createRoom(inputNewRoomName.text, listModelAddRoom.get(listViewAddRoom.currentIndex).imgsource);
                 createRoomDialog.accept();
             }
-        }
-
-        onRejected: {
-
         }
     }
 
@@ -238,7 +236,12 @@ Page {
         model: ListModel {
             id: listViewRoomsModel
         }
+
         Component.onCompleted: {
+            listViewRooms.refreshRooms();
+        }
+
+        function refreshRooms() {
             listViewRoomsModel.clear();
             httpcommunication.getRooms();
         }
@@ -264,6 +267,10 @@ Page {
             function onAddRoomsListItem(id1, name1, image1, bVisible1, id2, name2, image2, bVisible2) {
                 listViewRoomsModel.append({"name1":name1, "visible1":bVisible1, "roomid1":id1, "imgsource1":image1,
                                           "name2":name2, "visible2":bVisible2, "roomid2":id2, "imgsource2":image2});
+            }
+
+            function onCreateRoomFinished() {
+                listViewRooms.refreshRooms();
             }
         }
     }

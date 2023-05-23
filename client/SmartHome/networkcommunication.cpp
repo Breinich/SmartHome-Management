@@ -1,6 +1,9 @@
-#include "networkcommunication.h"
 #include <QByteArray>
 #include <QNetworkReply>
+#include <QRegularExpression>
+#include <QDirIterator>
+#include "networkcommunication.h"
+#include "room.h"
 
 NetworkCommunication::NetworkCommunication(QObject* pParent) : QObject(pParent)
 {
@@ -51,7 +54,14 @@ void NetworkCommunication::slotReplyFinished(QNetworkReply *pReply)
         else if(pReply->request().url().path().endsWith(m_roomsPath))
         {
             emit communicationFinished();
-            handleGetRoomsResponse(pReply);
+            if(pReply->request().header(QNetworkRequest::ContentTypeHeader) == "application/json")
+            {
+                handleCreateRoomResponse(pReply);
+            }
+            else
+            {
+                handleGetRoomsResponse(pReply);
+            }
         }
     }
 }
@@ -66,30 +76,71 @@ void NetworkCommunication::reportErrorToUser(QNetworkReply *pReply)
     }
 }
 
-void NetworkCommunication::sendRequest(const QString& strPath, bool bAuthenticate)
+void NetworkCommunication::addAuthHeader(QNetworkRequest& request)
+{
+    QString credentialsString = QString("%1:%2").arg(m_authenticator.user(), m_authenticator.password());
+    QByteArray base64Encoded(credentialsString.toUtf8().toBase64());
+    QByteArray headerData = "Basic " + base64Encoded;
+    request.setRawHeader("Authorization", headerData);
+}
+
+void NetworkCommunication::sendRequest(const QString& strPath, bool bAuth)
 {
     emit communicationStarted();
     QNetworkRequest request;
     request.setUrl(QUrl(m_baseUrl+strPath));
     request.setTransferTimeout();
-    if(bAuthenticate)
+    if(bAuth)
     {
-        QString credentialsString = QString("%1:%2").arg(m_authenticator.user(), m_authenticator.password());
-        QByteArray base64Encoded(credentialsString.toUtf8().toBase64());
-        QByteArray headerData = "Basic " + base64Encoded;
-        request.setRawHeader("Authorization", headerData);
+        addAuthHeader(request);
     }
     m_pNetManager->get(request);
 }
 
-void NetworkCommunication::sendPost(const QString& strPath, const QByteArray& body)
+void NetworkCommunication::sendPost(const QString& strPath, const QByteArray& body, bool bAuth)
 {
     emit communicationStarted();
     QNetworkRequest request;
     request.setUrl(QUrl(m_baseUrl+strPath));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     request.setTransferTimeout();
+    if(bAuth)
+    {
+        addAuthHeader(request);
+    }
     m_pNetManager->post(request, body);
+}
+
+QString NetworkCommunication::getJsonValue(const QString& sampleText, const QString& key, int idx)
+{
+    QString retVal;
+
+    const QRegularExpression regexpKey("(\"" + key +"\"\\s{0,1}:\\s{0,1})");
+    QRegularExpressionMatch match = regexpKey.match(sampleText);
+    qsizetype startPos = match.capturedEnd();
+    if(idx>0)
+    {
+        for(int i=1; i<=idx; i++)
+        {
+            match = regexpKey.match(sampleText, startPos);
+            startPos = match.capturedEnd();
+        }
+    }
+
+    static QRegularExpression regexpEnd("[,}]");
+    qsizetype endPos = sampleText.indexOf(regexpEnd, startPos);
+    retVal = sampleText.sliced(startPos, endPos-startPos);
+    return retVal;
+}
+
+QString NetworkCommunication::cutBeginAndEndQuotes(const QString& sampleText)
+{
+    QString retVal(sampleText);
+    if(retVal.at(0) == '\"' && retVal.at(retVal.size()-1) == '\"')
+    {
+        retVal = retVal.sliced(1, retVal.size()-2);
+    }
+    return retVal;
 }
 
 void NetworkCommunication::createAccount(const QString& firstName, const QString& lastName, const QString& email, const QString& password)
@@ -174,53 +225,68 @@ void NetworkCommunication::handleGetRoomsResponse(QNetworkReply *pReply)
         {
             QByteArray byteArrayResponse(pReply->readAll());
             QString strResponse(QString::fromUtf8(byteArrayResponse));
-            QMap<int, QString> mapRooms;
+            QList<Room> listRooms;
 
-            while(strResponse.contains("roomId"))
+            static QRegularExpression regexpRoomId("(\"roomId\"\\s{0,1}:)");
+            int count = strResponse.count(regexpRoomId);
+
+            for(int i=0; i<count; i++)
             {
-                int startPos = strResponse.indexOf(":") + 1;
-                int endPos = strResponse.indexOf(",", startPos);
-                QString strId = strResponse.sliced(startPos, endPos-startPos);
-                int id = -2;
+                QString strId = getJsonValue(strResponse, "roomId", i);
                 bool bOk;
-                int tmpId = strId.toInt(&bOk);
+                int id = strId.toInt(&bOk);
                 if(bOk)
                 {
-                    id = tmpId;
+                    QString name = getJsonValue(strResponse, "name", i);
+                    name = cutBeginAndEndQuotes(name);
+                    QString photo = getJsonValue(strResponse, "coverPhoto", i);
+                    photo = cutBeginAndEndQuotes(photo);
+                    listRooms.append(Room(id, name, photo));
                 }
-                strResponse = strResponse.last(strResponse.size()-endPos);
-
-                startPos = strResponse.indexOf(":") + 2;
-                endPos = strResponse.indexOf("}", startPos) - 1;
-                QString name = strResponse.sliced(startPos, endPos-startPos);
-                strResponse = strResponse.last(strResponse.size()-endPos);
-                mapRooms.insert(id, name);
             }
 
-            //TODO: read photo from file
-
             bool bPlusAdded = false;
-            QList<int> listId = mapRooms.keys();
-            for(int i=0; i<listId.size(); i+=2)
+            for(int i=0; i<listRooms.size(); i+=2)
             {
-                int key1 = listId.at(i);
-                if(i+1 < listId.size())
+                Room room1 = listRooms.at(i);
+                if(i+1 < listRooms.size())
                 {
-                    int key2 = listId.at(i+1);
-                    emit addRoomsListItem(key1, mapRooms.value(key1), "unknown.png", true, key2, mapRooms.value(key2), "unknown.png", true);
+                    Room room2 = listRooms.at(i+1);
+                    emit addRoomsListItem(room1.id(), room1.name(), room1.photo(), true, room2.id(), room2.name(), room2.photo(), true);
                 }
                 else
                 {
-                    emit addRoomsListItem(key1, mapRooms.value(key1), "unknown.png", true, -1, "Add room", "add.png", true);
+                    emit addRoomsListItem(room1.id(), room1.name(), room1.photo(), true, Room::getAddRoomId(), Room::getAddRoomName(), Room::getAddRoomPhoto(), true);
                     bPlusAdded = true;
                 }
             }
 
             if(!bPlusAdded)
             {
-                emit addRoomsListItem(-1, "Add room", "add.png", true, -2, "", "unknown.png", false);
+                emit addRoomsListItem(Room::getAddRoomId(), Room::getAddRoomName(), Room::getAddRoomPhoto(), true, -2, "", Room::getPhotoInvalid(), false);
             }
+        }
+        else
+        {
+            reportErrorToUser(pReply);
+        }
+    }
+}
 
+void NetworkCommunication::createRoom(const QString& name, const QString& picture)
+{
+    QByteArray body("{\"name\":\"" + name.toUtf8() + "\",\"coverPhoto\":\"" + picture.toUtf8() + "\"}");
+    sendPost(m_roomsPath, body, true);
+}
+
+void  NetworkCommunication::handleCreateRoomResponse(QNetworkReply *pReply)
+{
+    if(pReply)
+    {
+        QNetworkReply::NetworkError err = pReply->error();
+        if(err == QNetworkReply::NoError)
+        {
+            emit createRoomFinished();
         }
         else
         {

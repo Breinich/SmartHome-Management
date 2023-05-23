@@ -56,6 +56,12 @@ public class RoomService {
             }
             oldRoom.setName(room.getName());
         }
+
+        if (room.getCoverPhoto() != null && room.getCoverPhoto().length() > 0 && !Objects.equals(room.getCoverPhoto(),
+                oldRoom.getCoverPhoto())) {
+
+            oldRoom.setCoverPhoto(room.getCoverPhoto());
+        }
     }
 
     public List<Sensor> getSensorsByRoomId(Integer roomId) {

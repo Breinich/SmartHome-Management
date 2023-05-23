@@ -37,6 +37,17 @@ CppApplication {
             "pictures/logo.png",
             "pictures/back.png",
             "pictures/info.png",
+            "pictures/add.png",
+            "pictures/load.gif",
+            "pictures/rooms/living_room.jpg",
+            "pictures/rooms/bedroom.jpg",
+            "pictures/rooms/lobby.jpg",
+            "pictures/rooms/kitchen.jpg",
+            "pictures/rooms/pantry.jpg",
+            "pictures/rooms/bathroom.jpg",
+            "pictures/rooms/toilet.jpg",
+            "pictures/rooms/garage.jpg",
+            "pictures/rooms/unknown.png"
         ]
     }
 }

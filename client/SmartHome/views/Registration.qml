@@ -8,17 +8,18 @@ Page {
     Dialog {
         id: dialogPasswordReq
         modal: true
+        padding: 20
         parent:  registrationview
         x: infoRoundButton.x-dialogPasswordReq.width + infoRoundButton.width / 2
         y: infoRoundButton.y-(dialogPasswordReq.height + 5)
-        Label {
+        contentItem: Label {
                 text: qsTr("Password must meet the following requirements:"+
                             "<ul>"+
                               "<li>at least 8 characters long</li>"+
                               "<li>must contain lowercase character</li>"+
                               "<li>must contain uppercase character</li>"+
                               "<li>must contain number</li>"+
-                              "<li>must contain special character<br></li>"+
+                              "<li>must contain special character</li>"+
                             "</ul>")
                 textFormat: Text.RichText
         }
@@ -176,7 +177,7 @@ Page {
         ToolTip.text: qsTr("Back")
         ToolTip.delay: 1000
         onClicked: {
-            stack.replace("Login.qml")
+            stack.showLoginView();
         }
     }
 

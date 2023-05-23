@@ -84,7 +84,7 @@ Page {
         y: 298
         width: 200
         height: 28
-        color: "#ffffff"
+        color: "#00ffffff"
         border.width: 2
 
         TextInput {
@@ -114,15 +114,7 @@ Page {
         color: "#ff0000"
         text: qsTr("Invalid E-Mail format")
         font.pixelSize: 12
-    }
-
-    Text {
-        id: textLoginError
-        x: 233
-        y: 337
-        color: "#ff0000"
-        text: qsTr("Incorrect user name or password")
-        font.pixelSize: 12
+        visible: false
     }
 
 
@@ -130,7 +122,7 @@ Page {
     Button {
         id: buttonLogin
         x: 276
-        y: 371
+        y: 357
         width: 88
         height: 24
         text: qsTr("Log in")
@@ -138,8 +130,16 @@ Page {
         font.pointSize: 12
         onClicked: {
             //Todo: communicate with server, check password
-            stack.showMenu();
-            stack.replace("Rooms.qml");
+            textUserError.visible = false;
+            if(!userinputvalidator.validateEmail(inputEmail.text))
+            {
+                textUserError.visible = true;
+            }
+
+            if(!textUserError.visible)
+            {
+                httpcommunication.login(inputEmail.text, inputPassword.text);
+            }
         }
     }
 
@@ -157,12 +157,12 @@ Page {
 
     Label {
         id: label
-        x: 236
-        y: 413
+        x: 235
+        y: 403
         text: qsTr("No account yet? <a href='link_registration'>Create Account</a>")
         textFormat: Text.RichText
         onLinkActivated: (link)=> {
-            stack.replace("Registration.qml");
+            stack.showRegistrationView();
         }
     }
 }

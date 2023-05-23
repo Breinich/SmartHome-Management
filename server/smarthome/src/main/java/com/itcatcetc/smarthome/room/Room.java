@@ -28,6 +28,8 @@ public class Room {
     private Integer roomId;
     @Pattern(regexp = "^[a-zA-Z0-9]+$")
     private String name;
+    @Pattern(regexp ="^(living_room.jpg|bedroom.jpg|lobby.jpg|kitchen.jpg|pantry.jpg|bathroom.jpg|toilet.jpg|garage.jpg)$")
+    private String coverPhoto;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -57,6 +59,14 @@ public class Room {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCoverPhoto() {
+        return coverPhoto;
+    }
+
+    public void setCoverPhoto(String coverPhoto) {
+        this.coverPhoto = coverPhoto;
     }
 
     public String toString() {

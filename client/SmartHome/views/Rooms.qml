@@ -237,62 +237,10 @@ Page {
         }
         model: ListModel {
             id: listViewRoomsModel
-            /*ListElement {
-                name1: "Living Room"
-                visible1: true
-                roomid1: 3
-                imgsource1: "living_room.jpg"
-                name2: "Parent's Bedoom"
-                visible2: true
-                roomid2: 4
-                imgsource2: "bedroom.jpg"
-            }
-            ListElement {
-                name1: "Kitchen"
-                visible1: true
-                roomid1: 5
-                imgsource1: "kitchen.jpg"
-                name2: "Pantry"
-                visible2: true
-                roomid2: 6
-                imgsource2: "pantry.jpg"
-            }
-            ListElement {
-                name1: "Lobby"
-                visible1: true
-                roomid1: 7
-                imgsource1: "lobby.jpg"
-                name2: "Garage"
-                visible2: true
-                roomid2: 8
-                imgsource2: "garage.jpg"
-            }
-            ListElement {
-                name1: "Bathroom"
-                visible1: true
-                roomid1: 9
-                imgsource1: "bathroom.jpg"
-                name2: "Toilet"
-                visible2: true
-                roomid2: 10
-                imgsource2: "toilet.jpg"
-            }
-            ListElement {
-                name1: "Add room"
-                visible1: true
-                roomid1: -1
-                imgsource1: "add.png"
-                name2: ""
-                visible2: false
-                roomid2: -1
-                imgsource2: "add.png"
-            }*/
         }
         Component.onCompleted: {
             listViewRoomsModel.clear();
             httpcommunication.getRooms();
-            /*listViewRoomsModel.append({"name1":"Living Room", "visible1":true, "roomid1":3, "imgsource1":"living_room.jpg",
-                                      "name2":"Add room", "visible2":true, "roomid2":-1, "imgsource2":"add.png"});*/
         }
 
 

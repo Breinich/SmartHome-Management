@@ -28,7 +28,7 @@ public class Sensor {
             generator = "sensor_sequence"
     )
     private Integer sensorId;
-    @Pattern(regexp = "^[a-zA-Z0-9]+$")
+    @Pattern(regexp = "^[a-zA-Z0-9 ]+$")
     private String name;
     @Enumerated(EnumType.STRING)
     private Type type;

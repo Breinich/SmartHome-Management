@@ -23,7 +23,7 @@ public class Actuator {
             generator = "actuator_sequence"
     )
     private Integer actuatorId;
-    @Pattern(regexp = "^[a-zA-Z0-9]+$")
+    @Pattern(regexp = "^[a-zA-Z0-9 ]+$")
     private String name;
     @Enumerated(EnumType.STRING)
     private Type type;

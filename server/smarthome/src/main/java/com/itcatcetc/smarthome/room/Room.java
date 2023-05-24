@@ -26,7 +26,7 @@ public class Room {
             generator = "room_sequence"
     )
     private Integer roomId;
-    @Pattern(regexp = "^[a-zA-Z0-9]+$")
+    @Pattern(regexp = "^[a-zA-Z0-9 ]+$")
     private String name;
     @Pattern(regexp ="^(living_room.jpg|bedroom.jpg|lobby.jpg|kitchen.jpg|pantry.jpg|bathroom.jpg|toilet.jpg|garage.jpg)$")
     private String coverPhoto;

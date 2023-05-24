@@ -118,6 +118,20 @@ public class AuthController {
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
     }
 
+    @PostMapping("/promote/{id}")
+    @PreAuthorize("hasRole('HOMIE')")
+    public ResponseEntity<String> promoteUser(@PathVariable("id") Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+        user.get().addRole(Role.HOMIE);
+
+        userRepository.save(user.get());
+
+        return new ResponseEntity<>("User promoted successfully", HttpStatus.OK);
+    }
+
     private void sendEmail(User user) {
         EmailDetails details = new EmailDetails();
         details.setRecipient(user.getEmail());

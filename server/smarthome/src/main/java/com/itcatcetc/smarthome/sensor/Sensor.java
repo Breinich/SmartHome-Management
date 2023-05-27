@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Sensor class
+ * store sensors which can measure temperature, humidity, etc.
+ */
 @Entity
 @Table
 public class Sensor {

@@ -11,8 +11,18 @@ import java.util.Optional;
 @Repository
 public interface ActuatorRepository extends JpaRepository<Actuator, Integer> {
 
+    /**
+     * Find actuator by name
+     * @param name actuator name
+     * @return actuator
+     */
     Optional<Actuator> findByName(String name);
 
+    /**
+     * Find all rooms by type
+     * @param room room
+     * @return actuator list
+     */
     List<Actuator> findAllByRoomAndType(Room room, Type type);
 
 }

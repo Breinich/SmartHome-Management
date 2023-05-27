@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * a repository class for sensor
+ */
 @Repository
 public interface SensorRepository extends JpaRepository<Sensor, Integer> {
 

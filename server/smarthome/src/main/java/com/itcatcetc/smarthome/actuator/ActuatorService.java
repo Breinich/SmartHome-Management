@@ -13,12 +13,26 @@ import java.util.Optional;
 @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
 public class ActuatorService {
 
+    /**
+     * ActuatorRepository is an interface that extends JpaRepository
+     */
     private final ActuatorRepository actuatorRepository;
 
+
+    /**
+     * Constructor
+     * @param actuatorRepository
+     *
+     */
     @Autowired
     public ActuatorService(ActuatorRepository actuatorRepository) {
         this.actuatorRepository = actuatorRepository;
     }
+
+    /**
+     *
+     * @return List of actuators
+     */
 
     public List<Actuator> getActuators() {
         return actuatorRepository.findAll();

@@ -12,21 +12,41 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * RoomService
+ * provide some methods to operate database
+ */
 @Service
 @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
 public class RoomService {
 
+    /**
+     * roomRepository to save room data
+     */
     private final RoomRepository roomRepository;
 
+    /**
+     * constructor
+     * @param roomRepository
+     */
     @Autowired
     public RoomService(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
     }
 
+    /**
+     * get all rooms
+     * @return List<Room>
+     */
     public List<Room> getRooms() {
         return roomRepository.findAll();
     }
 
+    /**
+     * get room by id
+     * @param room
+     * @return Room
+     */
     public void addNewRoom(Room room) {
         Optional<Room> roomOptional = roomRepository.findRoomByName(room.getName());
         if (roomOptional.isPresent()) {
@@ -36,6 +56,10 @@ public class RoomService {
         roomRepository.save(room);
     }
 
+    /**
+     * delete room by id
+     * @param roomId
+     */
     public void deleteRoom(Integer roomId) {
         boolean exists = roomRepository.existsById(roomId);
         if (!exists) {
@@ -44,7 +68,11 @@ public class RoomService {
         roomRepository.deleteById(roomId);
     }
 
-
+    /**
+     * update room by id
+     * @param room
+     * @return Room
+     */
     @Transactional
     public void updateRoom(Room room) {
         Room oldRoom = roomRepository.findById(room.getRoomId()).orElseThrow(() -> new IllegalArgumentException("room with id " + room.getRoomId() + " does not exists"));
@@ -64,10 +92,20 @@ public class RoomService {
         }
     }
 
+    /**
+     * get sensors by room id
+     * @param roomId
+     * @return List<Sensor>
+     */
     public List<Sensor> getSensorsByRoomId(Integer roomId) {
         return roomRepository.findSensorsByRoomId(roomId);
     }
 
+    /**
+     * get actuators by room id
+     * @param roomId
+     * @return
+     */
     public List<Actuator> getActuatorsByRoomId(Integer roomId) {
         return roomRepository.findActuatorsByRoomId(roomId);
     }

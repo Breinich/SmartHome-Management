@@ -10,15 +10,35 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * RoomRepository
+ * make a connection between database and service
+ * provide some methods to operate database
+ */
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer>, JpaSpecificationExecutor<Room> {
 
+    /**
+     * find room by name
+     * @param name
+     * @return  a room with the name
+     */
     @Query("SELECT s FROM Room s WHERE s.name = ?1")
     Optional<Room> findRoomByName(String name);
 
+    /**
+     * find sensors by room id
+     * @param roomId
+     * @return a list of sensors in the room
+     */
     @Query("SELECT s FROM Sensor s WHERE s.room.roomId = ?1")
     List<Sensor> findSensorsByRoomId(Integer roomId);
 
+    /**
+     * find actuators by room id
+     * @param roomId
+     * @return a list of actuators in the room
+     */
     @Query("SELECT a FROM Actuator a WHERE a.room.roomId = ?1")
     List<Actuator> findActuatorsByRoomId(Integer roomId);
 

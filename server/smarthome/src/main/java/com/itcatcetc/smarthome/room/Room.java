@@ -12,6 +12,11 @@ import jakarta.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Room entity
+ * stores sensros and actuators
+ */
+
 @Entity
 @Table
 public class Room {

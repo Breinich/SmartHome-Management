@@ -8,7 +8,10 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 
-
+/**
+ * a class for sensor data
+ * a sensor data is a record of a sensor in each timestamp
+ */
 @Entity
 @Table
 public class SensorData {

@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Actuator controller
+ * To wrap your repository with a web layer, you must turn to Spring MVC.
+ * The @RestController annotation marks the class as a controller where every method returns a domain object instead of a view
+ */
 @RestController
 @RequestMapping(path = "api/v1/smarthome/actuators")
 public class ActuatorController {

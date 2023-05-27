@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Actuator repository
+ */
 @Repository
 public interface ActuatorRepository extends JpaRepository<Actuator, Integer> {
 

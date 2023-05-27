@@ -12,6 +12,8 @@ import java.util.List;
 /**
  * a controller class for sensor data
  * CRUD operations to reach the database
+ * To wrap your repository with a web layer, you must turn to Spring MVC.
+ * The @RestController annotation marks the class as a controller where every method returns a domain object instead of a view
  */
 @RestController
 @RequestMapping(path = "api/v1/smarthome/sensordata")
@@ -48,6 +50,7 @@ public class SensorDataController {
     /**
      * register a new sensor data
      * @param sensorData
+     * only the users with HOMIE role can add a new sensor data
      */
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
@@ -58,6 +61,7 @@ public class SensorDataController {
     /**
      * delete a sensor data by id
      * @param dataId
+     * only the users with HOMIE role can delete a sensor data
      */
     @DeleteMapping(path = "{dataId}")
     @PreAuthorize("hasRole('HOMIE')")

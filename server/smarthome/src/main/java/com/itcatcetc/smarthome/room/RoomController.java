@@ -14,6 +14,8 @@ import java.util.List;
 /**
  * RoomController is a class that handles HTTP requests
  * and returns responses in JSON format
+ * The @RestController annotation marks the class as a controller where every method returns a domain object instead of a view
+ * The @RequestMapping annotation maps HTTP requests to handler methods of the controller
  */
 @RestController
 @RequestMapping(path = "api/v1/smarthome/rooms")
@@ -23,6 +25,7 @@ public class RoomController {
     /**
      * Constructor
      * @param roomService
+     * @Autowired annotation marks a constructor, field, setter method, or config method as to be autowired by Spring dependency injection
      */
     @Autowired
     public RoomController(RoomService roomService) {
@@ -90,6 +93,7 @@ public class RoomController {
      * POST request
      * @param room
      * @return make a new room
+     * only users with the HOMIE role can access this endpoint (see SecurityConfig)
      */
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
@@ -112,6 +116,7 @@ public class RoomController {
      * PUT request
      * @param room
      * @return update a room
+     * only users with the HOMIE role can access this endpoint (see SecurityConfig)
      */
     @PutMapping
     @PreAuthorize("hasRole('HOMIE')")

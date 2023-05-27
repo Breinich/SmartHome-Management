@@ -11,21 +11,36 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * CommandDataService
+ * provides methods to access the database
+ * specifying the business logic
+ */
 @Service
 @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
 public class CommandDataService {
-
     private final CommandDataRepository commandDataRepository;
 
+    /**
+     * constructor
+     * @param commandDataRepository
+     */
     @Autowired
     public CommandDataService(CommandDataRepository commandDataRepository) {
         this.commandDataRepository = commandDataRepository;
     }
 
+    /**
+     * get the list of all commands from the database
+     * @return list of commands
+     */
     public List<ActuatorCommand> getData() {
         return commandDataRepository.findAll();
     }
 
+    /**
+     * add a new coomand to the database
+     */
     public void addNewCommand(ActuatorCommand command) {
         Optional<ActuatorCommand> dataOptional = commandDataRepository.findByCommandId(command.getCommandId());
         if (dataOptional.isPresent()) {
@@ -38,6 +53,10 @@ public class CommandDataService {
         commandDataRepository.save(command);
     }
 
+    /**
+     * delete a command from the database
+     * @param dataId
+     */
     public void deleteCommand(Integer dataId) {
         boolean exists = commandDataRepository.existsById(dataId);
         if (!exists) {
@@ -47,6 +66,10 @@ public class CommandDataService {
     }
 
 
+    /**
+     * update a command in the database
+     * @param newCommand
+     */
     @Transactional
     public void updateCommand(ActuatorCommand newCommand) {
 

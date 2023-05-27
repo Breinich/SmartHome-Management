@@ -25,6 +25,12 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 
+/**
+ * Config is a class that handles the configuration of the application
+ * We create a bean that will be used to populate the database with some data if it is empty
+ * We also create a bean that will be used to ping all sensors and actuators
+ * and check if they are reachable
+ */
 @Configuration
 public class Config {
 
@@ -51,7 +57,9 @@ public class Config {
             restTemplate = restTemplateBuilder.build();
             Logger logger = LoggerFactory.getLogger(Config.class);
 
-            //ping all sensors and actuators
+            /**
+             * Ping all sensors and actuators
+             */
             for (Sensor sensor : sensorRepository.findAll()) {
                 Long sent = System.currentTimeMillis();
                 try {
@@ -77,6 +85,11 @@ public class Config {
             }
 
             //read and write to DB
+            /**
+             * This is a test room that is created, saved, found, deleted
+             * and then the application finishes
+             * This is just to test the database
+             */
             Room testRoom = new Room("TestRoomhfiufehiusdfhsdhfihweufhweufhweu");
             roomRepository.save(testRoom);
             logger.info(format("Saved room: %s", testRoom));
@@ -93,6 +106,10 @@ public class Config {
         };
     }
 
+    /**
+     * This method populates the database with some rooms
+     * @param roomRepository
+     */
     private void populateRooms(RoomRepository roomRepository) {
         Room room1 = new Room(
                 "LivingRoom");
@@ -103,6 +120,11 @@ public class Config {
         );
     }
 
+    /**
+     * This method populates the database with some sensors
+     * @param repository
+     * @param roomRepository
+     */
     private void populateSensors(SensorRepository repository, RoomRepository roomRepository) {
         Room room1 = roomRepository.findAll().get(0);
 
@@ -121,6 +143,11 @@ public class Config {
         );
     }
 
+    /**
+     * This method populates the database with some actuators
+     * @param actuatorRepository
+     * @param roomRepository
+     */
     private void populateActuators(ActuatorRepository actuatorRepository, RoomRepository roomRepository) {
         Room room1 = roomRepository.findAll().get(0);
 
@@ -138,6 +165,11 @@ public class Config {
     }
 
 
+    /**
+     * This method populates the database with some users
+     * @param userRepository
+     * @param passwordEncoder
+     */
     private void populateUsers(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         User user1 = new User();
         user1.setFirstName("Adam");

@@ -12,8 +12,8 @@ import java.util.Optional;
 
 /**
  * RoomRepository
- * make a connection between database and service
- * provide some methods to operate database
+ * interface responsible for data access layer
+ * specifying the domain type as Room and the id type as Integer
  */
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer>, JpaSpecificationExecutor<Room> {

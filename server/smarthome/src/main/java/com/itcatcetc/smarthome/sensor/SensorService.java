@@ -12,21 +12,38 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * a service class for sensor
+ * interface responsible for business logic
+ */
 @Service
 @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
 public class SensorService {
 
     private final SensorRepository sensorRepository;
 
+    /**
+     * constructor
+     * @param sensorRepository
+     */
     @Autowired
     public SensorService(SensorRepository sensorRepository) {
         this.sensorRepository = sensorRepository;
     }
 
+    /**
+     * get all sensors
+     * @return
+     */
     public List<Sensor> getSensors() {
         return sensorRepository.findAll();
     }
 
+    /**
+     * get a sensor by id
+     * can't add a sensor with the same name
+     * @param sensor
+     */
     public void addNewSensor(Sensor sensor) {
         Optional<Sensor> sensorOptional = sensorRepository.findByName(sensor.getName());
         if (sensorOptional.isPresent()) {
@@ -37,6 +54,10 @@ public class SensorService {
 
     }
 
+    /**
+     * delete a sensor by id
+     * @param sensorId
+     */
     public void deleteSensor(Integer sensorId) {
         boolean exists = sensorRepository.existsById(sensorId);
         if (!exists) {
@@ -46,6 +67,10 @@ public class SensorService {
     }
 
 
+    /**
+     * update a sensor by id
+     * @param newSensor
+     */
     @Transactional
     public void updateSensor(Sensor newSensor) {
         Sensor sensor = sensorRepository.findById(newSensor.getSensorId()).orElseThrow(() -> new IllegalArgumentException("sensor with id " + newSensor.getSensorId() + " does not exists"));
@@ -71,6 +96,13 @@ public class SensorService {
         }
     }
 
+    /**
+     * get all sensor datas of a sensor
+     * @param sensorId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     public List<SensorData> getSensorDatasInTimeRange(Integer sensorId, Date startTime, Date endTime) {
         Sensor sensor = sensorRepository.findById(sensorId).orElseThrow(() -> new IllegalArgumentException("sensor with id " + sensorId + " does not exists"));
         return sensor.getSensorDatasInTimeRange(startTime, endTime);

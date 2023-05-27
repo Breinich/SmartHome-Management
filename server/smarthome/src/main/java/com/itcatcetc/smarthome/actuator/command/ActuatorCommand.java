@@ -10,6 +10,10 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
+/**
+ * ActuatorCommand
+ * Stores commands which can be executed by the actuator if the premise is true
+ */
 @Entity
 @Table
 public class ActuatorCommand {

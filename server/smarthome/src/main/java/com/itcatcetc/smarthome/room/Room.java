@@ -36,10 +36,16 @@ public class Room {
     @Pattern(regexp ="^(living_room.jpg|bedroom.jpg|lobby.jpg|kitchen.jpg|pantry.jpg|bathroom.jpg|toilet.jpg|garage.jpg)$")
     private String coverPhoto;
 
+    /**
+     * One room can have many sensors
+     */
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Sensor> sensors;
 
+    /**
+     * One room can have many actuators
+     */
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Actuator> actuators;

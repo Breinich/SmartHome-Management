@@ -5,6 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * CommandDataRepository
+ * interface responsible for data access layer
+ * specifying the domain type as ActuatorCommand and the id type as Integer
+ */
 @Repository
 public interface CommandDataRepository extends JpaRepository<ActuatorCommand, Integer> {
 

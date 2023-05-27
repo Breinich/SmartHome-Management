@@ -15,6 +15,8 @@ import java.util.Optional;
 /**
  * RoomService
  * provide some methods to operate database
+ * dependency injection
+ * specifying the business logic
  */
 @Service
 @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
@@ -22,6 +24,7 @@ public class RoomService {
 
     /**
      * roomRepository to save room data
+     * dependency injection
      */
     private final RoomRepository roomRepository;
 

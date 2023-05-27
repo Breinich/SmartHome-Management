@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Actuator service
+ * contains methods to access the database
+ * specifying the business logic
+ */
 @Service
 @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
 public class ActuatorService {
@@ -30,7 +35,7 @@ public class ActuatorService {
     }
 
     /**
-     *
+     * Get all actuators from the database
      * @return List of actuators
      */
 
@@ -48,6 +53,10 @@ public class ActuatorService {
 
     }
 
+    /**
+     * Delete actuator from the database
+     * @param actuatorId
+     */
     public void deleteActuator(Integer actuatorId) {
         boolean exists = actuatorRepository.existsById(actuatorId);
         if (!exists) {
@@ -57,6 +66,10 @@ public class ActuatorService {
     }
 
 
+    /**
+     * Update actuator in the database
+     * @param newActuator
+     */
     @Transactional
     public void updateActuator(Actuator newActuator) {
         Actuator actuator = actuatorRepository.findById(newActuator.getActuatorId()).orElseThrow(() -> new IllegalArgumentException("actuator with id " + newActuator.getActuatorId() + " does not exists"));

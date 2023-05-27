@@ -10,6 +10,8 @@ import java.util.Optional;
 
 /**
  * Actuator repository
+ * interface responsible for data access layer
+ * specifying the domain type as Actuator and the id type as Integer
  */
 @Repository
 public interface ActuatorRepository extends JpaRepository<Actuator, Integer> {

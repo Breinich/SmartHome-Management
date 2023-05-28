@@ -43,7 +43,12 @@ public class AuthController {
     private EmailService emailService;
 
 
-    // User data
+    /**
+     * get user data by email
+     * @param email the email of the user
+     * @return a user in JSON
+     * only the users with GUEST or HOMIE role can get their own data
+     */
     @GetMapping("/me")
     @PreAuthorize("(hasRole('GUEST') or hasRole('HOMIE')) and #email == authentication.principal.username")
     public ResponseEntity<String> userData(@Valid @Email @RequestParam String email) {
@@ -61,32 +66,50 @@ public class AuthController {
         return ResponseEntity.ok(res);
     }
 
-    // Can be called by anyone
+    /**
+     * Say hello to the world
+     * @return a string "hello"
+     */
     @GetMapping("/hello")
     public String hello() {
         return "hello";
     }
 
-    // Can be called by authenticated user
+    /**
+     * Say hello to the world
+     * @return the role of the user
+     */
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public String authHello(Principal principal) {
         return "You are authenticated as " + principal.getName();
     }
 
-    // Can be called by admins only
+    /**
+     * Say hello to the world, if you are a homie
+     * @return a string "Wow, you are a homie"
+     */
     @GetMapping("/homie")
     @PreAuthorize("hasRole('HOMIE')")
     public String homieHello() {
         return "Wow, you are a homie";
     }
 
+    /**
+     * Say hello to the world, if you are a guest
+     * @return a string "Wow, you are a guest"
+     */
     @GetMapping("/guest")
     @PreAuthorize("hasRole('GUEST')")
     public String guestHello2() {
         return "Wow, you are a guest";
     }
 
+    /**
+     * Login a user
+     * @param user the user to login
+     * @return a string "User signed-in successfully!"
+     */
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@Valid @RequestBody UserHeader user) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -96,6 +119,11 @@ public class AuthController {
         return new ResponseEntity<>("User signed-in successfully!", HttpStatus.OK);
     }
 
+    /**
+     * Register a user
+     * @param userH the user to register
+     * @return a string "User registered successfully"
+     */
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@Valid @RequestBody UserHeader userH) {
 
@@ -123,6 +151,11 @@ public class AuthController {
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
     }
 
+    /**
+     * Promote a user to homie
+     * @param id the id of the user to promote
+     * @return a string "User promoted successfully"
+     */
     @PostMapping("/promote/{id}")
     @PreAuthorize("hasRole('HOMIE')")
     public ResponseEntity<String> promoteUser(@PathVariable("id") Long id) {
@@ -137,6 +170,10 @@ public class AuthController {
         return new ResponseEntity<>("User promoted successfully", HttpStatus.OK);
     }
 
+    /**
+     * Email the user
+     * @param user the user to send email to
+     */
     private void sendEmail(User user) {
         EmailDetails details = new EmailDetails();
         details.setRecipient(user.getEmail());

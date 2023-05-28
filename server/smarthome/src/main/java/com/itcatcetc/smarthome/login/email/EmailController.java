@@ -18,7 +18,11 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
-    // Sending a simple Email
+    /**
+     * send an email
+     * @param details the email details
+     * @return the result
+     */
     @PostMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public String sendMail(@Valid @RequestBody EmailDetails details) {

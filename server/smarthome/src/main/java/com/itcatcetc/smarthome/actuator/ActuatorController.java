@@ -26,9 +26,11 @@ public class ActuatorController {
     }
 
 
-    // GET request to retrieve all actuators
-    // Only users with role GUEST or HOMIE can access this endpoint (see SecurityConfig)
-    // Returns a JSON array of all actuators
+    /**
+     * GET request to retrieve all actuators
+     * Only users with role GUEST or HOMIE can access this endpoint (see SecurityConfig)
+     * Returns a JSON array of all actuators
+     */
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public ResponseEntity<String> getActuators() {
@@ -43,27 +45,30 @@ public class ActuatorController {
         return ResponseEntity.ok(json);
     }
 
-    // POST request to register a new actuator
-    // Only users with role HOMIE can access this endpoint (see SecurityConfig)
-    // Returns nothing
+    /**
+     * GET request to retrieve an actuator by id
+     * @param actuator the actuator to retrieve
+     */
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void registerNewActuator(@Valid @RequestBody Actuator actuator) {
         actuatorService.addNewActuator(actuator);
     }
 
-    // DELETE request to delete an actuator
-    // Only users with role HOMIE can access this endpoint (see SecurityConfig)
-    // Returns nothing
+    /**
+     * DELETE request to delete an actuator by id
+     * @param actuatorId the id of the actuator to delete
+     */
     @DeleteMapping(path = "{actuatorId}")
     @PreAuthorize("hasRole('HOMIE')")
     public void deleteActuator(@Valid @PathVariable("actuatorId") Integer actuatorId) {
         actuatorService.deleteActuator(actuatorId);
     }
 
-    // PUT request to update an actuator
-    // Only users with role HOMIE can access this endpoint (see SecurityConfig)
-    // Returns nothing
+    /**
+     * PUT request to update an actuator
+     * @param actuator the actuator to update
+     */
     @PutMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void updateActuator(@Valid @RequestBody Actuator actuator) {

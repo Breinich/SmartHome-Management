@@ -9,15 +9,13 @@ import com.itcatcetc.smarthome.type.Type;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
-// Actuator entity
-// Actuators are smarthome devices that can be controlled by the user
-// They can be used to control lights, blinds, etc.
-
-
+/**
+ * Actuator entity class
+ */
 @Entity
 @Table
 public class Actuator {
-    // They have an id, a name, a type and an API endpoint
+
     @Id
     @SequenceGenerator(
             name = "actuator_sequence",
@@ -34,21 +32,21 @@ public class Actuator {
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    // The API endpoint is used to control the actuator
-    // The API endpoint is a URL that can be used to send commands to the actuator
+    /**
+     * The API endpoint of the actuator.
+     */
     @Pattern(regexp = "^https://(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\." +
             "(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))/[a-z0-9/]*$")
     private String apiEndpoint;
 
-    // They are located in a room
-    //In room can be multiple actuators
+    /**
+     * The room the actuator is in.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId", referencedColumnName = "roomId")
     private Room room;
 
-    public Actuator() {
-
-    }
+    public Actuator() {}
 
     public Actuator(String name, Type type, Room room, String apiEndpoint) {
         this.name = name;
@@ -93,6 +91,9 @@ public class Actuator {
         this.apiEndpoint = apiEndpoint;
     }
 
+    /**
+     * @return a JSON representation of the object.
+     */
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new Hibernate6Module()

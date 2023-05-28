@@ -22,7 +22,7 @@ public class SensorDataController {
 
     /**
      * constructor
-     * @param sensorDataService
+     * @param sensorDataService the service that handles the business logic
      */
     @Autowired
     public SensorDataController(SensorDataService sensorDataService) {

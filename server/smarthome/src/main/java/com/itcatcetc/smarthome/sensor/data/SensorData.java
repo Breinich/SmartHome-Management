@@ -75,7 +75,7 @@ public class SensorData {
             return "SensorData{" +
                     "id=" + dataId +
                     ", name='" + value +
-                    ", timestamp='" + timestamp.toString() +
+                    ", timestamp='" + timestamp +
                     '\'' +
                     '}';
         }

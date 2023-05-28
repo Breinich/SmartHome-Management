@@ -24,7 +24,7 @@ public class SensorService {
 
     /**
      * constructor
-     * @param sensorRepository
+     * @param sensorRepository autowired by Spring
      */
     @Autowired
     public SensorService(SensorRepository sensorRepository) {
@@ -33,16 +33,16 @@ public class SensorService {
 
     /**
      * get all sensors
-     * @return
+     * @return List<Sensor>
      */
     public List<Sensor> getSensors() {
         return sensorRepository.findAll();
     }
 
     /**
-     * get a sensor by id
+     * add new sensor
      * can't add a sensor with the same name
-     * @param sensor
+     * @param sensor the sensor to add
      */
     public void addNewSensor(Sensor sensor) {
         Optional<Sensor> sensorOptional = sensorRepository.findByName(sensor.getName());
@@ -56,7 +56,7 @@ public class SensorService {
 
     /**
      * delete a sensor by id
-     * @param sensorId
+     * @param sensorId the id of the sensor to delete
      */
     public void deleteSensor(Integer sensorId) {
         boolean exists = sensorRepository.existsById(sensorId);
@@ -69,7 +69,7 @@ public class SensorService {
 
     /**
      * update a sensor by id
-     * @param newSensor
+     * @param newSensor the new sensor data
      */
     @Transactional
     public void updateSensor(Sensor newSensor) {
@@ -98,10 +98,10 @@ public class SensorService {
 
     /**
      * get all sensor datas of a sensor
-     * @param sensorId
-     * @param startTime
-     * @param endTime
-     * @return
+     * @param sensorId the id of the sensor
+     * @param startTime the start time
+     * @param endTime the end time
+     * @return List<SensorData>
      */
     public List<SensorData> getSensorDatasInTimeRange(Integer sensorId, Date startTime, Date endTime) {
         Sensor sensor = sensorRepository.findById(sensorId).orElseThrow(() -> new IllegalArgumentException("sensor with id " + sensorId + " does not exists"));

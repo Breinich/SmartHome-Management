@@ -25,7 +25,7 @@ public class SensorController {
 
     /**
      * constructor
-     * @param sensorService
+     * @param sensorService the service that handles the business logic
      */
     @Autowired
     public SensorController(SensorService sensorService) {
@@ -53,9 +53,7 @@ public class SensorController {
 
     /**
      * register a new sensor
-     * @param sensor
-     * @return a sensor in JSON
-     * only the users with HOMIE role can add a new sensor
+     * @param sensor the sensor to be registered
      */
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
@@ -87,7 +85,7 @@ public class SensorController {
 
     /**
      * get the sensor's data in a time range (from startTime to endTime)
-     * @param sensorId
+     * @param sensorId the sensor's id
      * @return a list of sensor data in JSON
      */
     @GetMapping(path = "{sensorId}/data/{startTime}/{endTime}")

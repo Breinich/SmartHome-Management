@@ -18,7 +18,7 @@ public class SensorDataService {
 
     /**
      * constructor
-     * @param sensorDataRepository
+     * @param sensorDataRepository autowired by Spring
      */
     @Autowired
     public SensorDataService(SensorDataRepository sensorDataRepository) {
@@ -27,7 +27,6 @@ public class SensorDataService {
 
     /**
      * get the list of sensor data
-     * @return
      */
     public List<SensorData> getData() {
         return sensorDataRepository.findAll();
@@ -35,7 +34,7 @@ public class SensorDataService {
 
     /**
      * add new sensor data
-     * @param sensorData
+     * @param sensorData new sensor data
      */
     public void addNewData(SensorData sensorData) {
         if (sensorData.getDataId() != null) {
@@ -47,7 +46,7 @@ public class SensorDataService {
 
     /**
      * delete sensor data
-     * @param dataId
+     * @param dataId the id of the data to delete
      */
     public void deleteData(Integer dataId) {
         boolean exists = sensorDataRepository.existsById(dataId);

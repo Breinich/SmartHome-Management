@@ -57,7 +57,7 @@ public class Config {
             restTemplate = restTemplateBuilder.build();
             Logger logger = LoggerFactory.getLogger(Config.class);
 
-            /**
+            /*
              * Ping all sensors and actuators
              */
             for (Sensor sensor : sensorRepository.findAll()) {
@@ -84,8 +84,7 @@ public class Config {
                 }
             }
 
-            //read and write to DB
-            /**
+            /*
              * This is a test room that is created, saved, found, deleted
              * and then the application finishes
              * This is just to test the database
@@ -108,7 +107,7 @@ public class Config {
 
     /**
      * This method populates the database with some rooms
-     * @param roomRepository
+     * @param roomRepository the repository that handles the rooms
      */
     private void populateRooms(RoomRepository roomRepository) {
         Room room1 = new Room(
@@ -122,8 +121,8 @@ public class Config {
 
     /**
      * This method populates the database with some sensors
-     * @param repository
-     * @param roomRepository
+     * @param repository the repository that handles the sensors
+     * @param roomRepository the repository that handles the rooms
      */
     private void populateSensors(SensorRepository repository, RoomRepository roomRepository) {
         Room room1 = roomRepository.findAll().get(0);
@@ -145,8 +144,8 @@ public class Config {
 
     /**
      * This method populates the database with some actuators
-     * @param actuatorRepository
-     * @param roomRepository
+     * @param actuatorRepository  the repository that handles the actuators
+     * @param roomRepository the repository that handles the rooms
      */
     private void populateActuators(ActuatorRepository actuatorRepository, RoomRepository roomRepository) {
         Room room1 = roomRepository.findAll().get(0);
@@ -167,8 +166,8 @@ public class Config {
 
     /**
      * This method populates the database with some users
-     * @param userRepository
-     * @param passwordEncoder
+     * @param userRepository the repository that handles the users
+     * @param passwordEncoder the encoder that encodes the passwords
      */
     private void populateUsers(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         User user1 = new User();

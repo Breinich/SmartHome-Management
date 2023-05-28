@@ -4,6 +4,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
+/**
+ * This class is used to store the user information from the request body.
+ */
 public class UserHeader {
 
     @Pattern(regexp = "^[a-zA-Z]+$")

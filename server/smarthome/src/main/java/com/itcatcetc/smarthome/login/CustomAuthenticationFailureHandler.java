@@ -13,6 +13,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Custom authentication failure handler
+ */
 public class CustomAuthenticationFailureHandler
         implements AuthenticationFailureHandler {
 

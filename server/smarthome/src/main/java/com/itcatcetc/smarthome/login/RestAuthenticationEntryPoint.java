@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * Custom authentication entry point
+ */
 @Component
 public class RestAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
     private final ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();

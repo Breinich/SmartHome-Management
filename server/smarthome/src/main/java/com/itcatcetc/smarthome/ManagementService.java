@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+/**
+ * ManagementService for scheduling commands and generating sensor data for simulation
+ */
 @Component
 public class ManagementService {
 
@@ -47,7 +50,9 @@ public class ManagementService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-
+    /**
+     * Check all commands
+     */
     @Scheduled(fixedRate = 5000)
     @Transactional
     public void checkCommands() {
@@ -84,6 +89,10 @@ public class ManagementService {
         }
     }
 
+    /**
+     * Check if command's constraint is true and in that case execute the command
+     * @param command command to be executed
+     */
     private void checkConstraint(ActuatorCommand command) {
         if (command.getPremiseType() == Type.NONE) {
             doCommand(command);
@@ -97,6 +106,12 @@ public class ManagementService {
         }
     }
 
+    /**
+     * Get average value of all sensors of a given type in a given room
+     * @param room room to check
+     * @param type type of sensors to check
+     * @return average value of all sensors of a given type in a given room
+     */
     private int getAvgValue(Room room, Type type) {
         List<Sensor> sensors = sensorRepository.findAllByRoomAndType(room, type);
 
@@ -118,6 +133,10 @@ public class ManagementService {
         return avg;
     }
 
+    /**
+     * Execute command
+     * @param command command to be executed
+     */
     private void doCommand(ActuatorCommand command) {
         int avg = getAvgValue(command.getRoom(), command.getPremiseType());
 
@@ -134,6 +153,12 @@ public class ManagementService {
         }
     }
 
+    /**
+     * Send POST request to actuator
+     * @param param parameter to be sent
+     * @param actuator actuator to send the request to
+     * @return response from actuator
+     */
     private String sendPost(Integer param, Actuator actuator) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -147,6 +172,9 @@ public class ManagementService {
         }
     }
 
+    /**
+     * Generate sensor data for simulation
+     */
     @Scheduled(fixedRate = 4000)
     public void simulateSensors() {
         if (!SENSOR_SIMULATION)

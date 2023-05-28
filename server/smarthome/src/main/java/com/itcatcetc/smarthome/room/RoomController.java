@@ -24,8 +24,8 @@ public class RoomController {
 
     /**
      * Constructor
-     * @param roomService
-     * @Autowired annotation marks a constructor, field, setter method, or config method as to be autowired by Spring dependency injection
+     * @param roomService the service that handles the business logic
+     * {@code @Autowired} annotation marks a constructor, field, setter method, or config method as to be autowired by Spring dependency injection
      */
     @Autowired
     public RoomController(RoomService roomService) {
@@ -53,7 +53,7 @@ public class RoomController {
 
     /**
      * GET request  /
-     * @param roomId
+     * @param roomId the id of the room
      * @return List of sensors in the room
      */
     @GetMapping(path = "/sensors/{roomId}")
@@ -72,7 +72,7 @@ public class RoomController {
 
     /**
      * GET request
-     * @param roomId
+     * @param roomId the id of the room
      * @return List of actuators in the room
      */
     @GetMapping(path = "/actuators/{roomId}")
@@ -91,9 +91,7 @@ public class RoomController {
 
     /**
      * POST request
-     * @param room
-     * @return make a new room
-     * only users with the HOMIE role can access this endpoint (see SecurityConfig)
+     * @param room the room to be added
      */
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
@@ -103,8 +101,7 @@ public class RoomController {
 
     /**
      * DELETE request
-     * @param roomId
-     * @return delete a room
+     * @param roomId the id of the room
      */
     @DeleteMapping(path = "{roomId}")
     @PreAuthorize("hasRole('HOMIE')")
@@ -114,9 +111,7 @@ public class RoomController {
 
     /**
      * PUT request
-     * @param room
-     * @return update a room
-     * only users with the HOMIE role can access this endpoint (see SecurityConfig)
+     * @param room the room to be updated
      */
     @PutMapping
     @PreAuthorize("hasRole('HOMIE')")

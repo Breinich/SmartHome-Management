@@ -23,7 +23,7 @@ public class CommandDataService {
 
     /**
      * constructor
-     * @param commandDataRepository
+     * @param commandDataRepository autowired by Spring
      */
     @Autowired
     public CommandDataService(CommandDataRepository commandDataRepository) {
@@ -55,7 +55,7 @@ public class CommandDataService {
 
     /**
      * delete a command from the database
-     * @param dataId
+     * @param dataId the id of the command to delete
      */
     public void deleteCommand(Integer dataId) {
         boolean exists = commandDataRepository.existsById(dataId);
@@ -68,7 +68,7 @@ public class CommandDataService {
 
     /**
      * update a command in the database
-     * @param newCommand
+     * @param newCommand the new command to update
      */
     @Transactional
     public void updateCommand(ActuatorCommand newCommand) {
@@ -92,14 +92,10 @@ public class CommandDataService {
             premiseValue = command.getPremiseValue();
         if (consequenceType == null)
             consequenceType = command.getConsequenceType();
-        if (consequenceValue == null)
-            consequenceValue = command.getConsequenceValue();
         if (expiryDate == null)
             expiryDate = command.getExpirationDate();
         if (startDate == null)
             startDate = command.getStartDate();
-        if (room == null)
-            room = command.getRoom();
 
         command.setPremiseType(premiseType);
         command.setPremiseValue(premiseValue);

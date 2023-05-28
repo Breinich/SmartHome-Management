@@ -30,7 +30,7 @@ public class RoomService {
 
     /**
      * constructor
-     * @param roomRepository
+     * @param roomRepository autowired by Spring
      */
     @Autowired
     public RoomService(RoomRepository roomRepository) {
@@ -46,9 +46,8 @@ public class RoomService {
     }
 
     /**
-     * get room by id
-     * @param room
-     * @return Room
+     * add new room
+     * @param room new room
      */
     public void addNewRoom(Room room) {
         Optional<Room> roomOptional = roomRepository.findRoomByName(room.getName());
@@ -61,7 +60,7 @@ public class RoomService {
 
     /**
      * delete room by id
-     * @param roomId
+     * @param roomId room id
      */
     public void deleteRoom(Integer roomId) {
         boolean exists = roomRepository.existsById(roomId);
@@ -73,8 +72,7 @@ public class RoomService {
 
     /**
      * update room by id
-     * @param room
-     * @return Room
+     * @param room new room
      */
     @Transactional
     public void updateRoom(Room room) {
@@ -97,7 +95,7 @@ public class RoomService {
 
     /**
      * get sensors by room id
-     * @param roomId
+     * @param roomId room id
      * @return List<Sensor>
      */
     public List<Sensor> getSensorsByRoomId(Integer roomId) {
@@ -106,8 +104,7 @@ public class RoomService {
 
     /**
      * get actuators by room id
-     * @param roomId
-     * @return
+     * @param roomId room id
      */
     public List<Actuator> getActuatorsByRoomId(Integer roomId) {
         return roomRepository.findActuatorsByRoomId(roomId);

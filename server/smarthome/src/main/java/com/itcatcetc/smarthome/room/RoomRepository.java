@@ -20,7 +20,7 @@ public interface RoomRepository extends JpaRepository<Room, Integer>, JpaSpecifi
 
     /**
      * find room by name
-     * @param name
+     * @param name the name of the room
      * @return  a room with the name
      */
     @Query("SELECT s FROM Room s WHERE s.name = ?1")
@@ -28,7 +28,7 @@ public interface RoomRepository extends JpaRepository<Room, Integer>, JpaSpecifi
 
     /**
      * find sensors by room id
-     * @param roomId
+     * @param roomId the id of the room
      * @return a list of sensors in the room
      */
     @Query("SELECT s FROM Sensor s WHERE s.room.roomId = ?1")
@@ -36,7 +36,7 @@ public interface RoomRepository extends JpaRepository<Room, Integer>, JpaSpecifi
 
     /**
      * find actuators by room id
-     * @param roomId
+     * @param roomId the id of the room
      * @return a list of actuators in the room
      */
     @Query("SELECT a FROM Actuator a WHERE a.room.roomId = ?1")

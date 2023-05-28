@@ -10,10 +10,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class SmarthomeApplication {
 
+    /**
+     * Main method
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
-        /**
-         * run the application
-         */
         SpringApplication.run(SmarthomeApplication.class, args);
     }
 }

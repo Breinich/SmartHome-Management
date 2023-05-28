@@ -26,7 +26,7 @@ public class ActuatorService {
 
     /**
      * Constructor
-     * @param actuatorRepository
+     * @param actuatorRepository autowired by Spring
      *
      */
     @Autowired
@@ -55,7 +55,7 @@ public class ActuatorService {
 
     /**
      * Delete actuator from the database
-     * @param actuatorId
+     * @param actuatorId the id of the actuator to delete
      */
     public void deleteActuator(Integer actuatorId) {
         boolean exists = actuatorRepository.existsById(actuatorId);
@@ -68,7 +68,7 @@ public class ActuatorService {
 
     /**
      * Update actuator in the database
-     * @param newActuator
+     * @param newActuator the actuator to update
      */
     @Transactional
     public void updateActuator(Actuator newActuator) {

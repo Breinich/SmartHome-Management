@@ -101,7 +101,7 @@ public class AuthController {
      */
     @GetMapping("/guest")
     @PreAuthorize("hasRole('GUEST')")
-    public String guestHello2() {
+    public String guestHello() {
         return "Wow, you are a guest";
     }
 

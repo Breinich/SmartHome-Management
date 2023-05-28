@@ -14,7 +14,7 @@ public class EmailServiceImpl implements EmailService {
     /**
      * Logger for logging the messages
      */
-    Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
     @Autowired
     private JavaMailSender javaMailSender;
     @Value("${spring.mail.username}")

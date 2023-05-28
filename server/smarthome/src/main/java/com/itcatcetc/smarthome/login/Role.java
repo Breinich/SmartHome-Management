@@ -7,7 +7,6 @@ package com.itcatcetc.smarthome.login;
  * GUEST can only access the public features of the website.
  */
 public record Role() {
-
     public static final String HOMIE = "ROLE_HOMIE";
     public static final String GUEST = "ROLE_GUEST";
 }

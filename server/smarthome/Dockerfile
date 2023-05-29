@@ -10,5 +10,5 @@ FROM --platform=linux/amd64 eclipse-temurin:17.0.1_12-jdk-alpine
 COPY --from=build /usr/src/app/target/smarthome.jar /opt/smarthome/
 #COPY docker/application-docker.properties /opt/smarthome/application.properties
 WORKDIR /opt/smarthome
-ENTRYPOINT ["java", "-jar", "/opt/smarthome/smarthome.jar"]
+ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=98", "-jar", "/opt/smarthome/smarthome.jar"]
 EXPOSE 8081

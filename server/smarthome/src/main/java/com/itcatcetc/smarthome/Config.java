@@ -131,12 +131,12 @@ public class Config {
                 "TemperatureSensor",
                 Type.TEMPERATURE,
                 room1,
-                "192.168.0.3/");
+                "https://192.168.0.3/");
         Sensor sensor2 = new Sensor(
                 "LightSensor",
                 Type.LIGHT,
                 room1,
-                "192.168.0.4/");
+                "https://192.168.0.4/");
         repository.saveAll(
                 List.of(sensor1, sensor2)
         );
@@ -154,11 +154,11 @@ public class Config {
                 "Light",
                 Type.LIGHT,
                 room1,
-                "192.168.0.1/");
+                "https://192.168.0.1/");
         Actuator actuator2 = new Actuator("Heater",
                 Type.TEMPERATURE,
                 room1,
-                "192.168.0.2/");
+                "https://192.168.0.2/");
 
         actuatorRepository.saveAll(List.of(actuator1, actuator2));
     }

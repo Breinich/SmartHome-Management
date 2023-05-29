@@ -1,10 +1,14 @@
 package com.itcatcetc.smarthome.sensor.data;
 
+import com.itcatcetc.smarthome.sensor.Sensor;
+import com.itcatcetc.smarthome.sensor.SensorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * SensorDataService
@@ -15,21 +19,30 @@ import java.util.List;
 public class SensorDataService {
 
     private final SensorDataRepository sensorDataRepository;
+    private final SensorRepository sensorRepository;
 
     /**
      * constructor
      * @param sensorDataRepository autowired by Spring
      */
     @Autowired
-    public SensorDataService(SensorDataRepository sensorDataRepository) {
+    public SensorDataService(SensorDataRepository sensorDataRepository, SensorRepository sensorRepository){
         this.sensorDataRepository = sensorDataRepository;
+        this.sensorRepository = sensorRepository;
     }
 
     /**
-     * get the list of sensor data
+     * get the list of sensor data, the latest data of each sensor
      */
     public List<SensorData> getData() {
-        return sensorDataRepository.findAll();
+        ArrayList<SensorData> res = new ArrayList<>();
+        List<Sensor> sensors = sensorRepository.findAll();
+        for (Sensor sensor : sensors) {
+            Optional<SensorData> data = sensorDataRepository.findTopBySensorOrderByTimestampDesc(sensor);
+            data.ifPresent(res::add);
+        }
+
+        return res;
     }
 
     /**

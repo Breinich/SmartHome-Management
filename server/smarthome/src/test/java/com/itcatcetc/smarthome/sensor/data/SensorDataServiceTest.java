@@ -3,6 +3,7 @@ package com.itcatcetc.smarthome.sensor.data;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcatcetc.smarthome.room.Room;
 import com.itcatcetc.smarthome.sensor.Sensor;
+import com.itcatcetc.smarthome.sensor.SensorRepository;
 import com.itcatcetc.smarthome.type.Type;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,9 +18,9 @@ import static org.junit.Assert.*;
 
 public class SensorDataServiceTest {
 
-    private SensorDataService service;
     private SensorDataController controller;
     private SensorDataRepository repository;
+    private SensorRepository sensorRepository;
     private SensorData sensorData;
     private ObjectMapper mapper;
     private Sensor sensor;
@@ -28,7 +29,8 @@ public class SensorDataServiceTest {
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
         repository = Mockito.mock(SensorDataRepository.class);
-        service = new SensorDataService(repository);
+        sensorRepository = Mockito.mock(SensorRepository.class);
+        SensorDataService service = new SensorDataService(repository, sensorRepository);
         controller = new SensorDataController(service);
 
         Room room = new Room("Living Room");
@@ -47,9 +49,10 @@ public class SensorDataServiceTest {
      */
     @Test
     public void testGetData() {
-        ArrayList<SensorData> list = new ArrayList<>();
-        list.add(sensorData);
-        Mockito.when(repository.findAll()).thenReturn(list);
+        ArrayList<Sensor> list = new ArrayList<>();
+        list.add(sensor);
+        Mockito.when(sensorRepository.findAll()).thenReturn(list);
+        Mockito.when(repository.findTopBySensorOrderByTimestampDesc(sensor)).thenReturn(Optional.of(sensorData));
 
         String ret = controller.getData().getBody();
 

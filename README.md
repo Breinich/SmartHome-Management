@@ -16,7 +16,7 @@ Bemutató videó URL:
 Alap feladatok (maximális kapható pontokkal):
 - [ ] 7p: Yocto projekt alapokon készített szerver vagy kliens (házi feladatonként egyszer)
 - [ ] 5p: Beágyazott Linux rendszerben (de nem Yocto alapokon) készített szerver vagy kliens (feladatonként egyszer).
-- [ ] 7p: QML alapú grafikus felület (benne legalább egy grafikon vagy egyéb rajzolás, egy lista, valamint menü)
+- [X] 7p: QML alapú grafikus felület (benne legalább egy grafikon vagy egyéb rajzolás, egy lista, valamint menü)
 - [X] 7p: REST API (benne új adat létrehozása, lekérdezés, adat módosítása, logikusan felépített URL-ekkel)
 - [X] 8p: Több felhasználó, az authentikáció és különböző szerepkörök támogatása.
 - [ ] 7p: Linux alatt saját, jól átgondolt kommunikációs protokoll implementálása.

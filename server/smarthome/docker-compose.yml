@@ -17,7 +17,7 @@ services:
         dockerfile: Dockerfile
     environment:
       PORT: 80
-      DATABASE_URL: localhost
+      DATABASE_URL: db
       DATABASE_PORT: 3306
       DATABASE_NAME: smarthome
       DATABASE_USER: itcatcetc

@@ -8,6 +8,8 @@ CppApplication {
     files: [
         "inputvalidator.cpp",
         "inputvalidator.h",
+        "ipaddress.cpp",
+        "ipaddress.h",
         "main.cpp",
         "networkcommunication.cpp",
         "networkcommunication.h",
@@ -20,13 +22,12 @@ CppApplication {
         Qt.core.resourcePrefix: "SmartHome/"
         fileTags: ["qt.qml.qml", "qt.core.resource_data"]
         files: [
-            "views/Lightening.qml",
             "views/Login.qml",
             "views/Main.qml",
             "views/Registration.qml",
             "views/Rooms.qml",
             "views/Statistics.qml",
-            "views/Temperature.qml",
+            "views/Room.qml",
         ]
     }
 
@@ -49,7 +50,9 @@ CppApplication {
             "pictures/rooms/bathroom.jpg",
             "pictures/rooms/toilet.jpg",
             "pictures/rooms/garage.jpg",
-            "pictures/rooms/unknown.png"
+            "pictures/rooms/unknown.png",
+            "pictures/lamp_off.png",
+            "pictures/lamp_on.png"
         ]
     }
 }

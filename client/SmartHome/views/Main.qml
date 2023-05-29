@@ -16,7 +16,7 @@ ApplicationWindow {
     menuBar: MenuBar {
         visible: false
         id: menuBar
-        z: 100
+        z: 150
         Menu {
             title: qsTr("Views");
             MenuItem {
@@ -25,21 +25,6 @@ ApplicationWindow {
                     stack.showRoomsView();
                 }
             }
-            MenuItem {
-                text: qsTr("Temperature");
-                onTriggered: {
-                    stack.showTemperatureView();
-                }
-            }
-            MenuItem {
-                text: qsTr("Lightening");
-                onTriggered: {
-                    stack.showLighteningView()
-                }
-            }
-        }
-        Menu {
-            title: qsTr("Diagnose")
             MenuItem {
                 text: qsTr("Statistics")
                 onTriggered: {
@@ -85,6 +70,7 @@ ApplicationWindow {
         initialItem: "Login.qml"
         replaceEnter: null //don't need animation
         replaceExit: null
+        property int selectedRoomId: -1
 
         Dialog{
             id: dialogNetworkError
@@ -128,18 +114,12 @@ ApplicationWindow {
             stack.replace("Rooms.qml");
         }
 
-        function showTemperatureView()
+        function showRoomView(roomId)
         {
+            stack.selectedRoomId = roomId;
             menuBar.visible = true;
             stack.setFooterMessage("");
-            stack.replace("Temperature.qml");
-        }
-
-        function showLighteningView()
-        {
-            menuBar.visible = true;
-            stack.setFooterMessage("");
-            stack.replace("Lightening.qml");
+            stack.replace("Room.qml");
         }
 
         function showStatisticsView()

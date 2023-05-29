@@ -30,7 +30,7 @@ public class SensorDataController {
     }
 
     /**
-     * get all sensor data
+     * get the latest data of each sensor
      * @return a list of sensor data in JSON
      */
     @GetMapping

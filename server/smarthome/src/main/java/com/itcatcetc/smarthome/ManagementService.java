@@ -32,7 +32,7 @@ import java.util.Random;
 @Component
 public class ManagementService {
 
-    private static final boolean SENSOR_SIMULATION = false;
+    private static final boolean SENSOR_SIMULATION = true;
     private final RestTemplate restTemplate;
     private final Random random = new Random();
     @Autowired

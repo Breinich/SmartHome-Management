@@ -24,7 +24,7 @@ Page {
         x: parent.width/2 - dialogForgotPassword.width/2
         y: labelForgotPassword.y + dialogForgotPassword.height
         Label {
-                text: qsTr("Please contact our support team: <a href='mailto: support-smarthome@itcatcetc.com'>support-smarthome@itcatcetc.com</a>")
+                text: qsTr("Please contact our support team") + ": <a href='mailto: support-smarthome@itcatcetc.com'>support-smarthome@itcatcetc.com</a>"
                 textFormat: Text.RichText
                 onLinkActivated: (link)=> {
                     Qt.openUrlExternally(link);
@@ -39,6 +39,7 @@ Page {
         width: 200
         height: 28
         color: "#00ff0000"
+        border.color: "black"
         border.width: 2
 
         TextInput {
@@ -85,6 +86,7 @@ Page {
         width: 200
         height: 28
         color: "#00ffffff"
+        border.color: "black"
         border.width: 2
 
         TextInput {
@@ -131,12 +133,22 @@ Page {
         onClicked: {
             //Todo: communicate with server, check password
             textUserError.visible = false;
+            rectEmail.border.color = "black";
+            textPasswordError.visible = false;
+            rectPassword.border.color = "black";
             if(!userinputvalidator.validateEmail(inputEmail.text))
             {
                 textUserError.visible = true;
+                rectEmail.border.color = "red";
             }
 
-            if(!textUserError.visible)
+            if(inputPassword.text.length == 0)
+            {
+                textPasswordError.visible = true;
+                rectPassword.border.color = "red";
+            }
+
+            if(!textUserError.visible && !textPasswordError.visible)
             {
                 httpcommunication.login(inputEmail.text, inputPassword.text);
             }
@@ -147,7 +159,7 @@ Page {
         id: labelForgotPassword
         x: 431
         y: 304
-        text: qsTr("<a href='link_forgotpwd'>Forgot password</a>")
+        text: "<a href='link_forgotpwd'>" + qsTr("Forgot password") + "</a>"
         verticalAlignment: Text.AlignVCenter
         textFormat: Text.RichText
         onLinkActivated: (link)=> {
@@ -159,10 +171,23 @@ Page {
         id: label
         x: 235
         y: 403
-        text: qsTr("No account yet? <a href='link_registration'>Create Account</a>")
+        text: qsTr("No account yet?") + " <a href='link_registration'>" + qsTr("Create Account") + "</a>"
         textFormat: Text.RichText
         onLinkActivated: (link)=> {
-            stack.showRegistrationView();
-        }
+                             stack.showRegistrationView();
+                         }
+    }
+
+    Text {
+        id: textPasswordError
+        x: 220
+        y: 333
+        width: 200
+        height: 18
+        visible: false
+        color: "#ff0000"
+        text: qsTr("Password can not be empty")
+        font.pixelSize: 12
+        horizontalAlignment: Text.AlignHCenter
     }
 }

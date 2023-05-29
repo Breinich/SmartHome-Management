@@ -36,33 +36,49 @@ void NetworkCommunication::slotReplyFinished(QNetworkReply *pReply)
 {
     if(pReply)
     {
-        if(pReply->request().url().path().endsWith(m_authPath))
+        for(qsizetype  i=0; i<m_listReplys.size(); i++)
         {
-            emit communicationFinished();
-            handleCreateAccountResponse(pReply);
-        }
-        else if(pReply->request().url().path().endsWith(m_loginPath))
-        {
-            emit communicationFinished();
-            handleLoginResponse(pReply);
-        }
-        else if(pReply->request().url().path().endsWith(m_logoutPath))
-        {
-            emit communicationFinished();
-            handleLogoutResponse(pReply);
-        }
-        else if(pReply->request().url().path().endsWith(m_roomsPath))
-        {
-            emit communicationFinished();
-            if(pReply->request().header(QNetworkRequest::ContentTypeHeader) == "application/json")
+            if(m_listReplys.at(i).second == pReply)
             {
-                handleCreateRoomResponse(pReply);
-            }
-            else
-            {
-                handleGetRoomsResponse(pReply);
+                if(pReply->request().url().path().endsWith(m_authPath))
+                {
+                    emit communicationFinished();
+                    handleCreateAccountResponse(pReply);
+                }
+                else if(pReply->request().url().path().endsWith(m_loginPath))
+                {
+                    emit communicationFinished();
+                    handleLoginResponse(pReply);
+                }
+                else if(pReply->request().url().path().endsWith(m_logoutPath))
+                {
+                    emit communicationFinished();
+                    handleLogoutResponse(pReply);
+                }
+                else if(pReply->request().url().path().endsWith(m_roomsPath))
+                {
+                    emit communicationFinished();
+                    if (m_listReplys.at(i).first == "GET")
+                    {
+                        handleGetRoomsResponse(pReply);
+                    }
+                    else if (m_listReplys.at(i).first == "POST" || m_listReplys.at(i).first == "PUT")
+                    {
+                        handleResponseForRoomsUpdate(pReply);
+                    }
+                }
+                else if(pReply->request().url().path().contains(m_roomsPath))
+                {
+                    emit communicationFinished();
+                    if (m_listReplys.at(i).first == "DEL")
+                    {
+                        handleResponseForRoomsUpdate(pReply);
+                    }
+                }
+                m_listReplys.removeAt(i);
             }
         }
+
     }
 }
 
@@ -94,10 +110,23 @@ void NetworkCommunication::sendRequest(const QString& strPath, bool bAuth)
     {
         addAuthHeader(request);
     }
-    m_pNetManager->get(request);
+    m_listReplys.append(qMakePair("GET", m_pNetManager->get(request)));
 }
 
-void NetworkCommunication::sendPost(const QString& strPath, const QByteArray& body, bool bAuth)
+void NetworkCommunication::sendDelete(const QString& strPath, bool bAuth)
+{
+    emit communicationStarted();
+    QNetworkRequest request;
+    request.setUrl(QUrl(m_baseUrl+strPath));
+    request.setTransferTimeout();
+    if(bAuth)
+    {
+        addAuthHeader(request);
+    }
+    m_listReplys.append(qMakePair("DEL", m_pNetManager->deleteResource(request)));
+}
+
+void NetworkCommunication::sendPostOrPut(const QString& strPath, const QByteArray& body, bool bPost, bool bAuth)
 {
     emit communicationStarted();
     QNetworkRequest request;
@@ -108,7 +137,15 @@ void NetworkCommunication::sendPost(const QString& strPath, const QByteArray& bo
     {
         addAuthHeader(request);
     }
-    m_pNetManager->post(request, body);
+
+    if(bPost)
+    {
+        m_listReplys.append(qMakePair("POST", m_pNetManager->post(request, body)));
+    }
+    else
+    {
+        m_listReplys.append(qMakePair("PUT", m_pNetManager->put(request, body)));
+    }
 }
 
 QString NetworkCommunication::getJsonValue(const QString& sampleText, const QString& key, int idx)
@@ -147,7 +184,7 @@ void NetworkCommunication::createAccount(const QString& firstName, const QString
 {
     QByteArray body("{\"firstName\":\"" + firstName.toUtf8() + "\",\"lastName\":\"" + lastName.toUtf8() + "\",\"email\":\"" +
                              email.toUtf8() + "\",\"password\":\"" + password.toUtf8() + "\"}");
-    sendPost(m_authPath, body);
+    sendPostOrPut(m_authPath, body, true);
 }
 
 void NetworkCommunication::handleCreateAccountResponse(QNetworkReply *pReply)
@@ -171,7 +208,7 @@ void NetworkCommunication::login(const QString& email, const QString& password)
     QByteArray body("{\"email\":\"" + email.toUtf8() + "\",\"password\":\"" + password.toUtf8() + "\"}");
     m_authenticator.setUser(email);
     m_authenticator.setPassword(password);
-    sendPost(m_loginPath, body);
+    sendPostOrPut(m_loginPath, body, true);
 }
 
 void NetworkCommunication::handleLoginResponse(QNetworkReply *pReply)
@@ -276,17 +313,29 @@ void NetworkCommunication::handleGetRoomsResponse(QNetworkReply *pReply)
 void NetworkCommunication::createRoom(const QString& name, const QString& picture)
 {
     QByteArray body("{\"name\":\"" + name.toUtf8() + "\",\"coverPhoto\":\"" + picture.toUtf8() + "\"}");
-    sendPost(m_roomsPath, body, true);
+    sendPostOrPut(m_roomsPath, body, true, true);
 }
 
-void  NetworkCommunication::handleCreateRoomResponse(QNetworkReply *pReply)
+void NetworkCommunication::updateRoom(int roomId, const QString& name, const QString& picture)
+{
+    QByteArray body("{\"roomId\":\"" + QString::number(roomId).toUtf8() + "\",\"name\":\"" + name.toUtf8() +
+                    "\",\"coverPhoto\":\"" + picture.toUtf8() + "\"}");
+    sendPostOrPut(m_roomsPath, body, false, true);
+}
+
+void NetworkCommunication::deleteRoom(int roomId)
+{
+    sendDelete(m_roomsPath + "/" + QString::number(roomId), true);
+}
+
+void NetworkCommunication::handleResponseForRoomsUpdate(QNetworkReply *pReply)
 {
     if(pReply)
     {
         QNetworkReply::NetworkError err = pReply->error();
         if(err == QNetworkReply::NoError)
         {
-            emit createRoomFinished();
+            emit roomsUpdateNeeded();
         }
         else
         {

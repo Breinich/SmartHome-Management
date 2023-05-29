@@ -32,6 +32,7 @@ Page {
         width: 220
         height: 28
         color: "#00ff0000"
+        border.color: "black"
         border.width: 2
 
         TextInput {
@@ -113,35 +114,45 @@ Page {
         text: qsTr("Create account")
         onClicked: {
             textFirstNameErrReg.visible = false;
+            rectFirstNameReg.border.color = "black";
             textLastNameErrReg.visible = false;
+            rectLastNameReg.border.color = "black";
             textEmailErrReg.visible = false;
+            rectEmailReg.border.color = "black";
             textPwdErrReg.visible = false;
+            rectPwdReg.border.color = "black";
             textPwdRepeatErrReg.visible = false;
+            rectPwdRepeatReg.border.color = "black";
 
             if(!userinputvalidator.validateName(inputFirstNameReg.text))
             {
                 textFirstNameErrReg.visible = true;
+                rectFirstNameReg.border.color = "red";
             }
 
             if(!userinputvalidator.validateName(inputLastNameReg.text))
             {
                 textLastNameErrReg.visible = true;
+                rectLastNameReg.border.color = "red";
             }
 
             if(!userinputvalidator.validateEmail(inputEmailReg.text))
             {
                 textEmailErrReg.visible = true;
+                rectEmailReg.border.color = "red";
             }
 
             if(!userinputvalidator.validatePassword(inputPwdReg.text))
             {
                 textPwdErrReg.visible = true;
+                rectPwdReg.border.color = "red";
             }
             else
             {
                 if(inputPwdReg.text != inputPwdRepeatReg.text)
                 {
                     textPwdRepeatErrReg.visible = true;
+                    rectPwdRepeatReg.border.color = "red";
                 }
             }
 
@@ -188,6 +199,7 @@ Page {
         width: 220
         height: 28
         color: "#00ff0000"
+        border.color: "black"
         border.width: 2
         TextInput {
             id: inputFirstNameReg
@@ -211,6 +223,7 @@ Page {
         width: 220
         height: 28
         color: "#00ff0000"
+        border.color: "black"
         border.width: 2
         TextInput {
             id: inputLastNameReg
@@ -234,6 +247,7 @@ Page {
         width: 220
         height: 28
         color: "#00ff0000"
+        border.color: "black"
         border.width: 2
         TextInput {
             id: inputPwdReg
@@ -259,6 +273,7 @@ Page {
         width: 220
         height: 28
         color: "#00ff0000"
+        border.color: "black"
         border.width: 2
         TextInput {
             id: inputPwdRepeatReg

@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-    Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
+    /**
+     * Logger for logging the messages
+     */
+    private final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
     @Autowired
     private JavaMailSender javaMailSender;
     @Value("${spring.mail.username}")

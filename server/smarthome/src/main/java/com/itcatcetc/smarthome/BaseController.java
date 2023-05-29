@@ -21,6 +21,12 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 
+/**
+ * BaseController is a class that handles HTTP requests
+ * and returns responses in JSON format
+ * The @RestController annotation marks the class as a controller where every method returns a domain object instead of a view
+ * The @RequestMapping annotation maps HTTP requests to handler methods of the controller
+ */
 @RestController
 @RequestMapping(path = "")
 public class BaseController {
@@ -33,6 +39,7 @@ public class BaseController {
 
     private final RestTemplate restTemplate;
 
+
     public BaseController(RoomRepository roomRepository, SensorRepository sensorRepository, ActuatorRepository actuatorRepository,
                           RestTemplateBuilder restTemplateBuilder) {
         this.roomRepository = roomRepository;
@@ -42,11 +49,19 @@ public class BaseController {
         this.restTemplate = restTemplateBuilder.build();
     }
 
+    /**
+     * GET request
+     * @return Welcome message
+     */
     @GetMapping
     public ResponseEntity<String> getBase() {
         return ResponseEntity.ok("Welcome to SmartHome API");
     }
 
+    /**
+     * GET request
+     * @return Status of all sensors and actuators
+     */
     @GetMapping(path = "api/v1/smarthome/status")
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public ResponseEntity<String> getStatus() {

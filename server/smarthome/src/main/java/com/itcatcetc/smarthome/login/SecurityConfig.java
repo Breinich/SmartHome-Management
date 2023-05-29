@@ -16,6 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
+/**
+ * Security configuration
+ */
 @Configuration
 @EnableMethodSecurity
 @EnableWebSecurity
@@ -40,6 +43,12 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+    /**
+     * configure the security filter chain
+     * @param http the http security
+     * @return the security filter chain
+     * @throws Exception exception
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -55,7 +64,6 @@ public class SecurityConfig {
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessHandler(new LogoutSuccessHandler())
                 .and().httpBasic().authenticationEntryPoint(restAuthenticationEntryPoint)
-                //.and().formLogin().failureHandler(authenticationFailureHandler())
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
 
         return http.build();

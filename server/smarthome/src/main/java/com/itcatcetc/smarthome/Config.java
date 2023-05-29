@@ -25,6 +25,12 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 
+/**
+ * Config is a class that handles the configuration of the application
+ * We create a bean that will be used to populate the database with some data if it is empty
+ * We also create a bean that will be used to ping all sensors and actuators
+ * and check if they are reachable
+ */
 @Configuration
 public class Config {
 
@@ -51,7 +57,9 @@ public class Config {
             restTemplate = restTemplateBuilder.build();
             Logger logger = LoggerFactory.getLogger(Config.class);
 
-            //ping all sensors and actuators
+            /*
+             * Ping all sensors and actuators
+             */
             for (Sensor sensor : sensorRepository.findAll()) {
                 Long sent = System.currentTimeMillis();
                 try {
@@ -76,7 +84,11 @@ public class Config {
                 }
             }
 
-            //read and write to DB
+            /*
+             * This is a test room that is created, saved, found, deleted
+             * and then the application finishes
+             * This is just to test the database
+             */
             Room testRoom = new Room("TestRoomhfiufehiusdfhsdhfihweufhweufhweu");
             roomRepository.save(testRoom);
             logger.info(format("Saved room: %s", testRoom));
@@ -93,6 +105,10 @@ public class Config {
         };
     }
 
+    /**
+     * This method populates the database with some rooms
+     * @param roomRepository the repository that handles the rooms
+     */
     private void populateRooms(RoomRepository roomRepository) {
         Room room1 = new Room(
                 "LivingRoom");
@@ -103,6 +119,11 @@ public class Config {
         );
     }
 
+    /**
+     * This method populates the database with some sensors
+     * @param repository the repository that handles the sensors
+     * @param roomRepository the repository that handles the rooms
+     */
     private void populateSensors(SensorRepository repository, RoomRepository roomRepository) {
         Room room1 = roomRepository.findAll().get(0);
 
@@ -110,17 +131,22 @@ public class Config {
                 "TemperatureSensor",
                 Type.TEMPERATURE,
                 room1,
-                "192.168.0.3/");
+                "https://192.168.0.3/");
         Sensor sensor2 = new Sensor(
                 "LightSensor",
                 Type.LIGHT,
                 room1,
-                "192.168.0.4/");
+                "https://192.168.0.4/");
         repository.saveAll(
                 List.of(sensor1, sensor2)
         );
     }
 
+    /**
+     * This method populates the database with some actuators
+     * @param actuatorRepository  the repository that handles the actuators
+     * @param roomRepository the repository that handles the rooms
+     */
     private void populateActuators(ActuatorRepository actuatorRepository, RoomRepository roomRepository) {
         Room room1 = roomRepository.findAll().get(0);
 
@@ -128,16 +154,21 @@ public class Config {
                 "Light",
                 Type.LIGHT,
                 room1,
-                "192.168.0.1/");
+                "https://192.168.0.1/");
         Actuator actuator2 = new Actuator("Heater",
                 Type.TEMPERATURE,
                 room1,
-                "192.168.0.2/");
+                "https://192.168.0.2/");
 
         actuatorRepository.saveAll(List.of(actuator1, actuator2));
     }
 
 
+    /**
+     * This method populates the database with some users
+     * @param userRepository the repository that handles the users
+     * @param passwordEncoder the encoder that encodes the passwords
+     */
     private void populateUsers(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         User user1 = new User();
         user1.setFirstName("Adam");

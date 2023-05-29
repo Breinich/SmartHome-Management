@@ -9,9 +9,13 @@ import com.itcatcetc.smarthome.type.Type;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
+/**
+ * Actuator entity class
+ */
 @Entity
 @Table
 public class Actuator {
+
     @Id
     @SequenceGenerator(
             name = "actuator_sequence",
@@ -27,16 +31,23 @@ public class Actuator {
     private String name;
     @Enumerated(EnumType.STRING)
     private Type type;
-    @Pattern(regexp = "^https://(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\." +
-            "(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))\\.(\\d|[1-9]\\d|1\\d\\d|2([0-4]\\d|5[0-5]))/[a-z0-9/]*$")
+
+    /**
+     * The API endpoint of the actuator.
+     */
+    @Pattern(regexp = "^https://(((\\b25[0-5]|\\b2[0-4][0-9]|\\b[01]?[0-9][0-9]?)(\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})|" +
+            "(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])))" +
+            "/[a-z0-9/]*$")
     private String apiEndpoint;
+
+    /**
+     * The room the actuator is in.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId", referencedColumnName = "roomId")
     private Room room;
 
-    public Actuator() {
-
-    }
+    public Actuator() {}
 
     public Actuator(String name, Type type, Room room, String apiEndpoint) {
         this.name = name;
@@ -81,6 +92,9 @@ public class Actuator {
         this.apiEndpoint = apiEndpoint;
     }
 
+    /**
+     * @return a JSON representation of the object.
+     */
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new Hibernate6Module()

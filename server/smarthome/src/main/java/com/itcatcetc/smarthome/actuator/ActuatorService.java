@@ -9,16 +9,35 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Actuator service
+ * contains methods to access the database
+ * specifying the business logic
+ */
 @Service
 @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
 public class ActuatorService {
 
+    /**
+     * ActuatorRepository is an interface that extends JpaRepository
+     */
     private final ActuatorRepository actuatorRepository;
 
+
+    /**
+     * Constructor
+     * @param actuatorRepository autowired by Spring
+     *
+     */
     @Autowired
     public ActuatorService(ActuatorRepository actuatorRepository) {
         this.actuatorRepository = actuatorRepository;
     }
+
+    /**
+     * Get all actuators from the database
+     * @return List of actuators
+     */
 
     public List<Actuator> getActuators() {
         return actuatorRepository.findAll();
@@ -34,6 +53,10 @@ public class ActuatorService {
 
     }
 
+    /**
+     * Delete actuator from the database
+     * @param actuatorId the id of the actuator to delete
+     */
     public void deleteActuator(Integer actuatorId) {
         boolean exists = actuatorRepository.existsById(actuatorId);
         if (!exists) {
@@ -43,6 +66,10 @@ public class ActuatorService {
     }
 
 
+    /**
+     * Update actuator in the database
+     * @param newActuator the actuator to update
+     */
     @Transactional
     public void updateActuator(Actuator newActuator) {
         Actuator actuator = actuatorRepository.findById(newActuator.getActuatorId()).orElseThrow(() -> new IllegalArgumentException("actuator with id " + newActuator.getActuatorId() + " does not exists"));

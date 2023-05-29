@@ -1,7 +1,6 @@
 package com.itcatcetc.smarthome.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Custom authentication failure handler
+ */
 public class CustomAuthenticationFailureHandler
         implements AuthenticationFailureHandler {
 
@@ -23,7 +25,7 @@ public class CustomAuthenticationFailureHandler
             HttpServletRequest request,
             HttpServletResponse response,
             AuthenticationException exception)
-            throws IOException, ServletException {
+            throws IOException {
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         Map<String, Object> data = new HashMap<>();

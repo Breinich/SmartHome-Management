@@ -12,16 +12,30 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * a controller class for sensor
+ * CRUD operations to reach the database
+ * To wrap your repository with a web layer, you must turn to Spring MVC.
+ * The @RestController annotation marks the class as a controller where every method returns a domain object instead of a view
+ */
 @RestController
 @RequestMapping(path = "api/v1/smarthome/sensors")
 public class SensorController {
     private final SensorService sensorService;
 
+    /**
+     * constructor
+     * @param sensorService the service that handles the business logic
+     */
     @Autowired
     public SensorController(SensorService sensorService) {
         this.sensorService = sensorService;
     }
 
+    /**
+     * get all sensors
+     * @return a list of sensors in JSON
+     */
     @GetMapping
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public ResponseEntity<String> getSensors() {
@@ -36,24 +50,44 @@ public class SensorController {
         return ResponseEntity.ok(res);
     }
 
+
+    /**
+     * register a new sensor
+     * @param sensor the sensor to be registered
+     */
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void registerNewSensor(@Valid @RequestBody Sensor sensor) {
         sensorService.addNewSensor(sensor);
     }
 
+    /**
+     * delete a sensor by id
+     * @param sensorId
+     * only the users with HOMIE role can delete a sensor
+     */
     @DeleteMapping(path = "{sensorId}")
     @PreAuthorize("hasRole('HOMIE')")
     public void deleteSensor(@Valid @PathVariable("sensorId") Integer sensorId) {
         sensorService.deleteSensor(sensorId);
     }
 
+    /**
+     * update a sensor
+     * @param sensor
+     * only the users with HOMIE role can update a sensor
+     */
     @PutMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void updateSensor(@Valid @RequestBody Sensor sensor) {
         sensorService.updateSensor(sensor);
     }
 
+    /**
+     * get the sensor's data in a time range (from startTime to endTime)
+     * @param sensorId the sensor's id
+     * @return a list of sensor data in JSON
+     */
     @GetMapping(path = "{sensorId}/data/{startTime}/{endTime}")
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public ResponseEntity<String> getSensorDatasInTimeRange(@Valid @PathVariable("sensorId") Integer sensorId,

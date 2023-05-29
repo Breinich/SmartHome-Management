@@ -7,6 +7,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * SensorDataRepository
+ * interface responsible for data access layer
+ * specifying the domain type as SensorData and the id type as Integer
+ */
 @Repository
 public interface SensorDataRepository extends JpaRepository<SensorData, Integer> {
 

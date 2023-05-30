@@ -16,11 +16,9 @@ import java.util.Optional;
 @Repository
 public interface SensorDataRepository extends JpaRepository<SensorData, Integer> {
 
-    Optional<SensorData> findByDataId(Integer dataId);
 
-    List<SensorData> findAllBySensor(Sensor sensor);
 
     Optional<SensorData> findTopBySensorOrderByTimestampDesc(Sensor sensor);
 
-    List<SensorData> findAllBySensorAndTimestamp(Sensor sensor, Date timestamp);
+    Optional<SensorData> findTopBySensor_SensorIdOrderByTimestampDesc(Integer sensorId);
 }

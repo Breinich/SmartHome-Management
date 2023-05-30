@@ -55,6 +55,7 @@ Page {
                     id: valueAxis
                     min: comboSensorNameModel.get(comboSensorName.currentIndex).sensorType === "LIGHT" ? 0 : - 30
                     max: 100
+                    tickCount: 11
                 }
             }
         }

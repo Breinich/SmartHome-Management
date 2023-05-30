@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -69,19 +70,12 @@ public class SensorDataService {
         sensorDataRepository.deleteById(dataId);
     }
 
-    public List<SensorData> getLatestDataBySensorId(Integer sensorId) {
-        Optional<Sensor> sensorOptional = sensorRepository.findById(sensorId);
-        if (sensorOptional.isEmpty()) {
-            throw new IllegalArgumentException("Sensor with id " + sensorId + " does not exists");
+    public SensorData getLatestDataBySensorId(Integer sensorId) {
+        Optional<SensorData> dataOptional =  sensorDataRepository.findTopBySensor_SensorIdOrderByTimestampDesc(sensorId);
+        if (dataOptional.isPresent()) {
+            return dataOptional.get();
+        } else {
+            return null;
         }
-
-        Sensor sensor = sensorOptional.get();
-        Optional<SensorData> dataOptional = sensorDataRepository.findTopBySensorOrderByTimestampDesc(sensor);
-        if (dataOptional.isEmpty()) {
-            throw new IllegalArgumentException("No data for sensor with id " + sensorId);
-        }
-
-        SensorData data = dataOptional.get();
-        return sensorDataRepository.findAllBySensorAndTimestamp(data.getSensor(), data.getTimestamp());
     }
 }

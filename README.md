@@ -28,7 +28,7 @@ Alap feladatok (maximális kapható pontokkal):
 - [ ] 3p: Az alapértelmezettől eltérő tranzakció kezelés.
 - [X] 5p: Megfelelő biztonsági óvintézkedések (authorizáció, SQL injection kivédése, szerver oldali validáció, biztonságos jelszó tárolás stb.)
 - [X] 2p: Unit tesztek használata (Jelentős lefedettség esetén további bónusz pontokat ér.)
-- [ ] 3p: Qt alatt signals and slots mechanizmus használata.
+- [X] 3p: Qt alatt signals and slots mechanizmus használata.
 - [ ] 3p: Logolási mechanizmus használata loglevel támogatással.
 
 Bónusz feladatok, melyek plusz utánajárást is igényelhetnek (maximális kapható pontokkal, csak ha az alap feladatokból időben leadva legalább 30 pont összegyűlt):
@@ -37,7 +37,7 @@ Bónusz feladatok, melyek plusz utánajárást is igényelhetnek (maximális kap
 - [ ] 5p: Linux alatt megszakítás kezelő készítése
 - [X] 5p: E-mail küldés a backendben.
 - [ ] 3-10p: Jelentős automatikus teszt lefedettség, lefedettségtől függően pontozva
-- [ ] 3p: QRC mechanizmus használata nem QML fájlok tárolására és elérésére.
+- [X] 3p: QRC mechanizmus használata nem QML fájlok tárolására és elérésére.
 - [ ] 3p: Saját fejlesztésű dinamikusan linkelt könyvtár használata.
 - [X] 8p: Induláskor lefutó öntesztelő funkció megvalósítása, mely a rendszer minden komponensének elérhetőségét és alapvető funkcióinak működőképességét teszteli (pl. webes felületről egy adat elmentése adatbázisba, majd visszaolvasása, hardver periféria megszólítása, valamint a vastag kliensen a logba írás).
 

@@ -1,6 +1,7 @@
 package com.itcatcetc.smarthome.actuator.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itcatcetc.smarthome.type.Type;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -73,5 +74,19 @@ public class ActuatorCommandController {
     @PreAuthorize("hasRole('HOMIE')")
     public void updateData(@RequestBody ActuatorCommand command) {
         commandDataService.updateCommand(command);
+    }
+
+    @GetMapping(path = "{roomId}/{type}")
+    @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
+    public ResponseEntity<String> getActiveCommandsByRoomIdAndType(@PathVariable("roomId") Integer roomId, @PathVariable("type") Type type) {
+        List<ActuatorCommand> list = commandDataService.getActiveCommandsByRoomIdAndType(roomId, type);
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+        try {
+            json = mapper.writeValueAsString(list);
+        } catch (Exception e) {
+            json = list.toString();
+        }
+        return ResponseEntity.ok(json);
     }
 }

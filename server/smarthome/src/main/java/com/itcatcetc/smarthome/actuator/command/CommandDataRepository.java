@@ -1,8 +1,11 @@
 package com.itcatcetc.smarthome.actuator.command;
 
+import com.itcatcetc.smarthome.type.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,4 +17,6 @@ import java.util.Optional;
 public interface CommandDataRepository extends JpaRepository<ActuatorCommand, Integer> {
 
     Optional<ActuatorCommand> findByCommandId(Integer commandId);
+
+    List<ActuatorCommand> findByRoomRoomIdAndPremiseTypeAndExpirationDateAfter(Integer roomId, Type type, Date date);
 }

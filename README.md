@@ -7,8 +7,7 @@ Csapattagok Neptun kóddal:
 - Do Hoang Anh (M1QRYX)
 - Marton Judit (M0MYIM)
 
-Bemutató videó URL: 
-(Ugye minden olyan dolog szerepel benne a kiírásnak megfelelően, amire pontot szeretnétek kapni?)
+Bemutató videó URL: url is coming in the near future!!
 
 **Pontot érő technológiák**
 (Amit elkészítettetek, azt X-eljétek be!)

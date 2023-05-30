@@ -2,6 +2,8 @@
 #include <QNetworkReply>
 #include <QRegularExpression>
 #include <QDirIterator>
+#include <QJsonObject>
+#include <QJsonDocument>
 #include "networkcommunication.h"
 #include "room.h"
 
@@ -77,6 +79,18 @@ void NetworkCommunication::slotReplyFinished(QNetworkReply *pReply)
                     {
                         handleGetAllSensorsResponse(pReply);
                     }
+                    else if (m_listReplys.at(i).first == "PUT" || m_listReplys.at(i).first == "POST")
+                    {
+                        handleResponseForSensorsPerRoomUpdate(pReply);
+                    }
+                }
+                else if(pReply->request().url().path().endsWith(m_actuatorsPath))
+                {
+                    emit communicationFinished();
+                    if (m_listReplys.at(i).first == "PUT" || m_listReplys.at(i).first == "POST")
+                    {
+                        handleResponseForActuatorsPerRoomUpdate(pReply);
+                    }
                 }
                 else if(pReply->request().url().path().contains(m_roomsPath + m_sensorsPath))
                 {
@@ -110,20 +124,20 @@ void NetworkCommunication::slotReplyFinished(QNetworkReply *pReply)
                         handleGetLastHourOfSensorDataResponse(pReply);
                     }
                 }
-                else if (pReply->request().url().path().contains(m_actuatorsPath))
-                {
-                    emit communicationFinished();
-                    if (m_listReplys.at(i).first == "PUT" || m_listReplys.at(i).first == "POST" || m_listReplys.at(i).first == "DEL")
-                    {
-                        handleResponseForActuatorsPerRoomUpdate(pReply);
-                    }
-                }
                 else if (pReply->request().url().path().contains(m_sensorsPath))
                 {
                     emit communicationFinished();
-                    if (m_listReplys.at(i).first == "PUT" || m_listReplys.at(i).first == "POST" || m_listReplys.at(i).first == "DEL")
+                    if (m_listReplys.at(i).first == "DEL")
                     {
                         handleResponseForSensorsPerRoomUpdate(pReply);
+                    }
+                }
+                else if (pReply->request().url().path().contains(m_actuatorsPath))
+                {
+                    emit communicationFinished();
+                    if (m_listReplys.at(i).first == "DEL")
+                    {
+                        handleResponseForActuatorsPerRoomUpdate(pReply);
                     }
                 }
                 m_listReplys.removeAt(i);
@@ -598,7 +612,7 @@ void NetworkCommunication::createSensor(const QString &name, const QString &type
     QJsonObject json;
     json.insert("name", name);
     json.insert("type", type);
-    json.insert("apiEndpoint", address);
+    json.insert("apiEndpoint", "https://" + address + "/");
 
     QJsonObject jsonRoom;
     jsonRoom.insert("roomId", roomId);
@@ -612,9 +626,10 @@ void NetworkCommunication::createSensor(const QString &name, const QString &type
 void NetworkCommunication::updateSensor(int sensorId, const QString &name, const QString &type, const QString &address, int roomId)
 {
     QJsonObject json;
+    json.insert("sensorId", sensorId);
     json.insert("name", name);
     json.insert("type", type);
-    json.insert("apiEndpoint", address);
+    json.insert("apiEndpoint", "https://" + address + "/");
 
     QJsonObject jsonRoom;
     jsonRoom.insert("roomId", roomId);
@@ -628,9 +643,10 @@ void NetworkCommunication::updateSensor(int sensorId, const QString &name, const
 void NetworkCommunication::updateActuator(int actuatorId, const QString &name, const QString &type, const QString &address, int roomId)
 {
     QJsonObject json;
+    json.insert("actuatorId", actuatorId);
     json.insert("name", name);
     json.insert("type", type);
-    json.insert("apiEndpoint", address);
+    json.insert("apiEndpoint", "https://" + address + "/");
 
     QJsonObject jsonRoom;
     jsonRoom.insert("roomId", roomId);
@@ -657,7 +673,7 @@ void NetworkCommunication::createActuator(const QString &name, const QString &ty
     QJsonObject json;
     json.insert("name", name);
     json.insert("type", type);
-    json.insert("apiEndpoint", address);
+    json.insert("apiEndpoint", "https://" + address + "/");
     
     QJsonObject jsonRoom;
     jsonRoom.insert("roomId", roomId);
@@ -669,7 +685,7 @@ void NetworkCommunication::createActuator(const QString &name, const QString &ty
 }
 
 
-void handleResponseForSensorsPerRoomUpdate(QNetworkReply *pReply){
+void NetworkCommunication::handleResponseForSensorsPerRoomUpdate(QNetworkReply *pReply){
     if(pReply)
     {
         QNetworkReply::NetworkError err = pReply->error();
@@ -684,7 +700,7 @@ void handleResponseForSensorsPerRoomUpdate(QNetworkReply *pReply){
     }
 }
 
-void handleResponseForActuatorsPerRoomUpdate(QNetworkReply *pReply){
+void NetworkCommunication::handleResponseForActuatorsPerRoomUpdate(QNetworkReply *pReply){
     if(pReply)
     {
         QNetworkReply::NetworkError err = pReply->error();

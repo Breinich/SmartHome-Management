@@ -20,12 +20,12 @@ public:
     Q_INVOKABLE void getActuatorsPerRoom(int roomId);
     Q_INVOKABLE void getAllSensors();
     Q_INVOKABLE void getLastHourOfSensorData(int sensorId);
-    /*Q_INVOKABLE void createSensor(const QString& name, const QString& type, const QString& address, int roomId);
+    Q_INVOKABLE void createSensor(const QString& name, const QString& type, const QString& address, int roomId);
     Q_INVOKABLE void updateSensor(int sensorId, const QString& name, const QString& type, const QString& address, int roomId);
     Q_INVOKABLE void deleteSensor(int sensorId);
     Q_INVOKABLE void createActuator(const QString& name, const QString& type, const QString& address, int roomId);
     Q_INVOKABLE void updateActuator(int actuatorId, const QString& name, const QString& type, const QString& address, int roomId);
-    Q_INVOKABLE void deleteActuator(int sensorId);*/
+    Q_INVOKABLE void deleteActuator(int sensorId);
 
 
 
@@ -65,8 +65,8 @@ private:
     void handleGetActuatorsPerRoomResponse(QNetworkReply *pReply);
     void handleGetAllSensorsResponse(QNetworkReply *pReply);
     void handleGetLastHourOfSensorDataResponse(QNetworkReply *pReply); //emit addSensorStatisticData
-    /*void handleResponseForSensorsPerRoomUpdate(QNetworkReply *pReply); //emit sensorsPerRoomUpdateNeeded
-    void handleResponseForActuatorsPerRoomUpdate(QNetworkReply *pReply); //emit actuatorsPerRoomUpdateNeeded*/
+    void handleResponseForSensorsPerRoomUpdate(QNetworkReply *pReply); //emit sensorsPerRoomUpdateNeeded
+    void handleResponseForActuatorsPerRoomUpdate(QNetworkReply *pReply); //emit actuatorsPerRoomUpdateNeeded
 
     //Note: can not handle array as value
     QString getJsonValue(const QString& sampleText, const QString& key, int idx, const QString& afterKey = "");

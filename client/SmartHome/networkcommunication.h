@@ -81,6 +81,7 @@ private:
     QString m_roomsPath;
     QString m_sensorsPath;
     QString m_actuatorsPath;
+    QString m_sensorDataPath;
     QList<QPair<QString, QNetworkReply*>> m_listReplys;
 };
 

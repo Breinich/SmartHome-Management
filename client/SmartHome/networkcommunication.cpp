@@ -110,6 +110,22 @@ void NetworkCommunication::slotReplyFinished(QNetworkReply *pReply)
                         handleGetLastHourOfSensorDataResponse(pReply);
                     }
                 }
+                else if (pReply->request().url().path().contains(m_actuatorsPath))
+                {
+                    emit communicationFinished();
+                    if (m_listReplys.at(i).first == "PUT" || m_listReplys.at(i).first == "POST" || m_listReplys.at(i).first == "DEL")
+                    {
+                        handleResponseForActuatorsPerRoomUpdate(pReply);
+                    }
+                }
+                else if (pReply->request().url().path().contains(m_sensorsPath))
+                {
+                    emit communicationFinished();
+                    if (m_listReplys.at(i).first == "PUT" || m_listReplys.at(i).first == "POST" || m_listReplys.at(i).first == "DEL")
+                    {
+                        handleResponseForSensorsPerRoomUpdate(pReply);
+                    }
+                }
                 m_listReplys.removeAt(i);
             }
         }
@@ -569,6 +585,112 @@ void NetworkCommunication::handleGetLastHourOfSensorDataResponse(QNetworkReply *
                     }
                 }
             }
+        }
+        else
+        {
+            reportErrorToUser(pReply);
+        }
+    }
+}
+
+void NetworkCommunication::createSensor(const QString &name, const QString &type, const QString &address, int roomId)
+{
+    QJsonObject json;
+    json.insert("name", name);
+    json.insert("type", type);
+    json.insert("apiEndpoint", address);
+
+    QJsonObject jsonRoom;
+    jsonRoom.insert("roomId", roomId);
+    json.insert("room", jsonRoom);
+    
+    QJsonDocument doc = QJsonDocument(json);
+
+    sendPostOrPut(m_sensorsPath, doc.toJson(QJsonDocument::Compact), true, true);
+}
+
+void NetworkCommunication::updateSensor(int sensorId, const QString &name, const QString &type, const QString &address, int roomId)
+{
+    QJsonObject json;
+    json.insert("name", name);
+    json.insert("type", type);
+    json.insert("apiEndpoint", address);
+
+    QJsonObject jsonRoom;
+    jsonRoom.insert("roomId", roomId);
+    json.insert("room", jsonRoom);
+    
+    QJsonDocument doc = QJsonDocument(json);
+
+    sendPostOrPut(m_sensorsPath, doc.toJson(QJsonDocument::Compact), false, true);
+}
+
+void NetworkCommunication::updateActuator(int actuatorId, const QString &name, const QString &type, const QString &address, int roomId)
+{
+    QJsonObject json;
+    json.insert("name", name);
+    json.insert("type", type);
+    json.insert("apiEndpoint", address);
+
+    QJsonObject jsonRoom;
+    jsonRoom.insert("roomId", roomId);
+    json.insert("room", jsonRoom);
+    
+    QJsonDocument doc = QJsonDocument(json);
+
+    sendPostOrPut(m_actuatorsPath, doc.toJson(QJsonDocument::Compact), false, true);
+}
+
+void NetworkCommunication::deleteActuator(int actuatorId)
+{
+    sendDelete(m_actuatorsPath + "/" + QString::number(actuatorId), true);
+}
+
+void NetworkCommunication::deleteSensor(int sensorId)
+{
+    sendDelete(m_sensorsPath + "/" + QString::number(sensorId), true);
+}
+
+
+void NetworkCommunication::createActuator(const QString &name, const QString &type, const QString &address, int roomId)
+{
+    QJsonObject json;
+    json.insert("name", name);
+    json.insert("type", type);
+    json.insert("apiEndpoint", address);
+    
+    QJsonObject jsonRoom;
+    jsonRoom.insert("roomId", roomId);
+    json.insert("room", jsonRoom);
+
+    QJsonDocument doc = QJsonDocument(json);
+
+    sendPostOrPut(m_actuatorsPath, doc.toJson(QJsonDocument::Compact), true, true);
+}
+
+
+void handleResponseForSensorsPerRoomUpdate(QNetworkReply *pReply){
+    if(pReply)
+    {
+        QNetworkReply::NetworkError err = pReply->error();
+        if(err == QNetworkReply::NoError)
+        {
+            emit sensorsPerRoomUpdateNeeded();
+        }
+        else
+        {
+            reportErrorToUser(pReply);
+        }
+    }
+}
+
+void handleResponseForActuatorsPerRoomUpdate(QNetworkReply *pReply){
+    if(pReply)
+    {
+        QNetworkReply::NetworkError err = pReply->error();
+        if(err == QNetworkReply::NoError)
+        {
+            emit actuatorsPerRoomUpdateNeeded();
         }
         else
         {

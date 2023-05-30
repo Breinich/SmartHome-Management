@@ -56,7 +56,11 @@ public class SensorDataController {
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void registerNewData(@Valid @RequestBody SensorData sensorData) {
-        sensorDataService.addNewData(sensorData);
+        try{
+            sensorDataService.addNewData(sensorData);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -67,7 +71,11 @@ public class SensorDataController {
     @DeleteMapping(path = "{dataId}")
     @PreAuthorize("hasRole('HOMIE')")
     public void deleteData(@Valid @PathVariable("dataId") Integer dataId) {
-        sensorDataService.deleteData(dataId);
+        try {
+            sensorDataService.deleteData(dataId);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**

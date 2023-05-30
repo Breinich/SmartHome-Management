@@ -51,7 +51,11 @@ public class ActuatorCommandController {
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void registerNewData(@Valid @RequestBody ActuatorCommand command) {
-        commandDataService.addNewCommand(command);
+        try {
+            commandDataService.addNewCommand(command);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -62,7 +66,11 @@ public class ActuatorCommandController {
     @DeleteMapping(path = "{dataId}")
     @PreAuthorize("hasRole('HOMIE')")
     public void deleteData(@Valid @PathVariable("dataId") Integer dataId) {
-        commandDataService.deleteCommand(dataId);
+        try {
+            commandDataService.deleteCommand(dataId);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -73,7 +81,12 @@ public class ActuatorCommandController {
     @PutMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void updateData(@RequestBody ActuatorCommand command) {
-        commandDataService.updateCommand(command);
+        try {
+            commandDataService.updateCommand(command);
+        }
+        catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -85,7 +98,15 @@ public class ActuatorCommandController {
     @GetMapping(path = "{roomId}/{type}")
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public ResponseEntity<String> getActiveCommandsByRoomIdAndType(@PathVariable("roomId") Integer roomId, @PathVariable("type") Type type) {
-        List<ActuatorCommand> list = commandDataService.getActiveCommandsByRoomIdAndType(roomId, type);
+        List<ActuatorCommand> list;
+        try {
+            list = commandDataService.getActiveCommandsByRoomIdAndType(roomId, type);
+        }
+        catch (Exception e) {
+            System.err.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
         ObjectMapper mapper = new ObjectMapper();
         String json;
         try {

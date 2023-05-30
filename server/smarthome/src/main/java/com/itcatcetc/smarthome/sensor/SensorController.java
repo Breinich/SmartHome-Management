@@ -58,7 +58,11 @@ public class SensorController {
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void registerNewSensor(@Valid @RequestBody Sensor sensor) {
-        sensorService.addNewSensor(sensor);
+        try {
+            sensorService.addNewSensor(sensor);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -69,7 +73,11 @@ public class SensorController {
     @DeleteMapping(path = "{sensorId}")
     @PreAuthorize("hasRole('HOMIE')")
     public void deleteSensor(@Valid @PathVariable("sensorId") Integer sensorId) {
-        sensorService.deleteSensor(sensorId);
+        try{
+            sensorService.deleteSensor(sensorId);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -80,7 +88,11 @@ public class SensorController {
     @PutMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void updateSensor(@Valid @RequestBody Sensor sensor) {
-        sensorService.updateSensor(sensor);
+        try{
+            sensorService.updateSensor(sensor);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -96,7 +108,13 @@ public class SensorController {
         Date startTime = new Date(start);
         Date endTime = new Date(end);
 
-        List<SensorData> data = sensorService.getSensorDatasInTimeRange(sensorId, startTime, endTime);
+        List<SensorData> data;
+        try{
+            data = sensorService.getSensorDatasInTimeRange(sensorId, startTime, endTime);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
         String res;

@@ -52,7 +52,11 @@ public class ActuatorController {
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void registerNewActuator(@Valid @RequestBody Actuator actuator) {
-        actuatorService.addNewActuator(actuator);
+        try {
+            actuatorService.addNewActuator(actuator);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -62,7 +66,11 @@ public class ActuatorController {
     @DeleteMapping(path = "{actuatorId}")
     @PreAuthorize("hasRole('HOMIE')")
     public void deleteActuator(@Valid @PathVariable("actuatorId") Integer actuatorId) {
-        actuatorService.deleteActuator(actuatorId);
+        try {
+            actuatorService.deleteActuator(actuatorId);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -72,6 +80,10 @@ public class ActuatorController {
     @PutMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void updateActuator(@Valid @RequestBody Actuator actuator) {
-        actuatorService.updateActuator(actuator);
+        try{
+            actuatorService.updateActuator(actuator);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

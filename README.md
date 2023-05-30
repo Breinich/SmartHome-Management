@@ -32,7 +32,7 @@ Alap feladatok (maximális kapható pontokkal):
 - [ ] 3p: Logolási mechanizmus használata loglevel támogatással.
 
 Bónusz feladatok, melyek plusz utánajárást is igényelhetnek (maximális kapható pontokkal, csak ha az alap feladatokból időben leadva legalább 30 pont összegyűlt):
-- [ ] 5p: Linux alatt telepítő csomag készítése
+- [X] 5p: Linux alatt telepítő csomag készítése
 - [X] 5p: Időzített taskok a backendben.
 - [ ] 5p: Linux alatt megszakítás kezelő készítése
 - [X] 5p: E-mail küldés a backendben.

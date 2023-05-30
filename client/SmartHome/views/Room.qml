@@ -22,7 +22,6 @@ Page {
             padding: 20
         }
         onApplied: {
-            httpcommunication.deleteRoom(roomId);
             confirmDeleteDialog.accept();
         }
     }
@@ -925,14 +924,10 @@ Page {
             id: listViewSensorsModel
         }
         ScrollBar.vertical: ScrollBar {}
-        Component.onCompleted: {
-            listViewSensors.refreshSensors();
-        }
         function refreshSensors()
         {
             listViewSensorsModel.clear();
-            listViewSensorsModel.append({listViewSensorsId: 0, listViewSensorsType: "LIGHT", listViewSensorsAddress: "192.156.0.10", listViewSensorsName: "Light", listViewSensorsValueInitialized: true, listViewSensorsValue: 25});
-            listViewSensorsModel.append({listViewSensorsId: 0, listViewSensorsType: "TEMPERATURE", listViewSensorsAddress: "FE80:0000:0000:0000:0202:B3FF:FE1E:8329", listViewSensorsName: "Temp", listViewSensorsValueInitialized: false, listViewSensorsValue: 25});
+            httpcommunication.getSensorsPerRoom(stack.selectedRoomId);
         }
     }
 
@@ -1096,14 +1091,27 @@ Page {
             id: listViewActuatorsModel
         }
 
-        Component.onCompleted: {
-            listViewActuators.refreshActuators();
-        }
         function refreshActuators()
         {
             listViewActuatorsModel.clear();
-            listViewActuatorsModel.append({listViewActuatorId: 0, listViewActuatorsName: "Roomtepmerature", listViewActuatorType: "TEMPERATURE", listViewActuatorsValueFrom: -30, listViewActuatorsValueTo: 50, listViewActuatorsValue: 25, listViewactuatorsAddress: "121.23.142.10"});
-            listViewActuatorsModel.append({listViewActuatorId: 0, listViewActuatorsName: "Roomtepmerature 2", listViewActuatorType: "TEMPERATURE", listViewActuatorsValueFrom: -30, listViewActuatorsValueTo: 50, listViewActuatorsValue: 25, listViewactuatorsAddress: "FE80:0000:0000:0000:0202:B3FF:FE1E:8329"})
+            httpcommunication.getActuatorsPerRoom(stack.selectedRoomId);
         }
+
+        Connections{
+            target: httpcommunication
+
+            function onAddSensorsPerRoomListItem(id, name, type, address) {
+                listViewSensorsModel.append({listViewSensorsId: id, listViewSensorsType: type, listViewSensorsAddress: address, listViewSensorsName: name, listViewSensorsValueInitialized: false, listViewSensorsValue: 0});
+            }
+
+            function onAddActuatorsPerRoomListItem(id, name, type, address) {
+                listViewActuatorsModel.append({listViewActuatorId: id, listViewActuatorsName: name, listViewActuatorType: type, listViewActuatorsValueFrom: type === "TEMPERATURE" ? -30 : 0, listViewActuatorsValueTo: type === "TEMPERATURE" ? 50 : 100, listViewActuatorsValue: 22, listViewactuatorsAddress: address});
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        listViewSensors.refreshSensors();
+        listViewActuators.refreshActuators();
     }
 }

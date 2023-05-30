@@ -1,118 +1,77 @@
 import QtQuick
 import QtQuick.Controls 6.2
+import QtCharts 6.2
 
 Page {
     id: statisticsview
-    Label{
-        text: "TODO: statisticsview"
-    }
-
-    Rectangle
-    {
-        id: actuatorItemRect
-        y: 10
-        x: 10
-        width: 300
-        height: 100
-        property int actuatorId: listViewActuatorId
-        color: "transparent"
-        Column{
-            x:20
-            y:20
-            Label {
-                id: listViewActuatorsLabel
-                width: 280
-                height: 40
-                text: listViewActuatorsName
+    Column{
+        anchors.centerIn: parent
+        Row{
+            Text {
+                id: text1
+                width: 90
+                height: 65
+                text: qsTr("Select sensor")
+                font.pixelSize: 14
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
-                font.pointSize: 12
             }
-
-            Slider {
-                id: actuatorSlider
-                width: 280
-                from: listViewActuatorsValueFrom
-                to: listViewActuatorsValueTo
-                value: listViewActuatorsValue
-                stepSize: 1
-                visible: listViewActuatorsVisibility
-
-                background: Rectangle {
-                    x: actuatorSlider.leftPadding
-                    y: actuatorSlider.topPadding + actuatorSlider.availableHeight / 2 - height / 2
-                    implicitWidth: 200
-                    implicitHeight: 4
-                    width: actuatorSlider.availableWidth
-                    height: implicitHeight
-                    radius: 2
-                    color: "#bdbebf"
-
-                    Rectangle {
-                        width: actuatorSlider.visualPosition * parent.width
-                        height: parent.height
-                        color: "#21be2b"
-                        radius: 2
+            ComboBox {
+                id: comboSensorName
+                y: 18
+                width: 135
+                height: 30
+                textRole: "sensorName"
+                model: ListModel {
+                        id: comboSensorNameModel
                     }
+                Component.onCompleted: {
+                    comboSensorNameModel.clear();
+                    httpcommunication.getAllSensors();
+                }
+                onActivated: {
+                    lineSeries.name = comboSensorName.currentText;
+                }
+            }
+        }
+        ChartView {
+            id: chartView
+            width: 600
+            height: 350
+            LineSeries {
+                id: lineSeries
+                name: comboSensorName.currentText
+                XYPoint {
+                    x: 0
+                    y: 2
                 }
 
-                handle: Rectangle {
-                    x: actuatorSlider.leftPadding + actuatorSlider.visualPosition * (actuatorSlider.availableWidth - width)
-                    y: actuatorSlider.topPadding + actuatorSlider.availableHeight / 2 - height / 2
-                    implicitWidth: 26
-                    implicitHeight: 26
-                    radius: 13
-                    color: actuatorSlider.pressed ? "#f0f0f0" : "#f6f6f6"
-                    border.color: "#bdbebf"
+                XYPoint {
+                    x: 1
+                    y: 1.2
                 }
 
-                onMoved: {
-                    //TODO: post
+                XYPoint {
+                    x: 2
+                    y: 3.3
+                }
+
+                XYPoint {
+                    x: 5
+                    y: 2.1
                 }
             }
         }
 
-        Button {
-            id: buttonDeleteActuator
-            width: 60
-            height: 25
-            text: "Delete"
-            visible: true
-            hoverEnabled: false
-            x: actuatorItemRect.width - buttonDeleteActuator.width - 5
-            y: 5
-        }
+    }
 
-        Button {
-            id: buttonEditActuator
-            width: 60
-            height: 25
-            text: "Edit"
-            visible: true
-            hoverEnabled: false
-            x: actuatorItemRect.width - buttonEditActuator.width - buttonDeleteActuator.width - 10;
-            y: 5
-        }
+    Connections{
+        target: httpcommunication
 
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
-            onEntered: {
-                actuatorItemRect.color = "lightgrey";
-                buttonEditActuator.visible = true;
-                buttonDeleteActuator.visible = true;
-            }
-            onExited: {
-                if(visible2)
-                {
-                    actuatorItemRect.color = "transparent";
-                    buttonEditActuator.visible = false;
-                    buttonDeleteActuator.visible = false;
-                }
-            }
-            onClicked: {
-                listViewRooms.roomClicked(roomid2);
-            }
+        function onAddSensor(id, name, type, address, roomId)
+        {
+            comboSensorNameModel.append({sensorId: id, sensorName: name, sensorType: type, sensorAddress: address, roomId: roomId});
+            comboSensorName.currentIndex = 0;
         }
     }
 }

@@ -1,5 +1,5 @@
 
-#include <QGuiApplication>
+#include <QtWidgets/QApplication>
 #include <QQmlApplicationEngine>
 #include <QIcon>
 #include "networkcommunication.h"
@@ -9,7 +9,7 @@
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     app.setWindowIcon(QIcon(":/SmartHome/logo.png"));
 
     QQmlApplicationEngine engine;

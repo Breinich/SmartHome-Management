@@ -13,6 +13,8 @@ NetworkCommunication::NetworkCommunication(QObject* pParent) : QObject(pParent)
     m_loginPath = "/auth/login";
     m_logoutPath = "/auth/logout";
     m_roomsPath = "/rooms";
+    m_sensorsPath = "/sensors";
+    m_actuatorsPath = "/actuators";
 
     m_pNetManager = new QNetworkAccessManager(pParent);
     m_pNetManager->connectToHost(host, 8081);
@@ -67,6 +69,30 @@ void NetworkCommunication::slotReplyFinished(QNetworkReply *pReply)
                         handleResponseForRoomsUpdate(pReply);
                     }
                 }
+                else if(pReply->request().url().path().endsWith(m_sensorsPath))
+                {
+                    emit communicationFinished();
+                    if (m_listReplys.at(i).first == "GET")
+                    {
+                        handleGetAllSensorsResponse(pReply);
+                    }
+                }
+                else if(pReply->request().url().path().contains(m_roomsPath + m_sensorsPath))
+                {
+                    emit communicationFinished();
+                    if (m_listReplys.at(i).first == "GET")
+                    {
+                        handleGetSensorsPerRoomResponse(pReply);
+                    }
+                }
+                else if(pReply->request().url().path().contains(m_roomsPath + m_actuatorsPath))
+                {
+                    emit communicationFinished();
+                    if (m_listReplys.at(i).first == "GET")
+                    {
+                        handleGetActuatorsPerRoomResponse(pReply);
+                    }
+                }
                 else if(pReply->request().url().path().contains(m_roomsPath))
                 {
                     emit communicationFinished();
@@ -100,9 +126,12 @@ void NetworkCommunication::addAuthHeader(QNetworkRequest& request)
     request.setRawHeader("Authorization", headerData);
 }
 
-void NetworkCommunication::sendRequest(const QString& strPath, bool bAuth)
+void NetworkCommunication::sendRequest(const QString& strPath, bool bAuth, bool bNotifyStart)
 {
-    emit communicationStarted();
+    if(bNotifyStart)
+    {
+        emit communicationStarted();
+    }
     QNetworkRequest request;
     request.setUrl(QUrl(m_baseUrl+strPath));
     request.setTransferTimeout();
@@ -113,9 +142,12 @@ void NetworkCommunication::sendRequest(const QString& strPath, bool bAuth)
     m_listReplys.append(qMakePair("GET", m_pNetManager->get(request)));
 }
 
-void NetworkCommunication::sendDelete(const QString& strPath, bool bAuth)
+void NetworkCommunication::sendDelete(const QString& strPath, bool bAuth, bool bNotifyStart)
 {
-    emit communicationStarted();
+    if(bNotifyStart)
+    {
+        emit communicationStarted();
+    }
     QNetworkRequest request;
     request.setUrl(QUrl(m_baseUrl+strPath));
     request.setTransferTimeout();
@@ -126,9 +158,12 @@ void NetworkCommunication::sendDelete(const QString& strPath, bool bAuth)
     m_listReplys.append(qMakePair("DEL", m_pNetManager->deleteResource(request)));
 }
 
-void NetworkCommunication::sendPostOrPut(const QString& strPath, const QByteArray& body, bool bPost, bool bAuth)
+void NetworkCommunication::sendPostOrPut(const QString& strPath, const QByteArray& body, bool bPost, bool bAuth, bool bNotifyStart)
 {
-    emit communicationStarted();
+    if(bNotifyStart)
+    {
+        emit communicationStarted();
+    }
     QNetworkRequest request;
     request.setUrl(QUrl(m_baseUrl+strPath));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -148,20 +183,27 @@ void NetworkCommunication::sendPostOrPut(const QString& strPath, const QByteArra
     }
 }
 
-QString NetworkCommunication::getJsonValue(const QString& sampleText, const QString& key, int idx)
+QString NetworkCommunication::getJsonValue(const QString& sampleText, const QString& key, int idx, const QString& afterKey)
 {
     QString retVal;
 
     const QRegularExpression regexpKey("(\"" + key +"\"\\s{0,1}:\\s{0,1})");
-    QRegularExpressionMatch match = regexpKey.match(sampleText);
+    const QRegularExpression regexpAfterKey("(\"" + afterKey +"\"\\s{0,1}:\\s{0,1})");
+    QRegularExpressionMatch match = afterKey.isEmpty() ? regexpKey.match(sampleText) : regexpAfterKey.match(sampleText);
     qsizetype startPos = match.capturedEnd();
     if(idx>0)
     {
         for(int i=1; i<=idx; i++)
         {
-            match = regexpKey.match(sampleText, startPos);
+            match = afterKey.isEmpty() ? regexpKey.match(sampleText, startPos) : regexpAfterKey.match(sampleText, startPos);
             startPos = match.capturedEnd();
         }
+    }
+
+    if(!afterKey.isEmpty())
+    {
+        match = regexpKey.match(sampleText, startPos);
+        startPos = match.capturedEnd();
     }
 
     static QRegularExpression regexpEnd("[,}]");
@@ -336,6 +378,142 @@ void NetworkCommunication::handleResponseForRoomsUpdate(QNetworkReply *pReply)
         if(err == QNetworkReply::NoError)
         {
             emit roomsUpdateNeeded();
+        }
+        else
+        {
+            reportErrorToUser(pReply);
+        }
+    }
+}
+
+void NetworkCommunication::getSensorsPerRoom(int roomId)
+{
+    sendRequest(m_roomsPath + m_sensorsPath + "/" + QString::number(roomId), true);
+}
+
+void NetworkCommunication::handleGetSensorsPerRoomResponse(QNetworkReply *pReply)
+{
+    if(pReply)
+    {
+        QNetworkReply::NetworkError err = pReply->error();
+        if(err == QNetworkReply::NoError)
+        {
+            QByteArray byteArrayResponse(pReply->readAll());
+            QString strResponse(QString::fromUtf8(byteArrayResponse));
+
+
+            static QRegularExpression regexpSensorId("(\"sensorId\"\\s{0,1}:)");
+            int count = strResponse.count(regexpSensorId);
+
+            for(int i=0; i<count; i++)
+            {
+                QString strId = getJsonValue(strResponse, "sensorId", i);
+                bool bOk;
+                int id = strId.toInt(&bOk);
+                if(bOk)
+                {
+                    QString name = getJsonValue(strResponse, "name", i, "sensorId");
+                    name = cutBeginAndEndQuotes(name);
+                    QString type = getJsonValue(strResponse, "type", i);
+                    type = cutBeginAndEndQuotes(type);
+                    QString address = getJsonValue(strResponse, "apiEndpoint", i);
+                    address = cutBeginAndEndQuotes(address);
+                    QStringList listSplitted = address.split("/");
+                    emit addSensorsPerRoomListItem(id, name, type, listSplitted[listSplitted.length()-2]);
+                }
+            }
+        }
+        else
+        {
+            reportErrorToUser(pReply);
+        }
+    }
+}
+
+void NetworkCommunication::getActuatorsPerRoom(int roomId)
+{
+    sendRequest(m_roomsPath + m_actuatorsPath + "/" + QString::number(roomId), true);
+}
+
+void NetworkCommunication::handleGetActuatorsPerRoomResponse(QNetworkReply *pReply)
+{
+    if(pReply)
+    {
+        QNetworkReply::NetworkError err = pReply->error();
+        if(err == QNetworkReply::NoError)
+        {
+            QByteArray byteArrayResponse(pReply->readAll());
+            QString strResponse(QString::fromUtf8(byteArrayResponse));
+
+
+            static QRegularExpression regexpSensorId("(\"actuatorId\"\\s{0,1}:)");
+            int count = strResponse.count(regexpSensorId);
+
+            for(int i=0; i<count; i++)
+            {
+                QString strId = getJsonValue(strResponse, "actuatorId", i);
+                bool bOk;
+                int id = strId.toInt(&bOk);
+                if(bOk)
+                {
+                    QString name = getJsonValue(strResponse, "name", i, "actuatorId");
+                    name = cutBeginAndEndQuotes(name);
+                    QString type = getJsonValue(strResponse, "type", i);
+                    type = cutBeginAndEndQuotes(type);
+                    QString address = getJsonValue(strResponse, "apiEndpoint", i);
+                    address = cutBeginAndEndQuotes(address);
+                    QStringList listSplitted = address.split("/");
+                    emit addActuatorsPerRoomListItem(id, name, type, listSplitted[listSplitted.length()-2]);
+                }
+            }
+        }
+        else
+        {
+            reportErrorToUser(pReply);
+        }
+    }
+}
+
+void NetworkCommunication::getAllSensors(){
+    sendRequest(m_sensorsPath, true);
+}
+
+void NetworkCommunication::handleGetAllSensorsResponse(QNetworkReply *pReply)
+{
+    if(pReply)
+    {
+        QNetworkReply::NetworkError err = pReply->error();
+        if(err == QNetworkReply::NoError)
+        {
+            QByteArray byteArrayResponse(pReply->readAll());
+            QString strResponse(QString::fromUtf8(byteArrayResponse));
+
+
+            static QRegularExpression regexpSensorId("(\"sensorId\"\\s{0,1}:)");
+            int count = strResponse.count(regexpSensorId);
+
+            for(int i=0; i<count; i++)
+            {
+                QString strId = getJsonValue(strResponse, "sensorId", i);
+                bool bOk;
+                int id = strId.toInt(&bOk);
+                if(bOk)
+                {
+                    QString strRoomId = getJsonValue(strResponse, "roomId", i);
+                    int roomId = strRoomId.toInt(&bOk);
+                    if(bOk)
+                    {
+                        QString name = getJsonValue(strResponse, "name", i, "sensorId");
+                        name = cutBeginAndEndQuotes(name);
+                        QString type = getJsonValue(strResponse, "type", i);
+                        type = cutBeginAndEndQuotes(type);
+                        QString address = getJsonValue(strResponse, "apiEndpoint", i);
+                        address = cutBeginAndEndQuotes(address);
+                        QStringList listSplitted = address.split("/");
+                        emit addSensor(id, name, type, listSplitted[listSplitted.length()-2], roomId);
+                    }
+                }
+            }
         }
         else
         {

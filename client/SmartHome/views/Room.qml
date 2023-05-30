@@ -706,19 +706,19 @@ Page {
 
                 if(createNewItemDialog.titleForAddSensor)
                 {
-                    httpcommunication.createSensor(textInputItemName.text, comboBoxType.currentText(), address, stack.selectedRoomId);
+                    httpcommunication.createSensor(textInputItemName.text, comboBoxType.currentText, address, stack.selectedRoomId);
                 }
                 else if(createNewItemDialog.titleForAddActuator)
                 {
-                    httpcommunication.createActuator(textInputItemName.text, comboBoxType.currentText(), address, stack.selectedRoomId);
+                    httpcommunication.createActuator(textInputItemName.text, comboBoxType.currentText, address, stack.selectedRoomId);
                 }
                 else if(createNewItemDialog.titleForEditSensor)
                 {
-                    httpcommunication.updateSensor(createNewItemDialog.itemId, textInputItemName.text, comboBoxType.currentText(), address, stack.selectedRoomId);
+                    httpcommunication.updateSensor(createNewItemDialog.itemId, textInputItemName.text, comboBoxType.currentText, address, stack.selectedRoomId);
                 }
                 else if(createNewItemDialog.titleForEditActuator)
                 {
-                    httpcommunication.updateActuator(createNewItemDialog.itemId, textInputItemName.text, comboBoxType.currentText(), address, stack.selectedRoomId);
+                    httpcommunication.updateActuator(createNewItemDialog.itemId, textInputItemName.text, comboBoxType.currentText, address, stack.selectedRoomId);
                 }
                 createNewItemDialog.accept();
             }

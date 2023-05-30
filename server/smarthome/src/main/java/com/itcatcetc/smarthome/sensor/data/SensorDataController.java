@@ -69,9 +69,14 @@ public class SensorDataController {
         sensorDataService.deleteData(dataId);
     }
 
+    /**
+     * get the latest data of a sensor by sensor id
+     * @param sensorId the id of the sensor
+     * @return a list of sensor data in JSON
+     */
     @GetMapping(path = "sensor/{sensorId}")
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
-public ResponseEntity<String> getLatestDataBySensorId(@PathVariable("sensorId") Integer sensorId) {
+    public ResponseEntity<String> getLatestDataBySensorId(@PathVariable("sensorId") Integer sensorId) {
         List<SensorData> data = sensorDataService.getLatestDataBySensorId(sensorId);
         String res;
         ObjectMapper objectMapper = new ObjectMapper();

@@ -22,6 +22,7 @@ Page {
             padding: 20
         }
         onApplied: {
+            confirmDeleteItemDialog.title == titleForSensor ? httpcommunication.deleteSensor(confirmDeleteItemDialog.itemId) : httpcommunication.deleteActuator(confirmDeleteItemDialog.itemId)
             confirmDeleteDialog.accept();
         }
     }
@@ -645,7 +646,6 @@ Page {
                     rectInputAddressIPv4_3.border.color = "red";
                     bErr = true;
                 }
-
             }
             else
             {
@@ -694,6 +694,32 @@ Page {
             if(!bErr)
             {
                 //TODO server
+                var address = "";
+                if(comboBoxAddressProtocol.currentIndex === 0)
+                {
+                    address = textInputAddressIPv4_0.text + "." + textInputAddressIPv4_1.text + "." + textInputAddressIPv4_2.text + "." + textInputAddressIPv4_3.text;
+                }
+                else
+                {
+                    address = textInputAddressIPv6_0.text + ":" + textInputAddressIPv6_1.text + ":" + textInputAddressIPv6_2.text + ":" + textInputAddressIPv6_3.text + ":" + textInputAddressIPv6_4.text + ":" + textInputAddressIPv6_5.text + ":" + textInputAddressIPv6_6.text + ":" + textInputAddressIPv6_7.text;
+                }
+
+                if(createNewItemDialog.titleForAddSensor)
+                {
+                    httpcommunication.createSensor(textInputItemName.text, comboBoxType.currentText(), address, stack.selectedRoomId);
+                }
+                else if(createNewItemDialog.titleForAddActuator)
+                {
+                    httpcommunication.createActuator(textInputItemName.text, comboBoxType.currentText(), address, stack.selectedRoomId);
+                }
+                else if(createNewItemDialog.titleForEditSensor)
+                {
+                    httpcommunication.updateSensor(createNewItemDialog.itemId, textInputItemName.text, comboBoxType.currentText(), address, stack.selectedRoomId);
+                }
+                else if(createNewItemDialog.titleForEditActuator)
+                {
+                    httpcommunication.updateActuator(createNewItemDialog.itemId, textInputItemName.text, comboBoxType.currentText(), address, stack.selectedRoomId);
+                }
                 createNewItemDialog.accept();
             }
 
@@ -999,8 +1025,13 @@ Page {
 
                     onMoved: {
                         listViewActuatorsLabel.text = listViewActuatorsName + ": " + actuatorSlider.value + (listViewActuatorType === "TEMPERATURE" ? "°C" : "%");
-                        //TODO: post
                     }
+                }
+
+                Text {
+                    text: qsTr("Status: ") + listViewActuatorsOn
+                    font.pointSize: 12
+                    bottomPadding: 10
                 }
             }
 
@@ -1083,6 +1114,20 @@ Page {
                     createNewItemDialog.open();
                 }
             }
+
+            Button {
+                id: buttonSendCommand
+                width: 60
+                height: 25
+                text: "Set"
+                visible: true
+                hoverEnabled: false
+                x: actuatorItemRect.width - buttonSendCommand.width - 5
+                y: actuatorItemRect.height - 15
+                onClicked: {
+                    //TODO: post command with current value
+                }
+            }
         }
 
         ScrollBar.vertical: ScrollBar {}
@@ -1105,7 +1150,7 @@ Page {
             }
 
             function onAddActuatorsPerRoomListItem(id, name, type, address) {
-                listViewActuatorsModel.append({listViewActuatorId: id, listViewActuatorsName: name, listViewActuatorType: type, listViewActuatorsValueFrom: type === "TEMPERATURE" ? -30 : 0, listViewActuatorsValueTo: type === "TEMPERATURE" ? 50 : 100, listViewActuatorsValue: 22, listViewactuatorsAddress: address});
+                listViewActuatorsModel.append({listViewActuatorId: id, listViewActuatorsName: name, listViewActuatorType: type, listViewActuatorsValueFrom: type === "TEMPERATURE" ? -30 : 0, listViewActuatorsValueTo: type === "TEMPERATURE" ? 50 : 100, listViewActuatorsValue: 22, listViewactuatorsAddress: address, listViewActuatorsOn: "OFF"});
             }
         }
     }

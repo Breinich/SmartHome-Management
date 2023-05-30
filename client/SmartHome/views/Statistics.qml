@@ -30,7 +30,9 @@ Page {
                     httpcommunication.getAllSensors();
                 }
                 onActivated: {
+                    lineSeries.clear();
                     lineSeries.name = comboSensorName.currentText;
+                    httpcommunication.getLastHourOfSensorData(comboSensorNameModel.get(comboSensorName.currentIndex).sensorId);
                 }
             }
         }
@@ -41,25 +43,6 @@ Page {
             LineSeries {
                 id: lineSeries
                 name: comboSensorName.currentText
-                XYPoint {
-                    x: 0
-                    y: 2
-                }
-
-                XYPoint {
-                    x: 1
-                    y: 1.2
-                }
-
-                XYPoint {
-                    x: 2
-                    y: 3.3
-                }
-
-                XYPoint {
-                    x: 5
-                    y: 2.1
-                }
             }
         }
 
@@ -72,6 +55,11 @@ Page {
         {
             comboSensorNameModel.append({sensorId: id, sensorName: name, sensorType: type, sensorAddress: address, roomId: roomId});
             comboSensorName.currentIndex = 0;
+        }
+
+        function onaddSensorStatisticData(xValue, yValue)
+        {
+            lineSeries.append(xValue, yValue);
         }
     }
 }

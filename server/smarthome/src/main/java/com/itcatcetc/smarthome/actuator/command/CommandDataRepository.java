@@ -18,5 +18,5 @@ public interface CommandDataRepository extends JpaRepository<ActuatorCommand, In
 
     Optional<ActuatorCommand> findByCommandId(Integer commandId);
 
-    List<ActuatorCommand> findByRoomRoomIdAndPremiseTypeAndExpirationDateAfter(Integer roomId, Type type, Date date);
+    List<ActuatorCommand> findAllByRoom_RoomIdAndConsequenceTypeAndExpirationDateIsNullOrExpirationDateAfter(Integer roomId, Type consequenceType, Date expirationDate);
 }

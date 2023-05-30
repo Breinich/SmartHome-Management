@@ -108,6 +108,6 @@ public class CommandDataService {
     }
 
     public List<ActuatorCommand> getActiveCommandsByRoomIdAndType(Integer roomId, Type type) {
-        return commandDataRepository.findByRoomRoomIdAndPremiseTypeAndExpirationDateAfter(roomId, type,new Date(System.currentTimeMillis()));
+        return commandDataRepository.findAllByRoom_RoomIdAndConsequenceTypeAndExpirationDateIsNullOrExpirationDateAfter(roomId, type, new Date(System.currentTimeMillis()));
     }
 }

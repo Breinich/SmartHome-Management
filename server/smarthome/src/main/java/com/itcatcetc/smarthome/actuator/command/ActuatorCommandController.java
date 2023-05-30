@@ -76,6 +76,12 @@ public class ActuatorCommandController {
         commandDataService.updateCommand(command);
     }
 
+    /**
+     * GET request to retrieve all active commands of a specific room
+     * @param roomId the id of the room
+     * @param type the type of the command
+     * @return JSON array of all active commands of a specific room
+     */
     @GetMapping(path = "{roomId}/{type}")
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public ResponseEntity<String> getActiveCommandsByRoomIdAndType(@PathVariable("roomId") Integer roomId, @PathVariable("type") Type type) {

@@ -96,7 +96,11 @@ public class RoomController {
     @PostMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void registerNewRoom(@Valid @RequestBody Room room) {
-        roomService.addNewRoom(room);
+        try{
+            roomService.addNewRoom(room);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -106,7 +110,11 @@ public class RoomController {
     @DeleteMapping(path = "{roomId}")
     @PreAuthorize("hasRole('HOMIE')")
     public void deleteRoom(@Valid @PathVariable("roomId") Integer roomId) {
-        roomService.deleteRoom(roomId);
+        try{
+            roomService.deleteRoom(roomId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -116,6 +124,10 @@ public class RoomController {
     @PutMapping
     @PreAuthorize("hasRole('HOMIE')")
     public void updateRoom(@Valid @RequestBody Room room) {
-        roomService.updateRoom(room);
+        try{
+            roomService.updateRoom(room);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

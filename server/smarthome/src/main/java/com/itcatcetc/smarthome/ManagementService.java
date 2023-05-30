@@ -188,12 +188,18 @@ public class ManagementService {
             SensorData newData;
 
             if (data.isPresent()) {
-                newData = new SensorData(sensor.getType(), sensor, data.get().getValue() + (random.nextInt(10)) - 5);
+                newData = new SensorData(sensor.getType(), sensor, data.get().getValue() + (random.nextInt(11)) - 5);
                 if(sensor.getType().equals(Type.LIGHT)){
                     if(newData.getValue() < 0)
                         newData.setValue(0);
                     else if(newData.getValue() > 100)
                         newData.setValue(100);
+                }
+                if(sensor.getType().equals(Type.TEMPERATURE)){
+                    if(newData.getValue() < -20)
+                        newData.setValue(-20);
+                    else if(newData.getValue() > 70)
+                        newData.setValue(70);
                 }
             } else {
                 newData = new SensorData(sensor.getType(), sensor, random.nextInt(101));

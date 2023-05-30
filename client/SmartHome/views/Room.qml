@@ -23,7 +23,7 @@ Page {
         }
         onApplied: {
             confirmDeleteItemDialog.title == titleForSensor ? httpcommunication.deleteSensor(confirmDeleteItemDialog.itemId) : httpcommunication.deleteActuator(confirmDeleteItemDialog.itemId)
-            confirmDeleteDialog.accept();
+            confirmDeleteItemDialog.accept();
         }
     }
 
@@ -534,8 +534,8 @@ Page {
             textInputAddressIPv6_7.text = "";
         }
 
-        onApplied: {
-            var bErr = false;
+        function clearErrors()
+        {
             rectItemName.border.color = "black";
             textItemNameError.visible = false;
             rectInputAddressIPv4_0.border.color = "black";
@@ -550,6 +550,11 @@ Page {
             rectInputAddressIPv6_5.border.color = "black";
             rectInputAddressIPv6_6.border.color = "black";
             rectInputAddressIPv6_7.border.color = "black";
+        }
+
+        onApplied: {
+            createNewItemDialog.clearErrors();
+            var bErr = false;
 
             if(textInputItemName.text.length == 0)
             {
@@ -704,19 +709,19 @@ Page {
                     address = textInputAddressIPv6_0.text + ":" + textInputAddressIPv6_1.text + ":" + textInputAddressIPv6_2.text + ":" + textInputAddressIPv6_3.text + ":" + textInputAddressIPv6_4.text + ":" + textInputAddressIPv6_5.text + ":" + textInputAddressIPv6_6.text + ":" + textInputAddressIPv6_7.text;
                 }
 
-                if(createNewItemDialog.titleForAddSensor)
+                if(createNewItemDialog.title === createNewItemDialog.titleForAddSensor)
                 {
                     httpcommunication.createSensor(textInputItemName.text, comboBoxType.currentText, address, stack.selectedRoomId);
                 }
-                else if(createNewItemDialog.titleForAddActuator)
+                else if(createNewItemDialog.title === createNewItemDialog.titleForAddActuator)
                 {
                     httpcommunication.createActuator(textInputItemName.text, comboBoxType.currentText, address, stack.selectedRoomId);
                 }
-                else if(createNewItemDialog.titleForEditSensor)
+                else if(createNewItemDialog.title === createNewItemDialog.titleForEditSensor)
                 {
                     httpcommunication.updateSensor(createNewItemDialog.itemId, textInputItemName.text, comboBoxType.currentText, address, stack.selectedRoomId);
                 }
-                else if(createNewItemDialog.titleForEditActuator)
+                else if(createNewItemDialog.title === createNewItemDialog.titleForEditActuator)
                 {
                     httpcommunication.updateActuator(createNewItemDialog.itemId, textInputItemName.text, comboBoxType.currentText, address, stack.selectedRoomId);
                 }
@@ -755,6 +760,7 @@ Page {
             onLinkActivated: (link)=> {
                 createNewItemDialog.title = createNewItemDialog.titleForAddSensor
                 createNewItemDialog.clearInputs();
+                createNewItemDialog.clearErrors();
                 createNewItemDialog.itemId = -1;
                 createNewItemDialog.open();
             }
@@ -791,6 +797,7 @@ Page {
             onLinkActivated: (link)=> {
                 createNewItemDialog.title = createNewItemDialog.titleForAddActuator;
                 createNewItemDialog.clearInputs();
+                createNewItemDialog.clearErrors();
                 createNewItemDialog.itemId = -1;
                 createNewItemDialog.open();
             }
@@ -894,6 +901,7 @@ Page {
                 y: 5
                 onClicked: {
                     createNewItemDialog.clearInputs();
+                    createNewItemDialog.clearErrors();
                     createNewItemDialog.title = createNewItemDialog.titleForEditSensor;
                     createNewItemDialog.itemId = listViewSensorsId;
                     textInputItemName.text = listViewSensorsName;
@@ -969,7 +977,7 @@ Page {
             y: 10
             x: 0
             width: 310
-            height: 100
+            height: 120
             property int actuatorId: listViewActuatorId
             property string actuatorType: listViewActuatorType
             property string actuatorAddress: listViewactuatorsAddress
@@ -977,6 +985,7 @@ Page {
             Column{
                 x:20
                 y:20
+                height: 100
                 Label {
                     id: listViewActuatorsLabel
                     width: 280
@@ -1031,7 +1040,6 @@ Page {
                 Text {
                     text: qsTr("Status: ") + listViewActuatorsOn
                     font.pointSize: 12
-                    bottomPadding: 10
                 }
             }
 
@@ -1063,9 +1071,10 @@ Page {
                 y: 5
                 onClicked: {
                     createNewItemDialog.clearInputs();
+                    createNewItemDialog.clearErrors();
                     createNewItemDialog.title = createNewItemDialog.titleForEditActuator;
                     createNewItemDialog.itemId = listViewActuatorId;
-                    textInputItemName.text = listViewActuatorType;
+                    textInputItemName.text = listViewActuatorsName;
                     var bFound = false;
                     for(var i=0; i < comboBoxType.count; i++)
                     {
@@ -1123,7 +1132,7 @@ Page {
                 visible: true
                 hoverEnabled: false
                 x: actuatorItemRect.width - buttonSendCommand.width - 5
-                y: actuatorItemRect.height - 15
+                y: actuatorItemRect.height - 25
                 onClicked: {
                     //TODO: post command with current value
                 }
@@ -1151,6 +1160,14 @@ Page {
 
             function onAddActuatorsPerRoomListItem(id, name, type, address) {
                 listViewActuatorsModel.append({listViewActuatorId: id, listViewActuatorsName: name, listViewActuatorType: type, listViewActuatorsValueFrom: type === "TEMPERATURE" ? -30 : 0, listViewActuatorsValueTo: type === "TEMPERATURE" ? 50 : 100, listViewActuatorsValue: 22, listViewactuatorsAddress: address, listViewActuatorsOn: "OFF"});
+            }
+
+            function onSensorsPerRoomUpdateNeeded() {
+                listViewSensors.refreshSensors();
+            }
+
+            function onActuatorsPerRoomUpdateNeeded() {
+                listViewActuators.refreshActuators();
             }
         }
     }

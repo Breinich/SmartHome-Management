@@ -147,11 +147,15 @@ Page {
             }
         }
 
-        onApplied: {
-            var bErr = false;
+        function clearError() {
             textNewRoomSelectPhoto.color = "black";
             textNewRoomNameErr.visible = false;
             rectNewRoomName.border.color = "black";
+        }
+
+        onApplied: {
+            var bErr = false;
+            createRoomDialog.clearError();
             var bCreate = (createRoomDialog.title === createRoomDialog.createTitle);
 
             if(listViewAddRoom.currentIndex === -1)
@@ -402,6 +406,7 @@ Page {
                         listViewAddRoom.currentIndex = -1;
                     }
 
+                    createRoomDialog.clearError();
                     inputNewRoomName.text = name1;
                     textNewRoomSelectPhoto.color = "black";
                     textNewRoomNameErr.visible = false;
@@ -458,6 +463,7 @@ Page {
                         listViewAddRoom.currentIndex = -1;
                     }
 
+                    createRoomDialog.clearError();
                     inputNewRoomName.text = name2;
                     textNewRoomSelectPhoto.color = "black";
                     textNewRoomNameErr.visible = false;
@@ -485,6 +491,7 @@ Page {
         function roomClicked(roomId) {
             if (roomId === -1)
             {
+                createRoomDialog.clearError();
                 listViewAddRoom.currentIndex = -1
                 inputNewRoomName.text = "";
                 textNewRoomSelectPhoto.color = "black";

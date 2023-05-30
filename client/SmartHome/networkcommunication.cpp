@@ -6,18 +6,22 @@
 #include <QJsonDocument>
 #include "networkcommunication.h"
 #include "room.h"
+#include "ipaddress.h"
 
-NetworkCommunication::NetworkCommunication(QObject* pParent) : QObject(pParent)
+NetworkCommunication::NetworkCommunication(QObject* pParent) : QObject(pParent), m_userId(-1)
 {
     QString host = "localhost";
     m_baseUrl = "http://" + host + ":8081/api/v1/smarthome";
     m_authPath = "/auth/signup";
     m_loginPath = "/auth/login";
+    m_aboutMePath = "/auth/me";
     m_logoutPath = "/auth/logout";
     m_roomsPath = "/rooms";
     m_sensorsPath = "/sensors";
     m_actuatorsPath = "/actuators";
     m_sensorDataPath = "/data";
+    m_latestSensorDataPath = "/sensordata/sensor";
+    m_commandPath = "/command";
 
     m_pNetManager = new QNetworkAccessManager(pParent);
     m_pNetManager->connectToHost(host, 8081);
@@ -45,7 +49,12 @@ void NetworkCommunication::slotReplyFinished(QNetworkReply *pReply)
         {
             if(m_listReplys.at(i).second == pReply)
             {
-                if(pReply->request().url().path().endsWith(m_authPath))
+                if(pReply->request().url().path().contains(m_latestSensorDataPath))
+                {
+                    emit communicationFinished();
+                    handleGetLatestDataBySensorIdResponse(pReply);
+                }
+                else if(pReply->request().url().path().endsWith(m_authPath))
                 {
                     emit communicationFinished();
                     handleCreateAccountResponse(pReply);
@@ -138,6 +147,22 @@ void NetworkCommunication::slotReplyFinished(QNetworkReply *pReply)
                     if (m_listReplys.at(i).first == "DEL")
                     {
                         handleResponseForActuatorsPerRoomUpdate(pReply);
+                    }
+                }
+                else if (pReply->request().url().path().contains(m_aboutMePath))
+                {
+                    emit communicationFinished();
+                    if (m_listReplys.at(i).first == "GET")
+                    {
+                        handleAboutMeResponse(pReply);
+                    }
+                }
+                else if (pReply->request().url().path().endsWith(m_commandPath))
+                {
+                    emit communicationFinished();
+                    if (m_listReplys.at(i).first == "POST")
+                    {
+                        handleSendCommandResponse(pReply);
                     }
                 }
                 m_listReplys.removeAt(i);
@@ -300,6 +325,38 @@ void NetworkCommunication::handleLoginResponse(QNetworkReply *pReply)
         if(err == QNetworkReply::NoError)
         {
             emit successfulSignIn();
+            aboutMe(m_authenticator.user());
+        }
+        else
+        {
+            reportErrorToUser(pReply);
+        }
+    }
+}
+
+void NetworkCommunication::aboutMe(const QString& email)
+{
+    sendRequest(m_aboutMePath + "?email=" + m_authenticator.user(), true);
+}
+
+void NetworkCommunication::handleAboutMeResponse(QNetworkReply *pReply)
+{
+    if(pReply)
+    {
+        QNetworkReply::NetworkError err = pReply->error();
+        if(err == QNetworkReply::NoError)
+        {
+            QByteArray byteArrayResponse(pReply->readAll());
+            QString strResponse(QString::fromUtf8(byteArrayResponse));
+
+            QString strId = getJsonValue(strResponse, "userId", 0);
+            bool bOk;
+            int id = strId.toInt(&bOk);
+            if(bOk)
+            {
+                //TODO: get roles
+                m_userId = id;
+            }
         }
         else
         {
@@ -456,9 +513,11 @@ void NetworkCommunication::handleGetSensorsPerRoomResponse(QNetworkReply *pReply
                     QString type = getJsonValue(strResponse, "type", i);
                     type = cutBeginAndEndQuotes(type);
                     QString address = getJsonValue(strResponse, "apiEndpoint", i);
-                    address = cutBeginAndEndQuotes(address);
-                    QStringList listSplitted = address.split("/");
-                    emit addSensorsPerRoomListItem(id, name, type, listSplitted[listSplitted.length()-2]);
+                    address = matchedIPAddress(address);
+                    if(!address.isEmpty())
+                    {
+                        emit addSensorsPerRoomListItem(id, name, type, address);
+                    }
                 }
             }
         }
@@ -500,9 +559,11 @@ void NetworkCommunication::handleGetActuatorsPerRoomResponse(QNetworkReply *pRep
                     QString type = getJsonValue(strResponse, "type", i);
                     type = cutBeginAndEndQuotes(type);
                     QString address = getJsonValue(strResponse, "apiEndpoint", i);
-                    address = cutBeginAndEndQuotes(address);
-                    QStringList listSplitted = address.split("/");
-                    emit addActuatorsPerRoomListItem(id, name, type, listSplitted[listSplitted.length()-2]);
+                    address = matchedIPAddress(address);
+                    if(!address.isEmpty())
+                    {
+                        emit addActuatorsPerRoomListItem(id, name, type, address);
+                    }
                 }
             }
         }
@@ -547,9 +608,11 @@ void NetworkCommunication::handleGetAllSensorsResponse(QNetworkReply *pReply)
                         QString type = getJsonValue(strResponse, "type", i);
                         type = cutBeginAndEndQuotes(type);
                         QString address = getJsonValue(strResponse, "apiEndpoint", i);
-                        address = cutBeginAndEndQuotes(address);
-                        QStringList listSplitted = address.split("/");
-                        emit addSensor(id, name, type, listSplitted[listSplitted.length()-2], roomId);
+                        address = matchedIPAddress(address);
+                        if(!address.isEmpty())
+                        {
+                            emit addSensor(id, name, type, address, roomId);
+                        }
                     }
                 }
             }
@@ -713,4 +776,107 @@ void NetworkCommunication::handleResponseForActuatorsPerRoomUpdate(QNetworkReply
             reportErrorToUser(pReply);
         }
     }
+}
+
+void NetworkCommunication::getLatestDataBySensorId(int sensorId) {
+    sendRequest(m_latestSensorDataPath + "/" + QString::number(sensorId), true, false);
+}
+
+void NetworkCommunication::handleGetLatestDataBySensorIdResponse(QNetworkReply *pReply)
+{
+    if(pReply)
+    {
+        QNetworkReply::NetworkError err = pReply->error();
+        if(err == QNetworkReply::NoError)
+        {
+            QByteArray byteArrayResponse(pReply->readAll());
+            QJsonParseError parseError;
+            QJsonDocument doc = QJsonDocument::fromJson(byteArrayResponse, &parseError);
+            if(parseError.error == QJsonParseError::NoError)
+            {
+                QJsonObject object = doc.object();
+                QString sensorKey("sensor");
+                QJsonValue jsonSensor = object.value(sensorKey);
+                if(!jsonSensor.isObject())
+                {
+                    emit reportError("Unexpected value format with JSon key: " + sensorKey);
+                    return;
+                }
+                QJsonObject sensorValue = jsonSensor.toObject();
+                QString sensorIdKey("sensorId");
+                QJsonValue jsonSensorId = sensorValue.value(sensorIdKey);
+                int sensorIdValue = jsonSensorId.toInt();
+                QString valueKey("value");
+                QJsonValue jsonValue = object.value(valueKey);
+                int valueValue = jsonValue.toInt();
+
+                emit updateSensorValue(sensorIdValue, valueValue);
+            }
+            else
+            {
+                emit reportError(parseError.errorString());
+            }
+        }
+        else
+        {
+            reportErrorToUser(pReply);
+        }
+    }
+}
+
+void NetworkCommunication::sendCommand(const QString& type, int roomId, int value) {
+    QJsonObject json;
+    json.insert("consequenceType", type);
+    json.insert("consequenceValue", value);
+
+    QJsonObject jsonRoom;
+    jsonRoom.insert("roomId", roomId);
+    json.insert("room", jsonRoom);
+
+    QJsonObject jsonUser;
+    jsonUser.insert("userId", m_userId);
+    json.insert("user", jsonUser);
+
+    QJsonDocument doc = QJsonDocument(json);
+
+    sendPostOrPut(m_commandPath, doc.toJson(QJsonDocument::Compact), true, true);
+}
+
+void NetworkCommunication::handleSendCommandResponse(QNetworkReply *pReply)
+{
+    if(pReply)
+    {
+        QNetworkReply::NetworkError err = pReply->error();
+        if(err == QNetworkReply::NoError)
+        {
+            emit commandActivated();
+        }
+        else
+        {
+            reportErrorToUser(pReply);
+        }
+    }
+}
+
+QString NetworkCommunication::matchedIPAddress(const QString& sampleText)
+{
+    QString address(sampleText);
+    QRegularExpressionMatch match = IpAddress::getRegexpIPv4().match(address);
+    if(match.hasMatch())
+    {
+        address = match.captured();
+    }
+    else
+    {
+        match = IpAddress::getRegexpIPv6().match(address);
+        if(match.hasMatch())
+        {
+            address = match.captured();
+        }
+    }
+    if(!match.hasMatch())
+    {
+        address = "";
+    }
+    return address;
 }

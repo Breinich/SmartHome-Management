@@ -531,11 +531,11 @@ void NetworkCommunication::handleGetAllSensorsResponse(QNetworkReply *pReply)
     }
 }
 
-void NetworkCommunictaion::getLastHourOfSensorData(int sensorId)
+void NetworkCommunication::getLastHourOfSensorData(int sensorId)
 {
     qint64 now = QDateTime::currentMSecsSinceEpoch();
     qint64 oneHourAgo = now - 3600000;
-    sendRequest(m_sensorsPath + "/" + QString::number(sensorId) + m_sensorDataPath + "/" + QString::number(oneHourAgo) + "/" QString::number(now), true);
+    sendRequest(m_sensorsPath + "/" + QString::number(sensorId) + m_sensorDataPath + "/" + QString::number(oneHourAgo) + "/" + QString::number(now), true);
 }
 
 void NetworkCommunication::handleGetLastHourOfSensorDataResponse(QNetworkReply *pReply)
@@ -557,11 +557,12 @@ void NetworkCommunication::handleGetLastHourOfSensorDataResponse(QNetworkReply *
             {
             
                 QString strValue = getJsonValue(strResponse, "value", i);
+                bool bOk;
                 int value = strValue.toInt(&bOk);
                 if(bOk)
                 {
                     QString strTimestamp = getJsonValue(strResponse, "timestamp", i);
-                    long timestamp = strTimestamp.toLong(&bOk);
+                    long timestamp = strTimestamp.toLongLong(&bOk);
                     if(bOk)
                     {
                         emit addSensorStatisticData( qRound((timestamp - now) * 0.001), value);

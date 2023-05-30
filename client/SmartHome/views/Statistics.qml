@@ -18,6 +18,7 @@ Page {
             }
             ComboBox {
                 id: comboSensorName
+                property bool bInitialized: false
                 y: 18
                 width: 135
                 height: 30
@@ -27,6 +28,7 @@ Page {
                     }
                 Component.onCompleted: {
                     comboSensorNameModel.clear();
+                    comboSensorName.bInitialized = false;
                     httpcommunication.getAllSensors();
                 }
                 onActivated: {
@@ -43,6 +45,17 @@ Page {
             LineSeries {
                 id: lineSeries
                 name: comboSensorName.currentText
+                axisX: ValueAxis {
+                    id: timeAxis
+                    min: -3600
+                    max: 0
+                }
+
+                axisY: ValueAxis {
+                    id: valueAxis
+                    min: comboSensorNameModel.get(comboSensorName.currentIndex).sensorType === "LIGHT" ? 0 : - 30
+                    max: 100
+                }
             }
         }
 
@@ -55,9 +68,14 @@ Page {
         {
             comboSensorNameModel.append({sensorId: id, sensorName: name, sensorType: type, sensorAddress: address, roomId: roomId});
             comboSensorName.currentIndex = 0;
+            if(!comboSensorName.bInitialized)
+            {
+                httpcommunication.getLastHourOfSensorData(comboSensorNameModel.get(comboSensorName.currentIndex).sensorId);
+                comboSensorName.bInitialized = true;
+            }
         }
 
-        function onaddSensorStatisticData(xValue, yValue)
+        function onAddSensorStatisticData(xValue, yValue)
         {
             lineSeries.append(xValue, yValue);
         }

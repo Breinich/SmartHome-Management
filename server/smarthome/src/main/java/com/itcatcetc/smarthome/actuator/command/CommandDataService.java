@@ -106,4 +106,8 @@ public class CommandDataService {
         command.setGreaterThan(greaterThan);
         command.setRoom(room);
     }
+
+    public List<ActuatorCommand> getActiveCommandsByRoomIdAndType(Integer roomId, Type type) {
+        return commandDataRepository.findByRoomRoomIdAndPremiseTypeAndExpirationDateAfter(roomId, type,new Date(System.currentTimeMillis()));
+    }
 }

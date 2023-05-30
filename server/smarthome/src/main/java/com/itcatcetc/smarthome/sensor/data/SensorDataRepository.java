@@ -4,6 +4,7 @@ import com.itcatcetc.smarthome.sensor.Sensor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +21,6 @@ public interface SensorDataRepository extends JpaRepository<SensorData, Integer>
     List<SensorData> findAllBySensor(Sensor sensor);
 
     Optional<SensorData> findTopBySensorOrderByTimestampDesc(Sensor sensor);
+
+    List<SensorData> findAllBySensorAndTimestamp(Sensor sensor, Date timestamp);
 }

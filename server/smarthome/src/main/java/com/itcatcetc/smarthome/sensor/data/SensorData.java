@@ -82,5 +82,8 @@ public class SensorData {
     }
 
 
+    public Sensor getSensor() {
+        return sensor;
+    }
 }
 

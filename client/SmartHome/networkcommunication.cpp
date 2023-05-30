@@ -15,6 +15,7 @@ NetworkCommunication::NetworkCommunication(QObject* pParent) : QObject(pParent)
     m_roomsPath = "/rooms";
     m_sensorsPath = "/sensors";
     m_actuatorsPath = "/actuators";
+    m_sensorDataPath = "/data";
 
     m_pNetManager = new QNetworkAccessManager(pParent);
     m_pNetManager->connectToHost(host, 8081);
@@ -99,6 +100,14 @@ void NetworkCommunication::slotReplyFinished(QNetworkReply *pReply)
                     if (m_listReplys.at(i).first == "DEL")
                     {
                         handleResponseForRoomsUpdate(pReply);
+                    }
+                }
+                else if (pReply->request().url().path().contains(m_sensorDataPath))
+                {
+                    emit communicationFinished();
+                    if (m_listReplys.at(i).first == "GET")
+                    {
+                        handleGetLastHourOfSensorDataResponse(pReply);
                     }
                 }
                 m_listReplys.removeAt(i);
@@ -446,8 +455,8 @@ void NetworkCommunication::handleGetActuatorsPerRoomResponse(QNetworkReply *pRep
             QString strResponse(QString::fromUtf8(byteArrayResponse));
 
 
-            static QRegularExpression regexpSensorId("(\"actuatorId\"\\s{0,1}:)");
-            int count = strResponse.count(regexpSensorId);
+            static QRegularExpression regexpActuatorId("(\"actuatorId\"\\s{0,1}:)");
+            int count = strResponse.count(regexpActuatorId);
 
             for(int i=0; i<count; i++)
             {
@@ -511,6 +520,51 @@ void NetworkCommunication::handleGetAllSensorsResponse(QNetworkReply *pReply)
                         address = cutBeginAndEndQuotes(address);
                         QStringList listSplitted = address.split("/");
                         emit addSensor(id, name, type, listSplitted[listSplitted.length()-2], roomId);
+                    }
+                }
+            }
+        }
+        else
+        {
+            reportErrorToUser(pReply);
+        }
+    }
+}
+
+void NetworkCommunictaion::getLastHourOfSensorData(int sensorId)
+{
+    qint64 now = QDateTime::currentMSecsSinceEpoch();
+    qint64 oneHourAgo = now - 3600000;
+    sendRequest(m_sensorsPath + "/" + QString::number(sensorId) + m_sensorDataPath + "/" + QString::number(oneHourAgo) + "/" QString::number(now), true);
+}
+
+void NetworkCommunication::handleGetLastHourOfSensorDataResponse(QNetworkReply *pReply)
+{
+    if(pReply)
+    {
+        QNetworkReply::NetworkError err = pReply->error();
+        if(err == QNetworkReply::NoError)
+        {
+            QByteArray byteArrayResponse(pReply->readAll());
+            QString strResponse(QString::fromUtf8(byteArrayResponse));
+
+            static QRegularExpression regexpDataId("(\"dataId\":)");
+            int count = strResponse.count(regexpDataId);
+
+            long now = QDateTime::currentMSecsSinceEpoch();
+            
+            for(int i=0; i < count; i++)
+            {
+            
+                QString strValue = getJsonValue(strResponse, "value", i);
+                int value = strValue.toInt(&bOk);
+                if(bOk)
+                {
+                    QString strTimestamp = getJsonValue(strResponse, "timestamp", i);
+                    long timestamp = strTimestamp.toLong(&bOk);
+                    if(bOk)
+                    {
+                        emit addSensorStatisticData( qRound((timestamp - now) * 0.001), value);
                     }
                 }
             }

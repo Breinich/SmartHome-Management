@@ -68,4 +68,20 @@ public class SensorDataService {
         }
         sensorDataRepository.deleteById(dataId);
     }
+
+    public List<SensorData> getLatestDataBySensorId(Integer sensorId) {
+        Optional<Sensor> sensorOptional = sensorRepository.findById(sensorId);
+        if (sensorOptional.isEmpty()) {
+            throw new IllegalArgumentException("Sensor with id " + sensorId + " does not exists");
+        }
+
+        Sensor sensor = sensorOptional.get();
+        Optional<SensorData> dataOptional = sensorDataRepository.findTopBySensorOrderByTimestampDesc(sensor);
+        if (dataOptional.isEmpty()) {
+            throw new IllegalArgumentException("No data for sensor with id " + sensorId);
+        }
+
+        SensorData data = dataOptional.get();
+        return sensorDataRepository.findAllBySensorAndTimestamp(data.getSensor(), data.getTimestamp());
+    }
 }

@@ -8,6 +8,19 @@ Page {
         id: ipaddress
     }
 
+    Timer {
+        id: updateSensorDataTimer
+        interval: 10000
+        repeat: true
+        running: true
+        onTriggered: {
+            for(var i = 0; i < listViewSensorsModel.count; i++)
+            {
+                httpcommunication.getLatestDataBySensorId(listViewSensorsModel.get(i).listViewSensorsId);
+            }
+        }
+    }
+
     Dialog {
         id: confirmDeleteItemDialog
         anchors.centerIn: parent
@@ -1134,7 +1147,7 @@ Page {
                 x: actuatorItemRect.width - buttonSendCommand.width - 5
                 y: actuatorItemRect.height - 25
                 onClicked: {
-                    //TODO: post command with current value
+                    httpcommunication.sendCommand(listViewActuatorType, stack.selectedRoomId, actuatorSlider.value);
                 }
             }
         }
@@ -1159,7 +1172,7 @@ Page {
             }
 
             function onAddActuatorsPerRoomListItem(id, name, type, address) {
-                listViewActuatorsModel.append({listViewActuatorId: id, listViewActuatorsName: name, listViewActuatorType: type, listViewActuatorsValueFrom: type === "TEMPERATURE" ? -30 : 0, listViewActuatorsValueTo: type === "TEMPERATURE" ? 50 : 100, listViewActuatorsValue: 22, listViewactuatorsAddress: address, listViewActuatorsOn: "OFF"});
+                listViewActuatorsModel.append({listViewActuatorId: id, listViewActuatorsName: name, listViewActuatorType: type, listViewActuatorsValueFrom: type === "TEMPERATURE" ? -30 : 0, listViewActuatorsValueTo: 100, listViewActuatorsValue: 22, listViewactuatorsAddress: address, listViewActuatorsOn: "OFF"});
             }
 
             function onSensorsPerRoomUpdateNeeded() {
@@ -1169,6 +1182,30 @@ Page {
             function onActuatorsPerRoomUpdateNeeded() {
                 listViewActuators.refreshActuators();
             }
+
+            function onUpdateSensorValue(sensorId, sensorValue)
+            {
+                for(var i = 0; i < listViewSensorsModel.count; i++)
+                {
+                    if(listViewSensorsModel.get(i).listViewSensorsId === sensorId)
+                    {
+                        var oldModelItem = listViewSensorsModel.get(i);
+                        var oldSensorId = oldModelItem.listViewSensorsId;
+                        var oldType = oldModelItem.listViewSensorsType;
+                        var oldAddress = oldModelItem.listViewSensorsAddress;
+                        var oldName = oldModelItem.listViewSensorsName;
+                        listViewSensorsModel.remove(i);
+                        listViewSensorsModel.insert(i, {listViewSensorsId: oldSensorId, listViewSensorsType: oldType, listViewSensorsAddress: oldAddress, listViewSensorsName: oldName, listViewSensorsValueInitialized: true, listViewSensorsValue: sensorValue})
+                        break;
+                    }
+                }
+                stack.setFooterMessage("");
+            }
+
+            function onCommandActivated () {
+                stack.setFooterMessage("Command sent");
+            }
+
         }
     }
 

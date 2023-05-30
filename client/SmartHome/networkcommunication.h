@@ -11,6 +11,7 @@ public:
     ~NetworkCommunication();
     Q_INVOKABLE void createAccount(const QString& firstName, const QString& lastName, const QString& email, const QString& password);
     Q_INVOKABLE void login(const QString& email, const QString& password);
+    Q_INVOKABLE void aboutMe(const QString& email);
     Q_INVOKABLE void logout();
     Q_INVOKABLE void getRooms();
     Q_INVOKABLE void createRoom(const QString& name, const QString& picture);
@@ -25,7 +26,9 @@ public:
     Q_INVOKABLE void deleteSensor(int sensorId);
     Q_INVOKABLE void createActuator(const QString& name, const QString& type, const QString& address, int roomId);
     Q_INVOKABLE void updateActuator(int actuatorId, const QString& name, const QString& type, const QString& address, int roomId);
-    Q_INVOKABLE void deleteActuator(int sensorId);
+    Q_INVOKABLE void deleteActuator(int actuatorId);
+    Q_INVOKABLE void getLatestDataBySensorId(int sensorId);
+    Q_INVOKABLE void sendCommand(const QString& type, int roomId, int value);
 
 
 
@@ -41,9 +44,11 @@ signals:
     void addSensorsPerRoomListItem(int id, QString name, QString type, QString address);
     void addActuatorsPerRoomListItem(int id, QString name, QString type, QString address);
     void addSensor(int id, QString name, QString type, QString address, int roomId);
-    void addSensorStatisticData(int xValue, int yValue); //x value is time, data with first timestamp is 0, data with second timestamp is secondTimeStamp - firstTimeStamp (elapsed time), y value is value of sensor
+    void addSensorStatisticData(int xValue, int yValue);
     void sensorsPerRoomUpdateNeeded();
     void actuatorsPerRoomUpdateNeeded();
+    void updateSensorValue(int sensorId, int value);
+    void commandActivated();
 
 
 
@@ -58,30 +63,38 @@ private:
     void sendPostOrPut(const QString& strPath, const QByteArray& body, bool bPost, bool bAuth = false, bool bNotifyStart = true);
     void handleCreateAccountResponse(QNetworkReply *pReply);
     void handleLoginResponse(QNetworkReply *pReply);
+    void handleAboutMeResponse(QNetworkReply *pReply);
     void handleLogoutResponse(QNetworkReply *pReply);
     void handleGetRoomsResponse(QNetworkReply *pReply);
     void handleResponseForRoomsUpdate(QNetworkReply *pReply);
     void handleGetSensorsPerRoomResponse(QNetworkReply *pReply);
     void handleGetActuatorsPerRoomResponse(QNetworkReply *pReply);
     void handleGetAllSensorsResponse(QNetworkReply *pReply);
-    void handleGetLastHourOfSensorDataResponse(QNetworkReply *pReply); //emit addSensorStatisticData
-    void handleResponseForSensorsPerRoomUpdate(QNetworkReply *pReply); //emit sensorsPerRoomUpdateNeeded
-    void handleResponseForActuatorsPerRoomUpdate(QNetworkReply *pReply); //emit actuatorsPerRoomUpdateNeeded
+    void handleGetLastHourOfSensorDataResponse(QNetworkReply *pReply);
+    void handleResponseForSensorsPerRoomUpdate(QNetworkReply *pReply);
+    void handleResponseForActuatorsPerRoomUpdate(QNetworkReply *pReply);
+    void handleGetLatestDataBySensorIdResponse(QNetworkReply *pReply);
+    void handleSendCommandResponse(QNetworkReply *pReply);
 
     //Note: can not handle array as value
     QString getJsonValue(const QString& sampleText, const QString& key, int idx, const QString& afterKey = "");
     QString cutBeginAndEndQuotes(const QString& sampleText);
+    QString matchedIPAddress(const QString& sampleText);
 
     QNetworkAccessManager* m_pNetManager;
     QAuthenticator m_authenticator;
+    int m_userId;
     QString m_baseUrl;
     QString m_authPath;
     QString m_loginPath;
+    QString m_aboutMePath;
     QString m_logoutPath;
     QString m_roomsPath;
     QString m_sensorsPath;
     QString m_actuatorsPath;
     QString m_sensorDataPath;
+    QString m_latestSensorDataPath;
+    QString m_commandPath;
     QList<QPair<QString, QNetworkReply*>> m_listReplys;
 };
 

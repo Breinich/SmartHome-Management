@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * a controller class for sensor data
@@ -77,9 +78,11 @@ public class SensorDataController {
     @GetMapping(path = "sensor/{sensorId}")
     @PreAuthorize("hasRole('GUEST') or hasRole('HOMIE')")
     public ResponseEntity<String> getLatestDataBySensorId(@PathVariable("sensorId") Integer sensorId) {
-        List<SensorData> data = sensorDataService.getLatestDataBySensorId(sensorId);
+        SensorData data = sensorDataService.getLatestDataBySensorId(sensorId);
+
         String res;
         ObjectMapper objectMapper = new ObjectMapper();
+
         try {
             res = objectMapper.writeValueAsString(data);
         } catch (Exception e) {
